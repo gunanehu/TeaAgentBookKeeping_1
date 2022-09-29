@@ -1,22 +1,19 @@
 package com.teaagent.ui.listEntries
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
+import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.CustomerEntity
-import com.teaagent.domain.CustomerEntityToCSV
-import com.teaagent.domain.toCsv
+import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.repo.CustomerRepository
-import com.teaagent.utility.exportfile.CsvConfig
-import com.teaagent.utility.exportfile.ExportService
-import com.teaagent.utility.exportfile.Exports
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
-import java.util.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+
 
 // 1
 class ListEntryViewModel(private val trackingRepository: CustomerRepository) : ViewModel() {
@@ -40,9 +37,87 @@ class ListEntryViewModel(private val trackingRepository: CustomerRepository) : V
         }
         return amount
     }
+//    suspend fun getCollectionByNameAndDateFromFirebaseDb(
+//        customerName: String,
+//        startDate: Long?
+//    ): ArrayList<String> {
+//
+//        var collectionEntry: ArrayList<CollectionEntry> = ArrayList()
+//        var task: Task<QuerySnapshot>? = FirebaseUtil.getByNameAndDate(customerName, startDate)
+//
+//        val job = GlobalScope.async {
+//            task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
+//                if (task.isSuccessful) {
+//                    for (document in task.result) {
+//                        Log.d(
+//                            FirebaseUtil.TAG,
+//                            document.toString() + "===document===================="
+//                        )
+//
+//                        var c: CollectionEntry = document.toObject(CollectionEntry::class.java)
+//
+//                        collectionEntry.add(c.toString())
+////                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
+//                        Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
+//                        Log.d(FirebaseUtil.TAG, "=======================")
+//
+//                    }
+//
+//                } else {
+//                    Log.e(FirebaseUtil.TAG, "Error getting documents: ", task.exception)
+//                }
+//            })
+//        }
+//
+//        job.await()
+//        delay(3000)
+//        Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
+//        return customers
+//
+//    }
+    suspend fun getByNameAndDateFromFirebaseDb(
+        customerName: String,
+        startDate: Long?
+    ): ArrayList<String> {
 
+        var customers: ArrayList<String> = ArrayList()
+        var task: Task<QuerySnapshot>? = FirebaseUtil.getByNameAndDate(customerName, startDate)
 
-    suspend fun getByNameAndDate(customerName: String, startDate: Long?): ArrayList<String> {
+        val job = GlobalScope.async {
+            task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        Log.d(
+                            FirebaseUtil.TAG,
+                            document.toString() + "===document===================="
+                        )
+
+                        var c: CollectionEntry = document.toObject(CollectionEntry::class.java)
+
+                        customers.add(c.toString())
+//                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
+                        Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
+                        Log.d(FirebaseUtil.TAG, "=======================")
+
+                    }
+
+                } else {
+                    Log.e(FirebaseUtil.TAG, "Error getting documents: ", task.exception)
+                }
+            })
+        }
+
+        job.await()
+        delay(3000)
+        Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
+        return customers
+
+    }
+
+    suspend fun getByNameAndDateFromRoomDb(
+        customerName: String,
+        startDate: Long?
+    ): ArrayList<String> {
         var list = trackingRepository.getByNameAndDate(customerName, startDate)
         var customers: ArrayList<String> = ArrayList()
         list!!.forEach { customerEntity ->
@@ -72,11 +147,12 @@ class ListEntryViewModel(private val trackingRepository: CustomerRepository) : V
         return customers
     }
 
-    suspend  public  fun getALLByCustomerName(customerName: String): List<CustomerEntity> {
+    suspend public fun getALLByCustomerName(customerName: String): List<CustomerEntity> {
         var customers = trackingRepository.getAllEntitiesByCustomerName(customerName)
 
         return customers
     }
+
     suspend fun newAllExpensesFromTo(customerName: String, startDate: Long?): Double {
         Log.d(TAG, "newAllExpensesFromTo before serach   startDate: " + startDate);
 

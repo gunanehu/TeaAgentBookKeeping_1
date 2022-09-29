@@ -17,7 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teaagent.R
 import com.teaagent.TrackingApplication
 import com.teaagent.databinding.ActivityListBinding
+import com.teaagent.domain.firemasedbEntities.CollectionEntry
+import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.ui.report.ReportActivity
+import com.teaagent.ui.saveentry.SaveEntryViewModel
+import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -36,8 +41,13 @@ class ListEntryActivity : AppCompatActivity() {
     var adapter: ItemAdapter? = null
 
     // ViewModel
-    private val mapsActivityViewModel: ListEntryViewModel by viewModels {
+    private val listEntryActivityyViewModel: ListEntryViewModel by viewModels {
         ListEntryViewModelFactory(getTrackingRepository())
+    }
+
+    // ViewModel
+    private val saveEntryViewModel: SaveEntryViewModel by viewModels {
+        SaveEntryViewModelFactory(getTrackingRepository())
     }
 
     var dateTime = Calendar.getInstance()
@@ -70,15 +80,14 @@ class ListEntryActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
 //                data = mapsActivityViewModel.getTListByCustomerName(customerName)
-                data = mapsActivityViewModel.getByNameAndDate(customerName, dateTime.timeInMillis)
-//                mapsActivityViewModel.exportTransactionsToCsv(customerName)
+                data = listEntryActivityyViewModel.getByNameAndDateFromFirebaseDb(customerName, dateTime.timeInMillis)
+                delay(5000)
                 adapter = ItemAdapter(data)
                 recyclerview.adapter = adapter
 
-
                 lifecycleScope.launch {
 //                    val total = mapsActivityViewModel.getTotalAmountByCustomerName(customerName)
-                    val total = mapsActivityViewModel.newAllExpensesFromTo(
+                    val total = listEntryActivityyViewModel.newAllExpensesFromTo(
                         customerName,
                         dateTime.timeInMillis
                     )
@@ -164,13 +173,18 @@ class ListEntryActivity : AppCompatActivity() {
 
     private suspend fun getALLCustomer() {
 
-        var list: List<String> = mapsActivityViewModel.getAllCustomerName()
-
+//        var list: List<String> = listEntryActivityyViewModel.getAllCustomerName()
+        var customerNames: ArrayList<String> = ArrayList()
+        var list: ArrayList<Customer> =  saveEntryViewModel.getAllCustomerFirebaseDb()
+        for (customer in list) {
+            customer.name?.let { customerNames.add(it) }
+        }
 
         val hashSet: HashSet<String> = HashSet()
-        hashSet.addAll(list!!)
+        hashSet.addAll(customerNames!!)
 
         val customerNAmes: MutableList<String> = ArrayList()
+        customerNAmes.add("Select pre selected name")
         customerNAmes.addAll(hashSet)
 
         val spinner: Spinner = findViewById(R.id.spinnerSearchCustomerName)
