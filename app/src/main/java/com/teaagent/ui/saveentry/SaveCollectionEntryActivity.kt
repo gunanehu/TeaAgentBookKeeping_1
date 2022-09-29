@@ -1,6 +1,7 @@
 package com.teaagent.ui.saveentry
 
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.domain.firemasedbEntities.PhoneUserAndCustomer
 import com.teaagent.ui.listEntries.ListTransactionsActivity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -200,6 +202,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
     private suspend fun getALLCustomerNamesToSpinner() {
         //todo start progress dialog
+        showProgressDialog()
         var customerNames: ArrayList<String> = ArrayList()
         var list: ArrayList<Customer> = mapsActivityViewModel.getAllCustomerFirebaseDb()
         for (customer in list) {
@@ -235,7 +238,22 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
                 binding.editTextCustomerName.setText("")
             }
         })
+        delay(3000)
+        dismissProgressDialog()
         spinner?.adapter = adapter
+    }
+    var mProgressDialog: ProgressDialog? =null
+    private fun showProgressDialog() {
+        if(mProgressDialog==null){
+            mProgressDialog=  ProgressDialog(this)
+        }
+        mProgressDialog?.setTitle("Loading data...")
+        mProgressDialog?.show()
+    }
+    private fun dismissProgressDialog(){
+        if(mProgressDialog!=null &&  mProgressDialog!!.isShowing ){
+            mProgressDialog?.dismiss()
+        }
     }
 
 

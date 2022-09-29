@@ -1,10 +1,13 @@
 package com.teaagent.ui.listEntries
 
+import android.app.ProgressDialog
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
+import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.repo.CustomerRepository
@@ -16,13 +19,13 @@ import kotlinx.coroutines.delay
 // 1
 class ListTransactionsViewModel(private val trackingRepository: CustomerRepository) : ViewModel() {
     val TAG: String = "ListEntryViewModel"
+    val customerNames = MutableLiveData<List<String>>()
 
 
     suspend fun getByNameAndDateFromFirebaseDb(
         customerName: String,
         startDate: Long
     ): ArrayList<String> {
-
         var customers: ArrayList<String> = ArrayList()
 
         var entryTimestampDate = startDate?.div((1000 * 60 * 60 * 24))
@@ -57,9 +60,12 @@ class ListTransactionsViewModel(private val trackingRepository: CustomerReposito
 
         job.await()
         delay(3000)
+        customerNames.postValue(customers)
         Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
         return customers
 
     }
+
+
 
 }

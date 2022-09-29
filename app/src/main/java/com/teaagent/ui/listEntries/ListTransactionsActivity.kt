@@ -1,6 +1,7 @@
 package com.teaagent.ui.listEntries
 
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -75,7 +77,14 @@ class ListTransactionsActivity : AppCompatActivity() {
 
         buttonCalender()
         sendClick()
+
+        listEntryActivityyViewModel.customerNames.observe(this, Observer { it ->
+            dismissProgressDialog()
+
+        })
+
     }
+
 
     private fun buttonCalender() {
         binding.buttonfromDate.setOnClickListener {
@@ -100,8 +109,14 @@ class ListTransactionsActivity : AppCompatActivity() {
         }
     }
 
+    var mProgressDialog: ProgressDialog? = null
     private fun searchCustomer() {
+
         binding.buttonSearchCustomerName.setOnClickListener {
+
+            showProgressDialog()
+
+
             customerName = binding.editTextSearchCustomerName.text.toString()
 
             lifecycleScope.launch {
@@ -110,11 +125,25 @@ class ListTransactionsActivity : AppCompatActivity() {
                     customerName,
                     dateTime.timeInMillis
                 )
-                delay(5000)
+
                 adapter = ItemAdapter(data)
                 recyclerview?.adapter = adapter
 
             }
+        }
+    }
+
+    private fun showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = ProgressDialog(this)
+        }
+        mProgressDialog?.setTitle("Loading data...")
+        mProgressDialog?.show()
+    }
+
+    private fun dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog!!.isShowing) {
+            mProgressDialog?.dismiss()
         }
     }
 
@@ -136,6 +165,7 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
     private suspend fun getALLCustomer() {
+        showProgressDialog()
 
         var customerNames: ArrayList<String> = ArrayList()
         var list: ArrayList<Customer> = saveEntryViewModel.getAllCustomerFirebaseDb()
@@ -173,6 +203,9 @@ class ListTransactionsActivity : AppCompatActivity() {
                 // your code here
             }
         })
+
+        delay(3000)
+        dismissProgressDialog()
         spinner.adapter = adapter
     }
 
