@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.teaagent"
-    android:versionCode="0003"
-    android:versionName="version-0003">
+    android:versionCode="0004"
+    android:versionName="version-firebase-04">
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
