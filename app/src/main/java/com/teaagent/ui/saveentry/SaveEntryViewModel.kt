@@ -14,13 +14,15 @@ import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.domain.firemasedbEntities.PhoneUserAndCustomer
 import com.teaagent.repo.CustomerRepository
+import com.teaagent.repo.FirebaseEntryAddedCallback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // 1
-class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : ViewModel() {
+class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : ViewModel(),
+    FirebaseEntryAddedCallback {
     val TAG: String = "MapsActivityViewModel"
 
     // 2
@@ -30,6 +32,11 @@ class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : V
     val currentNumberOfStepCount = MutableLiveData(0)
     var initialStepCount = 0
 
+    fun addCustomer(customer: Customer?) {
+        FirebaseUtil.setFirebaseEntryAddedCallback(this)
+        FirebaseUtil.addCustomer(customer)
+
+    }
 
     // 3
     suspend fun insert(trackingEntity: CustomerEntity): Long {
@@ -85,7 +92,7 @@ class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : V
                     for (document in task.result) {
                         var c: Customer = document.toObject(Customer::class.java)
                         customers.add(c)
-//                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
+                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
                         Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.name)
                         Log.d(FirebaseUtil.TAG, "=======================")
                     }
@@ -100,5 +107,10 @@ class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : V
         delay(3000)
         Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
         return customers
+    }
+
+    override fun onCustomerAddedSuccessfully(id: String) {
+        Log.d(TAG, "onCustomerAddedSuccessfully id "+id)
+
     }
 }

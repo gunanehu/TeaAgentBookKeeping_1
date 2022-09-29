@@ -42,7 +42,7 @@ class SaveCustomerActivity : AppCompatActivity() {
                 it.phoneUserId
             )
         }
-        FirebaseUtil.addCustomer(customer)
+        mapsActivityViewModel.addCustomer(customer)
 //        lifecycleScope.launch { FirebaseUtil.getAllCustomers() }
     }
 

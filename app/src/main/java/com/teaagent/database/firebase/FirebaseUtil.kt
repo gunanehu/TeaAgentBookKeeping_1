@@ -13,6 +13,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.domain.firemasedbEntities.PhoneUser
+import com.teaagent.repo.FirebaseEntryAddedCallback
 
 
 object FirebaseUtil {
@@ -36,7 +37,13 @@ object FirebaseUtil {
 
 
     val phoneUser: PhoneUser = getCurrentPhoneUser()
+    private var firebaseEntryAddedCallback: FirebaseEntryAddedCallback? = null
 
+    fun setFirebaseEntryAddedCallback(
+        f: FirebaseEntryAddedCallback
+    ) {
+        firebaseEntryAddedCallback = f
+    }
     fun getCurrentPhoneUser(): PhoneUser {
         return PhoneUser("1212", "Guna", "785665")
     }
@@ -63,6 +70,19 @@ object FirebaseUtil {
 
         if (customer != null) {
             tableCustomer?.add(customer)
+                ?.addOnFailureListener(OnFailureListener { e ->
+                    {
+                        Log.e(TAG, "OnSuccessListener documentReference " + e.message)
+
+                    }
+                })
+                ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
+                    Log.i(TAG, "OnSuccessListener documentReference " + documentReference.id)
+                    firebaseEntryAddedCallback?.onCustomerAddedSuccessfully(documentReference.id)
+                })
+                ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
+                    Log.i(TAG, " OnCompleteListener documentReference " + task.result.get())
+                })
         }
         /* tablePhoneUser?.addValueEventListener(object : ValueEventListener {
              override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -80,10 +100,12 @@ object FirebaseUtil {
         if (phoneUser != null) {
             tablePhoneUser?.add(phoneUser)
 
-                ?.addOnFailureListener(OnFailureListener { e -> {
-                    Log.e(TAG, "OnSuccessListener documentReference " + e.message)
+                ?.addOnFailureListener(OnFailureListener { e ->
+                    {
+                        Log.e(TAG, "OnSuccessListener documentReference " + e.message)
 
-                } })
+                    }
+                })
                 ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
                     Log.i(TAG, "OnFailureListener documentReference " + documentReference)
                 })
@@ -123,10 +145,12 @@ object FirebaseUtil {
     fun addCollectionEntry(collectionEntry: CollectionEntry?) {
         if (collectionEntry != null) {
             tableCollectionEntry?.add(collectionEntry)
-                ?.addOnFailureListener(OnFailureListener { e -> {
-                    Log.e(TAG, "OnSuccessListener documentReference " + e.message)
+                ?.addOnFailureListener(OnFailureListener { e ->
+                    {
+                        Log.e(TAG, "OnSuccessListener documentReference " + e.message)
 
-                } })
+                    }
+                })
                 ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
                     Log.i(TAG, "OnSuccessListener documentReference " + documentReference.id)
                 })

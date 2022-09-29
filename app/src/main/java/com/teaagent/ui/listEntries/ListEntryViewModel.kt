@@ -10,6 +10,7 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.CustomerEntity
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.repo.CustomerRepository
+import com.teaagent.repo.FirebaseEntryAddedCallback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -37,7 +38,8 @@ class ListEntryViewModel(private val trackingRepository: CustomerRepository) : V
         }
         return amount
     }
-//    suspend fun getCollectionByNameAndDateFromFirebaseDb(
+
+    //    suspend fun getCollectionByNameAndDateFromFirebaseDb(
 //        customerName: String,
 //        startDate: Long?
 //    ): ArrayList<String> {
@@ -75,6 +77,8 @@ class ListEntryViewModel(private val trackingRepository: CustomerRepository) : V
 //        return customers
 //
 //    }
+
+
     suspend fun getByNameAndDateFromFirebaseDb(
         customerName: String,
         startDate: Long?
