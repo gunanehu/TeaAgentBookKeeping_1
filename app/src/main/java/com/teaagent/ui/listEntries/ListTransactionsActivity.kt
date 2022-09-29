@@ -42,8 +42,8 @@ class ListTransactionsActivity : AppCompatActivity() {
     var data = ArrayList<String>()
 
     // ViewModel
-    private val listEntryActivityyViewModel: ListEntryViewModel by viewModels {
-        ListEntryViewModelFactory(getTrackingRepository())
+    private val listEntryActivityyViewModel: ListTransactionsViewModel by viewModels {
+        ListTransactionsViewModelFactory(getTrackingRepository())
     }
 
     // ViewModel
@@ -114,18 +114,6 @@ class ListTransactionsActivity : AppCompatActivity() {
                 adapter = ItemAdapter(data)
                 recyclerview?.adapter = adapter
 
-                lifecycleScope.launch {
-//                    val total = mapsActivityViewModel.getTotalAmountByCustomerName(customerName)
-                    val total = listEntryActivityyViewModel.newAllExpensesFromTo(
-                        customerName,
-                        dateTime.timeInMillis
-                    )
-                    Log.d(
-                        TAG,
-                        "total : " + total + " dateTime.timeInMillis :" + dateTime.timeInMillis
-                    );
-                    binding.totalAmount.text = "Total amount : " + total.toString()
-                }
             }
         }
     }

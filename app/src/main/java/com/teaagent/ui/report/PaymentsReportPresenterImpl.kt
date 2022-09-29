@@ -5,7 +5,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import com.teaagent.domain.CustomerEntity
-import com.teaagent.ui.listEntries.ListEntryViewModel
+import com.teaagent.ui.listEntries.ListTransactionsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import java.util.*
 class PaymentsReportPresenterImpl internal constructor(
     var context: Context,
     private val customerName: String?,
-    private val mapsActivityViewModel: ListEntryViewModel
+    private val mapsActivityViewModel: ListTransactionsViewModel
 ) {
     private lateinit var text: String
     var PAYMENT_SUMMARY_HEADER = "Payment Summary:"
@@ -66,7 +66,6 @@ class PaymentsReportPresenterImpl internal constructor(
     private fun createFile(strFile: String) {
         try {
             CoroutineScope(IO).launch {
-                getALLByCustomers()
                 OutputStreamWriter(FileOutputStream(strFile), StandardCharsets.UTF_8).use { out ->
                     val data = paymentReportData
                     out.write(data)
@@ -88,15 +87,7 @@ class PaymentsReportPresenterImpl internal constructor(
     lateinit var textFile: String
     lateinit var commonCustomerDetails: String
 
-    public suspend fun getALLByCustomers() {
-        var customers: List<CustomerEntity>;
-        if (customerName != null) {
-            customers = mapsActivityViewModel.getALLByCustomerName(customerName)
-            val customerEntity: CustomerEntity = getCommonCustomerDetail(customers.get(0))
-            textFile = setSalesSummaryDataForShare(customers)
-            commonCustomerDetails = getCommonCustomerDetailsText(customerEntity)
-        }
-    }
+
 
     private fun getCommonCustomerDetail(customerEntity: CustomerEntity): CustomerEntity {
         val customerEntity = CustomerEntity(
@@ -113,19 +104,6 @@ class PaymentsReportPresenterImpl internal constructor(
     }
 
 
-/*    //        return setFlightInfoDetailsForShare();
-    private val paymentReportData: String
-        private get() {
-            CoroutineScope(IO).launch {
-                var data = customerName?.let { mapsActivityViewModel.getALLByCustomerName(it) }
-                val customerEntity = CustomerEntity(121212121, "qwqwqwqw", 23, 23, 2323, 23, 3)
-
-                text= customerName +
-                        setFlightInfoDetailsForShare(customerEntity) +
-                        setSalesSummaryDataForShare(data as ArrayList<CustomerEntity>)
-            }
-            return  text
-        }*/
 
     /**
      * Sets the flight details to the payment report based on fli

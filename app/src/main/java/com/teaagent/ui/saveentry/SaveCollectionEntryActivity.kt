@@ -163,6 +163,8 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
         );
 
+        var entryTimestampDate = dateTime.timeInMillis?.div((1000 * 60 * 60 * 24))
+
 
         val tran = CollectionEntry(
             /*Calendar.getInstance().timeInMillis.toString(),*/
@@ -170,7 +172,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             amount,
             labourAmount,
             netTotal,
-            dateTime.timeInMillis,
+            entryTimestampDate,
             FirebaseUtil.getCurrentPhoneUser().name,
             customerName
         )

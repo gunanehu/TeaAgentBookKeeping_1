@@ -15,8 +15,8 @@ import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.databinding.ActivityReportBinding
 import com.teaagent.domain.CustomerEntity
-import com.teaagent.ui.listEntries.ListEntryViewModel
-import com.teaagent.ui.listEntries.ListEntryViewModelFactory
+import com.teaagent.ui.listEntries.ListTransactionsViewModel
+import com.teaagent.ui.listEntries.ListTransactionsViewModelFactory
 import com.teaagent.ui.saveentry.SaveEntryViewModel
 import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
 import kotlinx.coroutines.launch
@@ -28,8 +28,8 @@ class ReportActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReportBinding
 
     // ViewModel
-    private val listEntryActivityyViewModel: ListEntryViewModel by viewModels {
-        ListEntryViewModelFactory(getTrackingRepository())
+    private val listEntryActivityyViewModel: ListTransactionsViewModel by viewModels {
+        ListTransactionsViewModelFactory(getTrackingRepository())
     }
 
     // ViewModel
@@ -53,7 +53,7 @@ class ReportActivity : AppCompatActivity() {
         presenter = PaymentsReportPresenterImpl(this, customerName, listEntryActivityyViewModel)
 
         lifecycleScope.launch {
-            presenter!!.  getALLByCustomers()
+//            presenter!!.  getALLByCustomers()
             val text = presenter!!.paymentReportData
 
             val webSettings: WebSettings = binding.tvReport.getSettings()
@@ -71,9 +71,9 @@ class ReportActivity : AppCompatActivity() {
 
         binding.buttonShare.setOnClickListener {
             lifecycleScope.launch {
-                data =
-                    customerName?.let { it1 -> listEntryActivityyViewModel.getALLByCustomerName(it1) } as ArrayList<CustomerEntity>
-                emailReport()
+//                data =
+//                    customerName?.let { it1 -> listEntryActivityyViewModel.getALLByCustomerName(it1) } as ArrayList<CustomerEntity>
+//                emailReport()
             }
         }
 
