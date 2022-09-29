@@ -2,7 +2,7 @@ package com.teaagent.domain.firemasedbEntities
 
 import java.io.Serializable
 
-data class PhoneUserAndCustomer(var phoneUserId: String, var customerId: String) :
+data class PhoneUserAndCustomer(var phoneUserName: String, var customerName: String) :
     Serializable {
 
     constructor() : this("", "")

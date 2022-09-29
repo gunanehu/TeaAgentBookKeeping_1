@@ -1,5 +1,6 @@
 package com.teaagent.data
 
+import android.provider.Settings
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
@@ -10,6 +11,10 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.teaagent.AppHelper
+import com.teaagent.TeaAgentApplication
+import com.teaagent.database.TeaAgentsharedPreferenceUtil
+import com.teaagent.database.TeaAgentsharedPreferenceUtil.addToPreferenceTabId
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.domain.firemasedbEntities.PhoneUser
@@ -23,35 +28,17 @@ object FirebaseUtil {
 
 
     var firestoreDb = FirebaseFirestore.getInstance()
-
     var TAG = "FirebaseUtil"
+    val phoneUser: PhoneUser = getCurrentPhoneUser()
+    private var firebaseEntryAddedCallback: FirebaseEntryAddedCallback? = null
 
-    /*  //firebaserealdb
-      private var tablePhoneUserRealDB: DatabaseReference? = null
-      private var tableCustomerRealDB: DatabaseReference? = null*/
 
     //firebeCloudStorage
     private var tablePhoneUser: CollectionReference? = null
     private var tableCustomer: CollectionReference? = null
     private var tableCollectionEntry: CollectionReference? = null
 
-
-    val phoneUser: PhoneUser = getCurrentPhoneUser()
-    private var firebaseEntryAddedCallback: FirebaseEntryAddedCallback? = null
-
-    fun setFirebaseEntryAddedCallback(
-        f: FirebaseEntryAddedCallback
-    ) {
-        firebaseEntryAddedCallback = f
-    }
-    fun getCurrentPhoneUser(): PhoneUser {
-        return PhoneUser("1212", "Guna", "785665")
-    }
-
     init {
-        /*  tablePhoneUserRealDB = mDatabase.child("PhoneUser");
-          tableCustomerRealDB = mDatabase.child("Customer");*/
-
         tableCustomer = firestoreDb.collection("Customer")
         tablePhoneUser = firestoreDb.collection("PhoneUser")
         tableCollectionEntry = firestoreDb.collection("Transactions")
@@ -60,20 +47,19 @@ object FirebaseUtil {
     }
 
 
-    fun addCustomer(customer: Customer?) {
-        /*   val key: String? = tableCustomer?.push()?.getKey()
-           Log.v(TAG, "key " + key)
-           customer?.phoneUserId ?: phoneUser.phoneUserId
-           if (key != null) {
-               tableCustomer?.child(key)?.setValue(customer)
-           }*/
+    fun setFirebaseEntryAddedCallback(
+        f: FirebaseEntryAddedCallback
+    ) {
+        firebaseEntryAddedCallback = f
+    }
 
+
+    fun addCustomer(customer: Customer?) {
         if (customer != null) {
             tableCustomer?.add(customer)
                 ?.addOnFailureListener(OnFailureListener { e ->
                     {
                         Log.e(TAG, "OnSuccessListener documentReference " + e.message)
-
                     }
                 })
                 ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
@@ -84,62 +70,31 @@ object FirebaseUtil {
                     Log.i(TAG, " OnCompleteListener documentReference " + task.result.get())
                 })
         }
-        /* tablePhoneUser?.addValueEventListener(object : ValueEventListener {
-             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                 val map = dataSnapshot.value as Map<String, Any>?
-                 Log.d(TAG, "Value is: $map")
-             }
 
-             override fun onCancelled(error: DatabaseError) {
-                 Log.w(TAG, "Failed to read value.", error.toException())
-             }
-         })*/
     }
 
     fun addPhoneUser(phoneUser: PhoneUser?) {
-        if (phoneUser != null) {
-            tablePhoneUser?.add(phoneUser)
+        val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
-                ?.addOnFailureListener(OnFailureListener { e ->
-                    {
-                        Log.e(TAG, "OnSuccessListener documentReference " + e.message)
+        if (phoneId .equals("")) {
+            if (phoneUser != null) {
+                addToPreferenceTabId()//save to local preference such that u never call again and again/
+                // / todo check after installation to check the same phoneid in firebase
 
-                    }
-                })
-                ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
-                    Log.i(TAG, "OnFailureListener documentReference " + documentReference)
-                })
-                ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
-                    Log.i(TAG, " OnCompleteListener documentReference " + task.result)
-                })
+                tablePhoneUser?.add(phoneUser)
+                    ?.addOnFailureListener(OnFailureListener { e ->
+                        {
+                            Log.e(TAG, "addPhoneUser OnFailureListener documentReference " + e.message)
+                        }
+                    })
+                    ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
+                        Log.i(TAG, "addPhoneUser OnSuccessListener  documentReference " + documentReference)
+                    })
+                    ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
+                        Log.i(TAG, "  addPhoneUser OnCompleteListener documentReference " + task.result)
+                    })
+            }
         }
-        /*  val key: String? = tablePhoneUserRealDB?.push()?.getKey()
-          Log.v(TAG, "key " + key)
-          phoneUser?.phoneUserId ?: key
-          if (key != null) {
-              tablePhoneUserRealDB?.child(key)?.setValue(phoneUser)
-          }
-  */
-        // Read from the database
-        // Read from the database
-
-        /* tablePhoneUser?.addValueEventListener(object : ValueEventListener {
-             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                 val map = dataSnapshot.value as Map<String, Any>?
-                 Log.d(TAG, "Value is: $map")
-             }
-
-             override fun onCancelled(error: DatabaseError) {
-                 Log.w(TAG, "Failed to read value.", error.toException())
-             }
-         })*/
-    }
-
-
-    public suspend fun getAllCustomers(): Task<QuerySnapshot>? {
-        val query = tableCustomer?.whereEqualTo("phoneUserId", getCurrentPhoneUser().phoneUserId)
-        return query?.get()
-
     }
 
     fun addCollectionEntry(collectionEntry: CollectionEntry?) {
@@ -148,7 +103,6 @@ object FirebaseUtil {
                 ?.addOnFailureListener(OnFailureListener { e ->
                     {
                         Log.e(TAG, "OnSuccessListener documentReference " + e.message)
-
                     }
                 })
                 ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
@@ -160,21 +114,33 @@ object FirebaseUtil {
         }
     }
 
+    ///get calls
+
+    fun getCurrentPhoneUser(): PhoneUser {
+        return PhoneUser( AppHelper.getInstance().uniqueUserID)
+
+    }
+
+    fun getAllCustomers(): Task<QuerySnapshot>? {
+        val query = tableCustomer?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+        return query?.get()
+    }
+
     fun getByNameAndDate(customerName: String, timestamp: Long?): Task<QuerySnapshot>? {
         var entryTimestampDate = timestamp?.div((1000 * 60 * 60 * 24))
-//        var  inDbTimestampDate= timestamp?.div((1000 * 60 * 60 * 24))
+
         val query = tableCollectionEntry
 //            ?.whereEqualTo("phoneUserId", getCurrentPhoneUser().phoneUserId)
 //            ?.whereEqualTo("customerName", customerName)
-            ?.whereEqualTo("quantity", 1)
-            ?.whereEqualTo("labourAmount", 1)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+            ?.whereEqualTo("customerName", customerName)
 
 //        tableCollectionEntry?.document("CJxgOxtYCwYIyDdKkwSs")
 //            ?.collection("phoneUserAndCustomer.")?.document("hi")
 //
 
 
-//             ?.orderBy("date")?.startAt( entryTimestampDate)
+           // ?.orderBy("date")?.startAt(entryTimestampDate)
         return query?.get()
     }
 }

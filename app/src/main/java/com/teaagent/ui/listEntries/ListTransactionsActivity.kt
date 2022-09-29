@@ -15,9 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.teaagent.R
-import com.teaagent.TrackingApplication
+import com.teaagent.TeaAgentApplication
 import com.teaagent.databinding.ActivityListBinding
-import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.ui.report.ReportActivity
 import com.teaagent.ui.saveentry.SaveEntryViewModel
@@ -27,18 +26,20 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-class ListEntryActivity : AppCompatActivity() {
+class ListTransactionsActivity : AppCompatActivity() {
+    val TAG: String = "ListTransactions_Activity"
     private lateinit var customerName: String
     private var kg: Double = 0.0
     private var amount: Double = 0.0
-    val TAG: String = "ListEntryActivity"
     private lateinit var binding: ActivityListBinding
 
     // Repository
-    private fun getTrackingApplicationInstance() = application as TrackingApplication
+    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
 
     var adapter: ItemAdapter? = null
+    var dateTime = Calendar.getInstance()
+    var data = ArrayList<String>()
 
     // ViewModel
     private val listEntryActivityyViewModel: ListEntryViewModel by viewModels {
@@ -50,65 +51,38 @@ class ListEntryActivity : AppCompatActivity() {
         SaveEntryViewModelFactory(getTrackingRepository())
     }
 
-    var dateTime = Calendar.getInstance()
-    var data = ArrayList<String>()
+    var recyclerview: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Switch to AppTheme fordisplaying the activity
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = ActivityListBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        recyclerview = binding.list
+        recyclerview!!.layoutManager = LinearLayoutManager(this)
 
         lifecycleScope.launch {
             getALLCustomer()
         }
 
-        val recyclerview = findViewById<RecyclerView>(R.id.list)
-        recyclerview.layoutManager = LinearLayoutManager(this)
-
         lifecycleScope.launch {
             adapter = ItemAdapter(data)
-            // Setting the Adapter with the recyclerview
-            recyclerview.adapter = adapter
+            recyclerview?.adapter = adapter
         }
 
+        searchCustomer()
 
-        binding.buttonSearchCustomerName.setOnClickListener {
-            customerName = binding.editTextSearchCustomerName.text.toString()
+        buttonCalender()
+        sendClick()
+    }
 
-            lifecycleScope.launch {
-//                data = mapsActivityViewModel.getTListByCustomerName(customerName)
-                data = listEntryActivityyViewModel.getByNameAndDateFromFirebaseDb(customerName, dateTime.timeInMillis)
-                delay(5000)
-                adapter = ItemAdapter(data)
-                recyclerview.adapter = adapter
-
-                lifecycleScope.launch {
-//                    val total = mapsActivityViewModel.getTotalAmountByCustomerName(customerName)
-                    val total = listEntryActivityyViewModel.newAllExpensesFromTo(
-                        customerName,
-                        dateTime.timeInMillis
-                    )
-                    Log.d(
-                        TAG,
-                        "total : " + total + " dateTime.timeInMillis :" + dateTime.timeInMillis
-                    );
-                    binding.totalAmount.text = "Total amount : " + total.toString()
-                }
-            }
-        }
-
-
+    private fun buttonCalender() {
         binding.buttonfromDate.setOnClickListener {
-            // Get Current Date
-            // Get Current Date
             val c = Calendar.getInstance()
             val mYear = c[Calendar.YEAR]
             val mMonth = c[Calendar.MONTH]
             val mDay = c[Calendar.DAY_OF_MONTH]
-
 
             val datePickerDialog = DatePickerDialog(
                 this,
@@ -124,45 +98,47 @@ class ListEntryActivity : AppCompatActivity() {
             )
             datePickerDialog.show()
         }
-        binding.buttonToDate.setOnClickListener {
-            // Get Current Date
-            // Get Current Date
-            val c = Calendar.getInstance()
-            var mYear = c[Calendar.YEAR]
-            var mMonth = c[Calendar.MONTH]
-            var mDay = c[Calendar.DAY_OF_MONTH]
+    }
 
+    private fun searchCustomer() {
+        binding.buttonSearchCustomerName.setOnClickListener {
+            customerName = binding.editTextSearchCustomerName.text.toString()
 
-            val datePickerDialog = DatePickerDialog(
-                this,
-                { view, year, monthOfYear, dayOfMonth ->
-                    mYear = year
-                    mMonth = monthOfYear
-                    mDay = dayOfMonth
-                    dateTime.set(year, monthOfYear, dayOfMonth)
-                    binding.buttonfromDate.setText(dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year)
-                },
-                mYear,
-                mMonth,
-                mDay,
-            )
-            datePickerDialog.show()
+            lifecycleScope.launch {
+//                data = mapsActivityViewModel.getTListByCustomerName(customerName)
+                data = listEntryActivityyViewModel.getByNameAndDateFromFirebaseDb(
+                    customerName,
+                    dateTime.timeInMillis
+                )
+                delay(5000)
+                adapter = ItemAdapter(data)
+                recyclerview?.adapter = adapter
+
+                lifecycleScope.launch {
+//                    val total = mapsActivityViewModel.getTotalAmountByCustomerName(customerName)
+                    val total = listEntryActivityyViewModel.newAllExpensesFromTo(
+                        customerName,
+                        dateTime.timeInMillis
+                    )
+                    Log.d(
+                        TAG,
+                        "total : " + total + " dateTime.timeInMillis :" + dateTime.timeInMillis
+                    );
+                    binding.totalAmount.text = "Total amount : " + total.toString()
+                }
+            }
         }
-
-
-        sendClick()
-
     }
 
     public val ReportActivityBundleTag: String = "ReportActivityBundleTag"
 
     private fun sendClick() {
         binding.buttonShareScreen.setOnClickListener {
-            if(customerName.length>0) {
+            if (customerName.length > 0) {
                 val listActiviTyIntent = Intent(this, ReportActivity::class.java)
                 listActiviTyIntent.putExtra(ReportActivityBundleTag, customerName)
                 startActivity(listActiviTyIntent)
-            }else{
+            } else {
                 Toast.makeText(
                     this, "Please select customer ",
                     Toast.LENGTH_LONG
@@ -173,9 +149,8 @@ class ListEntryActivity : AppCompatActivity() {
 
     private suspend fun getALLCustomer() {
 
-//        var list: List<String> = listEntryActivityyViewModel.getAllCustomerName()
         var customerNames: ArrayList<String> = ArrayList()
-        var list: ArrayList<Customer> =  saveEntryViewModel.getAllCustomerFirebaseDb()
+        var list: ArrayList<Customer> = saveEntryViewModel.getAllCustomerFirebaseDb()
         for (customer in list) {
             customer.name?.let { customerNames.add(it) }
         }
@@ -184,7 +159,7 @@ class ListEntryActivity : AppCompatActivity() {
         hashSet.addAll(customerNames!!)
 
         val customerNAmes: MutableList<String> = ArrayList()
-        customerNAmes.add("Select pre selected name")
+        customerNAmes.add("Select name")
         customerNAmes.addAll(hashSet)
 
         val spinner: Spinner = findViewById(R.id.spinnerSearchCustomerName)

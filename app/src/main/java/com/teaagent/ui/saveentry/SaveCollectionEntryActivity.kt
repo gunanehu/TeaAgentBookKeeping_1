@@ -14,14 +14,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.teaagent.R
-import com.teaagent.TrackingApplication
+import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityMainBinding
 import com.teaagent.databinding.ActivityMainBinding.inflate
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.domain.firemasedbEntities.PhoneUserAndCustomer
-import com.teaagent.ui.listEntries.ListEntryActivity
+import com.teaagent.ui.listEntries.ListTransactionsActivity
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,7 +37,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     private var advancedPaymentAmount: Long = 0
     var labourAmount: Long = 0
     var netTotal: Long = 0
-    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
+//    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
     private var totalKgAmount: Long = 0
 
     val TAG: String = "SaveCollectionEntryActivity"
@@ -47,27 +47,6 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     private val mapsActivityViewModel: SaveEntryViewModel by viewModels {
         SaveEntryViewModelFactory(getTrackingRepository())
     }
-
-
-//        if (trackingEntity != null && customerName != null)
-    //        {
-//            Log.v(TAG, trackingEntity.toString())
-//            lifecycleScope.launch {
-//                val index: Long = mapsActivityViewModel.insert(trackingEntity)
-//                if (index > 0) {
-//                    Toast.makeText(
-//                        applicationContext,
-//                        "value added index" + index, Toast.LENGTH_SHORT
-//                    ).show()
-//                    clearEditTextValues()
-//                } else {
-//                    Toast.makeText(
-//                        applicationContext,
-//                        "value not added returned >> "+index, Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
-//        }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,10 +62,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             getALLCustomerNamesToSpinner()
         }
 
-        val packageInfo = this.packageManager.getPackageInfo(packageName, 0)
-        val versionCode = packageInfo.versionCode
-        val version = packageInfo.versionName
-        binding.version.setText(version)
+        showAppVersion()
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
@@ -106,16 +82,9 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
                 showErrorMesage()
             }
         }
-        /* binding.buttonSearchCustomerName.setOnClickListener {
-             val customerName = binding.editTextSearchCustomerName.text.toString()
-             lifecycleScope.launch {
-                 val total = mapsActivityViewModel.getAllEntitiesByCustomerName(customerName)
-                 Log.d(TAG, "total : " + total);
-                 binding.tViewSearchCustomerNameResult.text = total.toString()
-             }
-         }*/
+
         binding.endButton.setOnClickListener {
-            val listActiviTyIntent = Intent(this, ListEntryActivity::class.java)
+            val listActiviTyIntent = Intent(this, ListTransactionsActivity::class.java)
             startActivity(listActiviTyIntent)
         }
         // 1
@@ -146,10 +115,17 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         }
     }
 
+    private fun showAppVersion() {
+        val packageInfo = this.packageManager.getPackageInfo(packageName, 0)
+        val versionCode = packageInfo.versionCode
+        val version = packageInfo.versionName
+        binding.version.setText(version)
+    }
+
     var dateTime = Calendar.getInstance()
 
     // Repository
-    private fun getTrackingApplicationInstance() = application as TrackingApplication
+    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
 
     private fun clearEditTextValues() {
@@ -186,17 +162,17 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             TAG,
             "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
         );
-        phoneUserAndCustomer =
-            PhoneUserAndCustomer(FirebaseUtil.getCurrentPhoneUser().phoneUserId, customerName)
+
 
         val tran = CollectionEntry(
-            Calendar.getInstance().timeInMillis.toString(),
+            /*Calendar.getInstance().timeInMillis.toString(),*/
             kg,
             amount,
             labourAmount,
             netTotal,
             dateTime.timeInMillis,
-            phoneUserAndCustomer
+            FirebaseUtil.getCurrentPhoneUser().name,
+            customerName
         )
         return tran
     }
@@ -221,6 +197,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
 
     private suspend fun getALLCustomerNamesToSpinner() {
+        //todo start progress dialog
         var customerNames: ArrayList<String> = ArrayList()
         var list: ArrayList<Customer> = mapsActivityViewModel.getAllCustomerFirebaseDb()
         for (customer in list) {
@@ -229,42 +206,6 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
         val hashSet: HashSet<String> = HashSet()
         hashSet.addAll(customerNames!!)
-
-        val customerNAmes: MutableList<String> = ArrayList()
-        customerNAmes.add("Select pre selected name")
-        customerNAmes.addAll(hashSet)
-
-        spinner = findViewById(R.id.spinnerSearchCustomerName)
-        val adapter: ArrayAdapter<Any?> =
-            ArrayAdapter<Any?>(
-                this, android.R.layout.simple_spinner_dropdown_item,
-                customerNAmes!! as List<Any?>
-            )
-        spinner?.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View?,
-                position: Int,
-                id: Long
-            ) {
-                customerName = customerNAmes?.get(position).toString()
-                Log.d(TAG, "onItemSelected customerName " + customerName)
-                binding.editTextCustomerName.setText(customerName)
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {
-                binding.editTextCustomerName.setText("")
-            }
-        })
-        spinner?.adapter = adapter
-    }
-
-    private suspend fun getALLCustomerRoomDb() {
-
-        var list: List<String> = mapsActivityViewModel.getAllCustomerNameRoomDb()
-
-        val hashSet: HashSet<String> = HashSet()
-        hashSet.addAll(list!!)
 
         val customerNAmes: MutableList<String> = ArrayList()
         customerNAmes.add("Select pre selected name")

@@ -12,7 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.teaagent.R
-import com.teaagent.TrackingApplication
+import com.teaagent.TeaAgentApplication
 import com.teaagent.databinding.ActivityReportBinding
 import com.teaagent.domain.CustomerEntity
 import com.teaagent.ui.listEntries.ListEntryViewModel
@@ -37,7 +37,7 @@ class ReportActivity : AppCompatActivity() {
         SaveEntryViewModelFactory(getTrackingRepository())
     }
     var presenter: PaymentsReportPresenterImpl? = null
-    private fun getTrackingApplicationInstance() = application as TrackingApplication
+    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
     var data = ArrayList<CustomerEntity>()
     public val ReportActivityBundleTag: String = "ReportActivityBundleTag"

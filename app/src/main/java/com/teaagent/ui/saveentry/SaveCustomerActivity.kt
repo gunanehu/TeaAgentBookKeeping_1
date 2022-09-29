@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.teaagent.R
-import com.teaagent.TrackingApplication
+import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
 import com.teaagent.domain.firemasedbEntities.Customer
@@ -21,11 +21,18 @@ import java.util.*
  * Main Screen
  */
 class SaveCustomerActivity : AppCompatActivity() {
-    private lateinit var customerName: String
-    private lateinit var additionalInfo: String
-
 
     val TAG: String = "SaveCustomerActivity"
+
+    private lateinit var customerName: String
+    private lateinit var additionalInfo: String
+    var spinner: Spinner? = null
+    var dateTime = Calendar.getInstance()
+
+    // Repository
+    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
+    private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
+
     private lateinit var binding: ActivitySaveCustomerBinding
 
     // ViewModel
@@ -33,18 +40,6 @@ class SaveCustomerActivity : AppCompatActivity() {
         SaveEntryViewModelFactory(getTrackingRepository())
     }
 
-    fun addCustomer(customerEntity: Customer?) {
-        val customer = customerEntity?.let {
-            Customer(
-                dateTime.timeInMillis.toString(),
-                it.name,
-                it.AdditionalInfo,
-                it.phoneUserId
-            )
-        }
-        mapsActivityViewModel.addCustomer(customer)
-//        lifecycleScope.launch { FirebaseUtil.getAllCustomers() }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -73,7 +68,10 @@ class SaveCustomerActivity : AppCompatActivity() {
             startActivity(listActiviTyIntent)
         }
 
+        initialiseCalender()
+    }
 
+    private fun initialiseCalender() {
         binding.buttonsetDate.setOnClickListener {
             val c = Calendar.getInstance()
             val mYear = c[Calendar.YEAR]
@@ -97,11 +95,18 @@ class SaveCustomerActivity : AppCompatActivity() {
         }
     }
 
-    var dateTime = Calendar.getInstance()
 
-    // Repository
-    private fun getTrackingApplicationInstance() = application as TrackingApplication
-    private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
+    fun addCustomer(customerEntity: Customer?) {
+        val customer = customerEntity?.let {
+            Customer(
+             /*   dateTime.timeInMillis.toString(),*/
+                it.name,
+                it.AdditionalInfo,
+                it.phoneUserName
+            )
+        }
+        mapsActivityViewModel.addCustomer(customer)
+    }
 
     private fun clearEditTextValues() {
         binding.editTextCustomerName.setText("")
@@ -116,10 +121,10 @@ class SaveCustomerActivity : AppCompatActivity() {
         customerName = binding.editTextCustomerName.text.toString()
         additionalInfo = binding.editTextAdditionalInfo.text.toString()
         return Customer(
-            dateTime.timeInMillis.toString(),
+      /*      dateTime.timeInMillis.toString(),*/
             customerName,
             additionalInfo,
-            FirebaseUtil.phoneUser.phoneUserId
+            FirebaseUtil.phoneUser.name
         )
     }
 
@@ -137,9 +142,6 @@ class SaveCustomerActivity : AppCompatActivity() {
 
         val show = builder.show()
     }
-
-    var spinner: Spinner? = null
-
 
 
 }
