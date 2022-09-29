@@ -1,11 +1,11 @@
-# RW Android Tutorial
+# Tea agent collection bookkeeping Android appp
 
 Sample Android app
 
 ## License
 
 ```
-Copyright (c) 2021 Razeware LLC
+Copyright (c) 2021 Tea agent LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
