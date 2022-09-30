@@ -23,7 +23,7 @@ import com.teaagent.repo.FirebaseEntryAddedCallback
 
 object FirebaseUtil {
     var mDatabase =
-        FirebaseDatabase.getInstance("https://teaagentbookkeeping-default-rtdb.asia-southeast1.firebasedatabase.app")
+        FirebaseDatabase.getInstance(/*"https://teaagentbookkeeping-default-rtdb.asia-southeast1.firebasedatabase.app"*/)
             .getReference();
 
 

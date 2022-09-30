@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "255380083216",
+    "project_id": "teaagent-prod",
+    "storage_bucket": "teaagent-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255380083216:android:c84389772353b7ee93f095",
+        "android_client_info": {
+          "package_name": "com.teaagent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255380083216-9pjb48thaugm4neuc2q2h9u9desqqjh8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGUyyttQrwrR360LwqYs_jyxidELGcNWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255380083216-9pjb48thaugm4neuc2q2h9u9desqqjh8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
