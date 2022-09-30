@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
+import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
 import com.teaagent.domain.firemasedbEntities.Customer
 import java.text.SimpleDateFormat
@@ -45,13 +46,16 @@ class SaveCustomerActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = ActivitySaveCustomerBinding.inflate(layoutInflater)
-
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
         val view = binding.root
         setContentView(view)
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
         binding.todaysDate.setText("currentDate : " + currentDate)
+
+        val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
+        binding.version.setText("Logged in user : " + phoneId)
 
         // Set up button click events
         binding.saveCustomerButton.setOnClickListener {
@@ -99,7 +103,7 @@ class SaveCustomerActivity : AppCompatActivity() {
     fun addCustomer(customerEntity: Customer?) {
         val customer = customerEntity?.let {
             Customer(
-             /*   dateTime.timeInMillis.toString(),*/
+                /*   dateTime.timeInMillis.toString(),*/
                 it.name,
                 it.AdditionalInfo,
                 it.phoneUserName
@@ -121,7 +125,7 @@ class SaveCustomerActivity : AppCompatActivity() {
         customerName = binding.editTextCustomerName.text.toString()
         additionalInfo = binding.editTextAdditionalInfo.text.toString()
         return Customer(
-      /*      dateTime.timeInMillis.toString(),*/
+            /*      dateTime.timeInMillis.toString(),*/
             customerName,
             additionalInfo,
             FirebaseUtil.phoneUser.name

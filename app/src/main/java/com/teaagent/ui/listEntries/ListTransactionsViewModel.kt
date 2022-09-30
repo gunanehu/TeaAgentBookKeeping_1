@@ -17,27 +17,34 @@ import kotlinx.coroutines.async
 class ListTransactionsViewModel(private val trackingRepository: CustomerRepository) : ViewModel() {
     val TAG: String = "ListEntryViewModel"
     val customerNames = MutableLiveData<List<String>>()
+    val customerEntities = MutableLiveData<List<CollectionEntry>>()
 
 
     suspend fun getByNameAndDateFromFirebaseDb(
         customerName: String,
         startDate: Long
     )/*: ArrayList<String> */ {
-        var customers: ArrayList<String> = ArrayList()
+        var customers: ArrayList<CollectionEntry> = ArrayList()
+//        var customers: ArrayList<String> = ArrayList()
 
-        var entryTimestampDate = startDate?.div((1000 * 60 * 60 * 24))
+        var entryTimestampDate = startDate
 
 
         val job = GlobalScope.async {
             var task: Task<QuerySnapshot>? =
-                FirebaseUtil.getByNameAndDate(customerName, entryTimestampDate)
+                FirebaseUtil.getByNameAndDate(
+                    customerName,
+                    CollectionEntry.convertDate(entryTimestampDate)
+                )
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
 
                         var c: CollectionEntry = document.toObject(CollectionEntry::class.java)
 
-                        customers.add(c.toString())
+//                        customers.add(c.toString())
+                        customers.add(c)
+
 //                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
                         Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
                         Log.d(FirebaseUtil.TAG, "netTotal" + " => " + c.netTotal)
@@ -48,14 +55,14 @@ class ListTransactionsViewModel(private val trackingRepository: CustomerReposito
                 }
             })
             task?.addOnSuccessListener { it ->
-                Log.d(FirebaseUtil.TAG, "*****************addOnSuccessListener ********************* customers $customers")
-                customerNames.postValue(customers)
+                Log.d(
+                    FirebaseUtil.TAG,
+                    "*****************addOnSuccessListener ********************* customers $customers"
+                )
+//                customerNames.postValue(customers)
+                customerEntities.postValue(customers)
             }
         }
-
-        job.await()
-
     }
-
 
 }

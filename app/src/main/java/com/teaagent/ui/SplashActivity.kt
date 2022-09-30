@@ -2,6 +2,7 @@ package com.teaagent.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.teaagent.databinding.ActivitySplashBinding
 import com.teaagent.ui.saveentry.SaveCustomerActivity
@@ -9,6 +10,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SplashActivity : AppCompatActivity() {
@@ -22,9 +26,15 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
+
         showAppVersion()
         activityScope.launch {
             delay(1000)
+
+
+
 
             var intent = Intent(this@SplashActivity, SaveCustomerActivity::class.java)
             startActivity(intent)

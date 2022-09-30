@@ -42,6 +42,7 @@ class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : V
                 it.labourAmount,
                 it.netTotal,
                 it.timestamp,
+                CollectionEntry.convertDate(it.timestamp),
                 it?.phoneUserName,
                 it?.customerName
             )

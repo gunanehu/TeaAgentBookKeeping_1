@@ -14,19 +14,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
-import com.teaagent.databinding.ActivityMainBinding
-import com.teaagent.databinding.ActivityMainBinding.inflate
+import com.teaagent.databinding.ActivitySaveCollectionBinding
+import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
-import com.teaagent.domain.firemasedbEntities.PhoneUserAndCustomer
 import com.teaagent.ui.listEntries.ListTransactionsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,11 +39,12 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     private var advancedPaymentAmount: Long = 0
     var labourAmount: Long = 0
     var netTotal: Long = 0
-//    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
+
+    //    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
     private var totalKgAmount: Long = 0
 
     val TAG: String = "SaveCollectionEntryActivity"
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivitySaveCollectionBinding
 
     // ViewModel
     private val mapsActivityViewModel: SaveEntryViewModel by viewModels {
@@ -60,26 +58,27 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
         val view = binding.root
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
+
         setContentView(view)
 
         showProgressDialog()
-      GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
-          mapsActivityViewModel.getAllCustomerFirebaseDb()
+        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            mapsActivityViewModel.getAllCustomerFirebaseDb()
         }
 
 
-        mapsActivityViewModel.customersLiveData.observe(this, Observer(){it ->
+        mapsActivityViewModel.customersLiveData.observe(this, Observer() { it ->
 
 
-                getALLCustomerNamesToSpinner(it as ArrayList<Customer>)
+            getALLCustomerNamesToSpinner(it as ArrayList<Customer>)
 
             dismissProgressDialog()
         })
-        showAppVersion()
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
-        binding.todaysDate.setText("currentDate : " + currentDate)
+        binding.todaysDate.setText(currentDate)
 
         // Set up button click events
         binding.saveButton.setOnClickListener {
@@ -117,6 +116,21 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
                 this,
                 { view, year, monthOfYear, dayOfMonth ->
                     dateTime.set(mYear, monthOfYear, dayOfMonth)
+
+
+                    /*   val date = Date()
+                       val stamp: Date = Timestamp(date.time)
+
+                       val ft = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                       val date1String = ft.format(date)
+                       val date2String = ft.format(stamp)
+
+                       val date1 = ft.parse(date1String)
+                       val date2 = ft.parse(date2String)*/
+
+
+
+
                     binding.todaysDate.text =
                         dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
                 },
@@ -128,12 +142,6 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAppVersion() {
-        val packageInfo = this.packageManager.getPackageInfo(packageName, 0)
-        val versionCode = packageInfo.versionCode
-        val version = packageInfo.versionName
-        binding.version.setText(version)
-    }
 
     var dateTime = Calendar.getInstance()
 
@@ -176,7 +184,8 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
         );
 
-        var entryTimestampDate = dateTime.timeInMillis?.div((1000 * 60 * 60 * 24))
+        var entryTimestampDate = dateTime.timeInMillis
+        var entryConvertedDate = CollectionEntry.convertDate(dateTime.timeInMillis)
 
 
         val tran = CollectionEntry(
@@ -185,7 +194,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             amount,
             labourAmount,
             netTotal,
-            entryTimestampDate,
+            entryTimestampDate, entryConvertedDate,
             FirebaseUtil.getCurrentPhoneUser().name,
             customerName
         )
@@ -211,7 +220,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     var spinner: Spinner? = null
 
 
-    private  fun getALLCustomerNamesToSpinner( list: ArrayList<Customer> ) {
+    private fun getALLCustomerNamesToSpinner(list: ArrayList<Customer>) {
         //todo start progress dialog
         var customerNames: ArrayList<String> = ArrayList()
 //        var list: ArrayList<Customer> =
@@ -252,16 +261,18 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
         spinner?.adapter = adapter
     }
-    var mProgressDialog: ProgressDialog? =null
+
+    var mProgressDialog: ProgressDialog? = null
     private fun showProgressDialog() {
-        if(mProgressDialog==null){
-            mProgressDialog=  ProgressDialog(this)
+        if (mProgressDialog == null) {
+            mProgressDialog = ProgressDialog(this)
         }
         mProgressDialog?.setTitle("Loading data...")
         mProgressDialog?.show()
     }
-    private fun dismissProgressDialog(){
-        if(mProgressDialog!=null &&  mProgressDialog!!.isShowing ){
+
+    private fun dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog!!.isShowing) {
             mProgressDialog?.dismiss()
         }
     }

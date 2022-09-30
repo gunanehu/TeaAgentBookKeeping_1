@@ -19,7 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
-import com.teaagent.databinding.ActivityListBinding
+import com.teaagent.databinding.ActivityShowTxListBinding
+import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.ui.report.ReportActivity
 import com.teaagent.ui.saveentry.SaveEntryViewModel
@@ -31,11 +32,11 @@ import java.util.*
 
 
 class ListTransactionsActivity : AppCompatActivity() {
-    val TAG: String = "ListTransactions_Activity"
+    val TAG: String = "ListTransactions"
     private lateinit var customerName: String
     private var kg: Double = 0.0
     private var amount: Double = 0.0
-    private lateinit var binding: ActivityListBinding
+    private lateinit var binding: ActivityShowTxListBinding
 
     // Repository
     private fun getTrackingApplicationInstance() = application as TeaAgentApplication
@@ -60,8 +61,10 @@ class ListTransactionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        binding = ActivityListBinding.inflate(layoutInflater)
+        binding = ActivityShowTxListBinding.inflate(layoutInflater)
         val view = binding.root
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
+
         setContentView(view)
         recyclerview = binding.list
         recyclerview!!.layoutManager = LinearLayoutManager(this)
@@ -76,22 +79,33 @@ class ListTransactionsActivity : AppCompatActivity() {
             dismissProgressDialog()
         })
 
-        showProgressDialog()
         searchTransactions()
 
         buttonCalender()
         sendClick()
 
-        listEntryActivityyViewModel.customerNames.observe(this, Observer { it ->
-            dismissProgressDialog()
-            Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
+        /* listEntryActivityyViewModel.customerNames.observe(this, Observer { it ->
+             dismissProgressDialog()
+             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
-            adapter = ItemAdapter(it as ArrayList<String>)
-            recyclerview?.adapter = adapter
-        }
-        )
+             adapter = ItemAdapter(it as ArrayList<String>)
+             recyclerview?.adapter = adapter
+         }
+         )*/
+
+
     }
 
+    var total: Long = 0
+    private fun convertCustomersToString(customers: ArrayList<CollectionEntry>): ArrayList<String> {
+        total = 0
+        var customerString: ArrayList<String> = ArrayList()
+        for (customer in customers) {
+            customerString.add(customer.toString())
+            total = total + customer.netTotal
+        }
+        return customerString
+    }
 
     private fun buttonCalender() {
         binding.buttonfromDate.setOnClickListener {
@@ -118,20 +132,30 @@ class ListTransactionsActivity : AppCompatActivity() {
 
     var mProgressDialog: ProgressDialog? = null
     private fun searchTransactions() {
+        showProgressDialog()
         binding.buttonSearchCustomerName.setOnClickListener {
-            customerName = binding.editTextSearchCustomerName.text.toString()
 
             GlobalScope.launch(Dispatchers.Main) {
-//                data = mapsActivityViewModel.getTListByCustomerName(customerName)
                 listEntryActivityyViewModel.getByNameAndDateFromFirebaseDb(
                     customerName,
                     dateTime.timeInMillis
                 )
-
-//                adapter = ItemAdapter(data)
-//                recyclerview?.adapter = adapter
             }
         }
+
+
+        listEntryActivityyViewModel.customerEntities.observe(this, Observer { it ->
+            Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
+
+            var customerString: ArrayList<String> =
+                convertCustomersToString(it as ArrayList<CollectionEntry>)
+            adapter = ItemAdapter(customerString)
+            recyclerview?.adapter = adapter
+
+            binding.totalAmount.setText("Total amount : " + total)
+            dismissProgressDialog()
+
+        })
     }
 
     private fun showProgressDialog() {
@@ -194,16 +218,12 @@ class ListTransactionsActivity : AppCompatActivity() {
             ) {
                 customerName = customerNAmes?.get(position).toString()
                 Log.d(TAG, "onItemSelected customerName " + customerName)
-                binding.editTextSearchCustomerName.setText(customerName)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
                 // your code here
             }
         })
-
-//        delay(3000)
-        dismissProgressDialog()
         spinner.adapter = adapter
     }
 

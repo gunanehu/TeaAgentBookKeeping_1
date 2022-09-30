@@ -11,6 +11,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.type.Date
 import com.teaagent.AppHelper
 import com.teaagent.TeaAgentApplication
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
@@ -126,7 +127,7 @@ object FirebaseUtil {
         return query?.get()
     }
 
-    fun getByNameAndDate(customerName: String, timestamp: Long): Task<QuerySnapshot>? {
+    fun getByNameAndDate(customerName: String, convertedTimestampDate: String): Task<QuerySnapshot>? {
 //        var entryTimestampDate = timestamp?.div((1000 * 60 * 60 * 24))
 
         val query = tableCollectionEntry
@@ -134,7 +135,7 @@ object FirebaseUtil {
 //            ?.whereEqualTo("customerName", customerName)
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
             ?.whereEqualTo("customerName", customerName)
-            ?.whereEqualTo("timestamp", timestamp)
+            ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
 
         return query?.get()
     }
