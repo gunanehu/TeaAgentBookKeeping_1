@@ -45,7 +45,7 @@ class SaveCustomerActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = ActivitySaveCustomerBinding.inflate(layoutInflater)
-
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
         val view = binding.root
         setContentView(view)
 

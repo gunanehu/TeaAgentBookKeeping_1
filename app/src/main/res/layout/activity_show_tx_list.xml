@@ -10,47 +10,68 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="List "
+        android:text="Show Transactions"
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <Spinner
-        android:id="@+id/spinnerSearchCustomerName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
 
-    <EditText
-        android:id="@+id/editTextSearchCustomerName"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Customer name "
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinnerSearchCustomerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:ems="10"
-        android:hint="search by Customer Name"
-        android:inputType="text"
-        android:visibility="gone" />
+        android:orientation="horizontal"
+        android:weightSum="2">
 
+        <Button
+            android:id="@+id/buttonfromDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="select Date"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/buttonfromDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="select Date"
-        android:textAllCaps="false" />
+        <TextView
+            android:id="@+id/tViewFromDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="FromDate"
+            android:textSize="15sp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tViewFromDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:textSize="20dp"
-        android:hint="FromDate" />
 
     <Button
         android:id="@+id/buttonToDate"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -59,7 +80,6 @@
 
     <TextView
         android:id="@+id/tViewtoDate"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -71,9 +91,15 @@
         android:id="@+id/buttonSearchCustomerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="Search Customer Name"
-        android:textAllCaps="false" />
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="Search Customer Transactions "
+        android:textAllCaps="false"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/total_amount"
@@ -85,14 +111,16 @@
         android:inputType="number"
         android:textSize="24sp"
         android:textStyle="bold" />
+
     <Button
         android:id="@+id/buttonShareScreen"
-        android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="go to Share Screen"
-        />
+        android:textAllCaps="false"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
