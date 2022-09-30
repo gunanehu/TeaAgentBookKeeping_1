@@ -58,13 +58,8 @@ class ListTransactionsViewModel(private val trackingRepository: CustomerReposito
                 )
 //                customerNames.postValue(customers)
                 customerEntities.postValue(customers)
-
             }
         }
-
-        job.await()
-
     }
-
 
 }

@@ -20,7 +20,6 @@ import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTxListBinding
-import com.teaagent.domain.CustomerEntity
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.ui.report.ReportActivity
@@ -80,7 +79,6 @@ class ListTransactionsActivity : AppCompatActivity() {
             dismissProgressDialog()
         })
 
-        showProgressDialog()
         searchTransactions()
 
         buttonCalender()
@@ -95,21 +93,12 @@ class ListTransactionsActivity : AppCompatActivity() {
          }
          )*/
 
-        listEntryActivityyViewModel.customerEntities.observe(this, Observer { it ->
-            dismissProgressDialog()
-            Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
-            var customerString: ArrayList<String> =
-                convertCustomersToString(it as ArrayList<CollectionEntry>)
-            adapter = ItemAdapter(customerString)
-            recyclerview?.adapter = adapter
-
-            binding.totalAmount.setText("Total amount : " + total)
-        })
     }
 
     var total: Long = 0
     private fun convertCustomersToString(customers: ArrayList<CollectionEntry>): ArrayList<String> {
+        total = 0
         var customerString: ArrayList<String> = ArrayList()
         for (customer in customers) {
             customerString.add(customer.toString())
@@ -143,6 +132,7 @@ class ListTransactionsActivity : AppCompatActivity() {
 
     var mProgressDialog: ProgressDialog? = null
     private fun searchTransactions() {
+        showProgressDialog()
         binding.buttonSearchCustomerName.setOnClickListener {
 
             GlobalScope.launch(Dispatchers.Main) {
@@ -152,6 +142,20 @@ class ListTransactionsActivity : AppCompatActivity() {
                 )
             }
         }
+
+
+        listEntryActivityyViewModel.customerEntities.observe(this, Observer { it ->
+            Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
+
+            var customerString: ArrayList<String> =
+                convertCustomersToString(it as ArrayList<CollectionEntry>)
+            adapter = ItemAdapter(customerString)
+            recyclerview?.adapter = adapter
+
+            binding.totalAmount.setText("Total amount : " + total)
+            dismissProgressDialog()
+
+        })
     }
 
     private fun showProgressDialog() {
@@ -220,7 +224,6 @@ class ListTransactionsActivity : AppCompatActivity() {
                 // your code here
             }
         })
-        dismissProgressDialog()
         spinner.adapter = adapter
     }
 
