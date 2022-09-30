@@ -14,23 +14,26 @@ data class CollectionEntry(
     var phoneUserName: String?,
     var customerName: String
 ) :
-    Serializable{
+    Serializable {
 
-    constructor() : this(/*"",*/ 0,0,0,0,0,"","")
+    constructor() : this(/*"",*/ 0, 0, 0, 0, 0, "", "")
 
     override fun toString(): String {
-        return "Name : " + customerName + " | " +
+        /* "Name : " + customerName + " | " +*/
 //                " phoneUserName : " + phoneUserName + " | " +
-                " Quantity : " + quantity + " | " +
-                " amount : " + amount + " | " +
-                " total : " + netTotal + " | " +
-                " labourAmount : " + labourAmount + " | " +
-                " Date :" + convertDate(timestamp)
+        return  "|| " + convertDate(timestamp) +
+                "| Quantity : " + quantity + "* " +
+                " amount : " + amount + " - " +
+                " labourAmount : " + labourAmount + "= " +
+                " total : " + netTotal
+
+
     }
 
 
     fun convertDate(timestamp: Long): String {
-        val timeD = Date(timestamp*(1000 * 60 * 60 * 24)) //as we were dividing with the same (1000 * 60 * 60 * 24), so now multiply
+        val timeD =
+            Date(timestamp * (1000 * 60 * 60 * 24)) //as we were dividing with the same (1000 * 60 * 60 * 24), so now multiply
         val sdf = SimpleDateFormat("dd/M/yyyy")
         val time: String = sdf.format(timeD)
         return time

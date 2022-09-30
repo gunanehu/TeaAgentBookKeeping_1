@@ -20,6 +20,8 @@ import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTxListBinding
+import com.teaagent.domain.CustomerEntity
+import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.ui.report.ReportActivity
 import com.teaagent.ui.saveentry.SaveEntryViewModel
@@ -84,16 +86,37 @@ class ListTransactionsActivity : AppCompatActivity() {
         buttonCalender()
         sendClick()
 
-        listEntryActivityyViewModel.customerNames.observe(this, Observer { it ->
+        /* listEntryActivityyViewModel.customerNames.observe(this, Observer { it ->
+             dismissProgressDialog()
+             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
+
+             adapter = ItemAdapter(it as ArrayList<String>)
+             recyclerview?.adapter = adapter
+         }
+         )*/
+
+        listEntryActivityyViewModel.customerEntities.observe(this, Observer { it ->
             dismissProgressDialog()
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
-            adapter = ItemAdapter(it as ArrayList<String>)
+            var customerString: ArrayList<String> =
+                convertCustomersToString(it as ArrayList<CollectionEntry>)
+            adapter = ItemAdapter(customerString)
             recyclerview?.adapter = adapter
-        }
-        )
+
+            binding.totalAmount.setText("Total amount : " + total)
+        })
     }
 
+    var total: Long = 0
+    private fun convertCustomersToString(customers: ArrayList<CollectionEntry>): ArrayList<String> {
+        var customerString: ArrayList<String> = ArrayList()
+        for (customer in customers) {
+            customerString.add(customer.toString())
+            total = total + customer.netTotal
+        }
+        return customerString
+    }
 
     private fun buttonCalender() {
         binding.buttonfromDate.setOnClickListener {
