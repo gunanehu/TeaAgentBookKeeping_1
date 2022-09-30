@@ -13,14 +13,13 @@ import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.repo.CustomerRepository
 import com.teaagent.repo.FirebaseEntryAddedCallback
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 
 // 1
 class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : ViewModel(),
     FirebaseEntryAddedCallback {
     val TAG: String = "MapsActivityViewModel"
+    val customersLiveData = MutableLiveData<List<Customer>>()
 
     // 2
     val allTrackingEntities: LiveData<List<CustomerEntity>> = trackingRepository.allTrackingEntities
@@ -51,7 +50,7 @@ class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : V
 
     }
 
-    suspend fun getAllCustomerFirebaseDb(): ArrayList<Customer> {
+    suspend fun getAllCustomerFirebaseDb()/*: ArrayList<Customer>*/ {
         var customers: ArrayList<Customer> = ArrayList()
         var task: Task<QuerySnapshot>? = FirebaseUtil.getAllCustomers()
 
@@ -71,15 +70,34 @@ class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : V
                 }
             })
         }
+        task?.addOnSuccessListener { it ->
+            Log.d(FirebaseUtil.TAG, "*****************addOnSuccessListener ********************* customers $customers")
+            customersLiveData.postValue(customers)
+        }
 
         job.await()
-        delay(3000)
-        Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
-        return customers
+//        delay(3000)
+//        return customers
     }
 
     override fun onCustomerAddedSuccessfully(id: String) {
         Log.d(TAG, "onCustomerAddedSuccessfully id " + id)
 
     }
-}
+
+   /* suspend fun getUIAllCustomerFirebaseDb(): ArrayList<Customer> {
+        var customers: ArrayList<Customer> = ArrayList()
+
+        val value = GlobalScope.async { // creates worker thread
+            withContext(Dispatchers.Default) {
+                customers = getAllCustomerFirebaseDb()
+            }
+        }
+        value.await() //waits for workerthread to finish
+        //runs on ui thread as calling function is on Dispatchers.main
+        customersLiveData.postValue(customers)
+        Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
+        return customers
+    }*/
+    }
+

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
@@ -23,6 +24,8 @@ import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.domain.firemasedbEntities.PhoneUserAndCustomer
 import com.teaagent.ui.listEntries.ListTransactionsActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -59,11 +62,19 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        lifecycleScope.launch {
-//            getALLCustomerRoomDb()
-            getALLCustomerNamesToSpinner()
+        showProgressDialog()
+      GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+          mapsActivityViewModel.getAllCustomerFirebaseDb()
         }
 
+
+        mapsActivityViewModel.customersLiveData.observe(this, Observer(){it ->
+
+
+                getALLCustomerNamesToSpinner(it as ArrayList<Customer>)
+
+            dismissProgressDialog()
+        })
         showAppVersion()
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
@@ -200,11 +211,11 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     var spinner: Spinner? = null
 
 
-    private suspend fun getALLCustomerNamesToSpinner() {
+    private  fun getALLCustomerNamesToSpinner( list: ArrayList<Customer> ) {
         //todo start progress dialog
-        showProgressDialog()
         var customerNames: ArrayList<String> = ArrayList()
-        var list: ArrayList<Customer> = mapsActivityViewModel.getAllCustomerFirebaseDb()
+//        var list: ArrayList<Customer> =
+
         for (customer in list) {
             customer.name?.let { customerNames.add(it) }
         }
@@ -238,8 +249,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
                 binding.editTextCustomerName.setText("")
             }
         })
-        delay(3000)
-        dismissProgressDialog()
+
         spinner?.adapter = adapter
     }
     var mProgressDialog: ProgressDialog? =null

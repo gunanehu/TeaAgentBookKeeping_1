@@ -18,12 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
+import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityListBinding
 import com.teaagent.domain.firemasedbEntities.Customer
 import com.teaagent.ui.report.ReportActivity
 import com.teaagent.ui.saveentry.SaveEntryViewModel
 import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -65,24 +67,29 @@ class ListTransactionsActivity : AppCompatActivity() {
         recyclerview!!.layoutManager = LinearLayoutManager(this)
 
         lifecycleScope.launch {
-            getALLCustomer()
+            showProgressDialog()
+            saveEntryViewModel.getAllCustomerFirebaseDb()
         }
 
-        lifecycleScope.launch {
-            adapter = ItemAdapter(data)
-            recyclerview?.adapter = adapter
-        }
+        saveEntryViewModel.customersLiveData.observe(this, Observer() { it ->
+            getALLCustomer(it as ArrayList<Customer>)
+            dismissProgressDialog()
+        })
 
-        searchCustomer()
+        showProgressDialog()
+        searchTransactions()
 
         buttonCalender()
         sendClick()
 
         listEntryActivityyViewModel.customerNames.observe(this, Observer { it ->
             dismissProgressDialog()
+            Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
-        })
-
+            adapter = ItemAdapter(it as ArrayList<String>)
+            recyclerview?.adapter = adapter
+        }
+        )
     }
 
 
@@ -110,25 +117,19 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
     var mProgressDialog: ProgressDialog? = null
-    private fun searchCustomer() {
-
+    private fun searchTransactions() {
         binding.buttonSearchCustomerName.setOnClickListener {
-
-            showProgressDialog()
-
-
             customerName = binding.editTextSearchCustomerName.text.toString()
 
-            lifecycleScope.launch {
+            GlobalScope.launch(Dispatchers.Main) {
 //                data = mapsActivityViewModel.getTListByCustomerName(customerName)
-                data = listEntryActivityyViewModel.getByNameAndDateFromFirebaseDb(
+                listEntryActivityyViewModel.getByNameAndDateFromFirebaseDb(
                     customerName,
                     dateTime.timeInMillis
                 )
 
-                adapter = ItemAdapter(data)
-                recyclerview?.adapter = adapter
-
+//                adapter = ItemAdapter(data)
+//                recyclerview?.adapter = adapter
             }
         }
     }
@@ -164,11 +165,9 @@ class ListTransactionsActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun getALLCustomer() {
-        showProgressDialog()
+    private fun getALLCustomer(list: ArrayList<Customer>) {
 
         var customerNames: ArrayList<String> = ArrayList()
-        var list: ArrayList<Customer> = saveEntryViewModel.getAllCustomerFirebaseDb()
         for (customer in list) {
             customer.name?.let { customerNames.add(it) }
         }
@@ -198,13 +197,12 @@ class ListTransactionsActivity : AppCompatActivity() {
                 binding.editTextSearchCustomerName.setText(customerName)
             }
 
-
             override fun onNothingSelected(parentView: AdapterView<*>?) {
                 // your code here
             }
         })
 
-        delay(3000)
+//        delay(3000)
         dismissProgressDialog()
         spinner.adapter = adapter
     }
