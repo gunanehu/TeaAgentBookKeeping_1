@@ -130,10 +130,6 @@ object FirebaseUtil {
     fun getByNameAndDate(customerName: String, timestamp: Long): Task<QuerySnapshot>? {
 //        var entryTimestampDate = timestamp?.div((1000 * 60 * 60 * 24))
 
-
-
-
-
         val query = tableCollectionEntry
 //            ?.whereEqualTo("phoneUserId", getCurrentPhoneUser().phoneUserId)
 //            ?.whereEqualTo("customerName", customerName)

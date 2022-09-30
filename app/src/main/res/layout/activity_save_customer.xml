@@ -19,7 +19,7 @@
             android:text="App version:  "
             android:textSize="10sp"
             android:textStyle="italic"
-            android:visibility="gone" />
+       />
 
 
         <TextView

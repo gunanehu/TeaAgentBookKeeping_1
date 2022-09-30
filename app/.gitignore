@@ -1,33 +1,74 @@
-# Gradle files
-.gradle/
-build/
+# Windows
+thumbs.db
 
-# Local configuration file (sdk path, etc)
+# Mac OSX
+.DS_Store
+__MACOSX
+installADB.sh
+
+# IntelliJ Idea
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse
+.project
+.classpath
+.settings/
+.checkstyle
+.pmd
+.externalToolBuilders/
+
+# Android SDK
+client/bin/
+gen/
+tmp/
 local.properties
 
-# Log/OS Files
-*.log
+# Maven
+classes/
+target/
+*.releaseBackup
+*.versionsBackup
+release.properties
 
-# Android Studio generated files and folders
-captures/
-.externalNativeBuild/
-.cxx/
-*.apk
-output.json
+# Misc
+carbon/.car
+client/assets/
+client-test/assets/
+mi-send-tool/dependency-reduced-pom.xml
+client/gen-external-apklibs/
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+# Vi temp files
+*.swp
+*~
 
-# Keystore files
-*.jks
-*.keystore
+# Apk
+apk/
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+client/res/values/com_crashlytics_export_strings.xml
 
-# Android Profiling
-*.hprof
+# Crashlytics configuration
+crashlytics.properties
+
+# Gradle
+build/
+client/FILTERED/
+client/build/
+out/
+.gradle
+.cxx
+
+# Exclude the files generated during native code compilation
+client/.externalNativeBuild/
+
+#Exclude fastlane report
+fastlane/report.xml
+
+#Exclude unused.text
+client/unused.txt
+
+#Sonarscanner
+.scannerwork/
+
