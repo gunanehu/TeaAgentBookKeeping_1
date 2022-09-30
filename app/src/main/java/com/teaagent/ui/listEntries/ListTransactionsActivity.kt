@@ -32,7 +32,7 @@ import java.util.*
 
 
 class ListTransactionsActivity : AppCompatActivity() {
-    val TAG: String = "ListTransactions_Activity"
+    val TAG: String = "ListTransactions"
     private lateinit var customerName: String
     private var kg: Double = 0.0
     private var amount: Double = 0.0

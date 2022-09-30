@@ -27,12 +27,15 @@ class ListTransactionsViewModel(private val trackingRepository: CustomerReposito
         var customers: ArrayList<CollectionEntry> = ArrayList()
 //        var customers: ArrayList<String> = ArrayList()
 
-        var entryTimestampDate = startDate?.div((1000 * 60 * 60 * 24))
+        var entryTimestampDate = startDate
 
 
         val job = GlobalScope.async {
             var task: Task<QuerySnapshot>? =
-                FirebaseUtil.getByNameAndDate(customerName, entryTimestampDate)
+                FirebaseUtil.getByNameAndDate(
+                    customerName,
+                    CollectionEntry.convertDate(entryTimestampDate)
+                )
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
