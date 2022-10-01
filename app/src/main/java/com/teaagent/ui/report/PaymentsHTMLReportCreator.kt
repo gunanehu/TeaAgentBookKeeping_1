@@ -176,7 +176,7 @@ class PaymentsHTMLReportCreator internal constructor(
         for (collection in customerEntities) {
             val time = collection.convertedTimestampDate.toString()
             val getQuantity = collection.quantity.toString() + ""
-            val amount = collection.netTotal.toString() + ""
+            val amount = collection.amount.toString() + ""
             val getTotalamount = collection.netTotal.toString() + ""
             val getLabourAmount = collection.labourAmount.toString() + ""
 
