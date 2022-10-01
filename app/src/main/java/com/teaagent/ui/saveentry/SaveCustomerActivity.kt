@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.teaagent.R
-import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
@@ -30,15 +29,11 @@ class SaveCustomerActivity : AppCompatActivity() {
     var spinner: Spinner? = null
     var dateTime = Calendar.getInstance()
 
-    // Repository
-    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
-    private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
-
     private lateinit var binding: ActivitySaveCustomerBinding
 
     // ViewModel
-    private val mapsActivityViewModel: SaveEntryViewModel by viewModels {
-        SaveEntryViewModelFactory(getTrackingRepository())
+    private val saveEntryViewModel: SaveEntryViewModel by viewModels {
+        SaveEntryViewModelFactory()
     }
 
 
@@ -109,7 +104,7 @@ class SaveCustomerActivity : AppCompatActivity() {
                 it.phoneUserName
             )
         }
-        mapsActivityViewModel.addCustomer(customer)
+        saveEntryViewModel.addCustomer(customer)
     }
 
     private fun clearEditTextValues() {

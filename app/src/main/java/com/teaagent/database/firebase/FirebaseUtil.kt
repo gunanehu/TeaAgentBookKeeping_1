@@ -7,10 +7,7 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import com.google.type.Date
 import com.teaagent.AppHelper
 import com.teaagent.TeaAgentApplication
@@ -128,15 +125,22 @@ object FirebaseUtil {
     }
 
     fun getByNameAndDate(customerName: String, convertedTimestampDate: String): Task<QuerySnapshot>? {
-//        var entryTimestampDate = timestamp?.div((1000 * 60 * 60 * 24))
-
         val query = tableCollectionEntry
-//            ?.whereEqualTo("phoneUserId", getCurrentPhoneUser().phoneUserId)
-//            ?.whereEqualTo("customerName", customerName)
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
             ?.whereEqualTo("customerName", customerName)
             ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
+//            ?.orderBy("customerName")
 
+        return query?.get()
+    }
+
+
+
+    fun getByName(customerName: String): Task<QuerySnapshot>? {
+        val query = tableCollectionEntry
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+            ?.whereEqualTo("customerName", customerName)
+//            ?.orderBy("timestamp")
         return query?.get()
     }
 }

@@ -119,7 +119,7 @@
         android:layout_margin="10dp"
         android:text="go to Share Screen"
         android:textAllCaps="false"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"

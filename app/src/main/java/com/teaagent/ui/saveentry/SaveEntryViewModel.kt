@@ -8,21 +8,18 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import com.teaagent.data.FirebaseUtil
-import com.teaagent.domain.CustomerEntity
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
 import com.teaagent.domain.firemasedbEntities.Customer
-import com.teaagent.repo.CustomerRepository
 import com.teaagent.repo.FirebaseEntryAddedCallback
 import kotlinx.coroutines.*
 
 // 1
-class SaveEntryViewModel(private val trackingRepository: CustomerRepository) : ViewModel(),
+class SaveEntryViewModel() : ViewModel(),
     FirebaseEntryAddedCallback {
     val TAG: String = "MapsActivityViewModel"
     val customersLiveData = MutableLiveData<List<Customer>>()
 
     // 2
-    val allTrackingEntities: LiveData<List<CustomerEntity>> = trackingRepository.allTrackingEntities
 
     //  val totalDistanceTravelled: LiveData<Float?> = trackingRepository.totalDistanceTravelled
     val currentNumberOfStepCount = MutableLiveData(0)
