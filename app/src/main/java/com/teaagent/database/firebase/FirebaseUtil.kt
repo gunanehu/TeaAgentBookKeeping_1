@@ -1,6 +1,5 @@
 package com.teaagent.data
 
-import android.provider.Settings
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
@@ -8,9 +7,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.*
-import com.google.type.Date
 import com.teaagent.AppHelper
-import com.teaagent.TeaAgentApplication
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil.addToPreferenceTabId
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
@@ -74,7 +71,7 @@ object FirebaseUtil {
     fun addPhoneUser(phoneUser: PhoneUser?) {
         val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
-        if (phoneId .equals("")) {
+        if (phoneId.equals("")) {
             if (phoneUser != null) {
                 addToPreferenceTabId()//save to local preference such that u never call again and again/
                 // / todo check after installation to check the same phoneid in firebase
@@ -82,14 +79,23 @@ object FirebaseUtil {
                 tablePhoneUser?.add(phoneUser)
                     ?.addOnFailureListener(OnFailureListener { e ->
                         {
-                            Log.e(TAG, "addPhoneUser OnFailureListener documentReference " + e.message)
+                            Log.e(
+                                TAG,
+                                "addPhoneUser OnFailureListener documentReference " + e.message
+                            )
                         }
                     })
                     ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
-                        Log.i(TAG, "addPhoneUser OnSuccessListener  documentReference " + documentReference)
+                        Log.i(
+                            TAG,
+                            "addPhoneUser OnSuccessListener  documentReference " + documentReference
+                        )
                     })
                     ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
-                        Log.i(TAG, "  addPhoneUser OnCompleteListener documentReference " + task.result)
+                        Log.i(
+                            TAG,
+                            "  addPhoneUser OnCompleteListener documentReference " + task.result
+                        )
                     })
             }
         }
@@ -115,7 +121,7 @@ object FirebaseUtil {
     ///get calls
 
     fun getCurrentPhoneUser(): PhoneUser {
-        return PhoneUser( AppHelper.getInstance().uniqueUserID)
+        return PhoneUser(AppHelper.getInstance().uniqueUserID)
 
     }
 
@@ -124,23 +130,23 @@ object FirebaseUtil {
         return query?.get()
     }
 
-    fun getByNameAndDate(customerName: String, convertedTimestampDate: String): Task<QuerySnapshot>? {
+    fun getByNameAndDate(
+        customerName: String,
+        convertedTimestampDate: String
+    ): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
             ?.whereEqualTo("customerName", customerName)
             ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
-//            ?.orderBy("customerName")
-
         return query?.get()
     }
-
 
 
     fun getByName(customerName: String): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
             ?.whereEqualTo("customerName", customerName)
-//            ?.orderBy("timestamp")
+            ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()
     }
 }
