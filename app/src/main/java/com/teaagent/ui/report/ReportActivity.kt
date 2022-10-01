@@ -69,17 +69,7 @@ class ReportActivity : AppCompatActivity() {
         }
 
         binding.buttonShare.setOnClickListener {
-
-            GlobalScope.launch(Dispatchers.Main) {
-                customerName?.let { it1 ->
-                    listEntryActivityyViewModel.getByNameFirebaseDb(
-                        it1
-                    )
-                }
-            }
-
-//            emailReport()
-
+            emailReport()
         }
 
         listEntryActivityyViewModel.reportEntities.observe(this, Observer { it ->
@@ -101,16 +91,15 @@ class ReportActivity : AppCompatActivity() {
 
             binding.tvReport.loadData(
                 "<html><body>" +
-                        commonCustomerDetails+textFile +
+                        commonCustomerDetails + textFile +
                         "</body></html>", "text/html", "UTF-8"
-            )//
-            //  emailReport()
+            )
         })
 
     }
 
 
-    public suspend fun getALLByCustomers() {
+    suspend fun getALLByCustomers() {
         var collectionEntrys: java.util.ArrayList<CollectionEntry> = java.util.ArrayList()
 
         if (customerName != null) {
