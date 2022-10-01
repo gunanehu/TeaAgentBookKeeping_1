@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="0003"
-    android:versionName="version-0003"
-    package="com.teaagent">
+    package="com.teaagent"
+   >
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 
-    <application android:requestLegacyExternalStorage="true"
-        android:name=".TrackingApplication"
+    <application
+        android:name=".TeaAgentApplication"
         android:allowBackup="false"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ui.report.ReportActivity"
@@ -22,16 +26,27 @@
         <activity
             android:name=".ui.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:theme="@style/Theme.RwAndroidTutorial.Fullscreen" /> <!-- Main Activity -->
-        <activity android:name=".ui.saveentry.SaveEntryActivity">
+            android:exported="true"
+            android:theme="@style/Theme.RwAndroidTutorial.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity><!-- Main Activity -->
+
+        <activity
+            android:name=".ui.saveentry.SaveCollectionEntryActivity"
+            android:exported="true">
+
         </activity>
-        <activity android:name=".ui.listEntries.ListEntryActivity" />
+        <activity
+            android:name=".ui.saveentry.SaveCustomerActivity"
+            android:exported="true">
+
+        </activity>
+        <activity android:name=".ui.listEntries.ListTransactionsActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

@@ -10,13 +10,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.teaagent.R
-import com.teaagent.TrackingApplication
+import com.teaagent.TeaAgentApplication
+import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityReportBinding
-import com.teaagent.domain.CustomerEntity
-import com.teaagent.ui.listEntries.ListEntryViewModel
-import com.teaagent.ui.listEntries.ListEntryViewModelFactory
+import com.teaagent.domain.firemasedbEntities.CollectionEntry
+import com.teaagent.ui.listEntries.ListTransactionsViewModel
+import com.teaagent.ui.listEntries.ListTransactionsViewModelFactory
+import com.teaagent.ui.saveentry.SaveEntryViewModel
+import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
@@ -26,15 +32,22 @@ class ReportActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReportBinding
 
     // ViewModel
-    private val mapsActivityViewModel: ListEntryViewModel by viewModels {
-        ListEntryViewModelFactory(getTrackingRepository())
+    private val listEntryActivityyViewModel: ListTransactionsViewModel by viewModels {
+        ListTransactionsViewModelFactory()
     }
-    var presenter: PaymentsReportPresenterImpl? = null
-    private fun getTrackingApplicationInstance() = application as TrackingApplication
+
+    // ViewModel
+    private val saveEntryViewModel: SaveEntryViewModel by viewModels {
+        SaveEntryViewModelFactory()
+    }
+    var presenter: PaymentsHTMLReportCreator? = null
+    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
-    var data = ArrayList<CustomerEntity>()
+    var data = ArrayList<CollectionEntry>()
     public val ReportActivityBundleTag: String = "ReportActivityBundleTag"
     var customerName: String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -43,41 +56,69 @@ class ReportActivity : AppCompatActivity() {
         setContentView(view)
 
         customerName = intent.getStringExtra(ReportActivityBundleTag)
-        presenter = PaymentsReportPresenterImpl(this, customerName, mapsActivityViewModel)
-
+        presenter = PaymentsHTMLReportCreator(this, customerName)
         lifecycleScope.launch {
-            presenter!!.  getALLByCustomers()
-            val text = presenter!!.paymentReportData
 
+            getALLByCustomers()
             val webSettings: WebSettings = binding.tvReport.getSettings()
             webSettings.javaScriptEnabled = true
             val webViewClient = WebViewClientImpl(this@ReportActivity)
             binding.tvReport.setWebViewClient(webViewClient)
 
 
-            binding.tvReport.loadData("<html><body>" +
-                    text +
-                    "</body></html>", "text/html", "UTF-8")
-
-
         }
 
         binding.buttonShare.setOnClickListener {
-            lifecycleScope.launch {
-                data =
-                    customerName?.let { it1 -> mapsActivityViewModel.getALLByCustomerName(it1) } as ArrayList<CustomerEntity>
-                emailReport()
-            }
+            emailReport()
         }
 
+        listEntryActivityyViewModel.reportEntities.observe(this, Observer { it ->
+
+            val listOfStrings: ArrayList<CollectionEntry> = ArrayList()
+            listOfStrings.addAll(it)
+            data = listOfStrings
+            Log.d(
+                FirebaseUtil.TAG,
+                "******reportEntities MutableLiveData<List<CollectionEntry>> *********** ********************* customers $it"
+            )
+
+            val collectionEntry: CollectionEntry? = presenter?.getCommonCustomerDetail(data.get(0))
+            commonCustomerDetails = presenter?.getCommonCustomerDetailsText(collectionEntry)
+//            presenter?.setCommonCustomerDetails(commonCustomerDetails)
+
+            textFile = presenter?.setSalesSummaryDataForShare(data)
+            textFile?.let { presenter?.setTextFile(it) }
+
+            binding.tvReport.loadData(
+                "<html><body>" +
+                        commonCustomerDetails + textFile +
+                        "</body></html>", "text/html", "UTF-8"
+            )
+        })
 
     }
+
+
+    suspend fun getALLByCustomers() {
+        var collectionEntrys: java.util.ArrayList<CollectionEntry> = java.util.ArrayList()
+
+        if (customerName != null) {
+
+            customerName?.let { it1 ->
+                listEntryActivityyViewModel.getByNameFirebaseDb(it1)
+            }
+
+        }
+    }
+
+    var textFile: String? = null
+    var commonCustomerDetails: String? = null
 
     private val READ_WRITE_PERMISSION_REQUEST_CODE = 0x01
 
     protected fun emailReport() {
         if (isFileReadWritePermissionGranted()) {
-            presenter?.prepareDataForEmail()
+            textFile?.let { presenter?.prepareDataForEmail(it) }
         } else {
             ActivityCompat.requestPermissions(
                 this, arrayOf(
@@ -106,7 +147,7 @@ class ReportActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (READ_WRITE_PERMISSION_REQUEST_CODE == requestCode) {
             if (isFileReadWritePermissionGranted()) {
-                presenter?.prepareDataForEmail()
+                textFile?.let { presenter?.prepareDataForEmail(it) }
             } else {
                 Toast.makeText(
                     this, "permission_not_granted_alert",

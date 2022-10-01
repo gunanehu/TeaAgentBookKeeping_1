@@ -1,1 +1,74 @@
-/build
+# Windows
+thumbs.db
+
+# Mac OSX
+.DS_Store
+__MACOSX
+installADB.sh
+
+# IntelliJ Idea
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse
+.project
+.classpath
+.settings/
+.checkstyle
+.pmd
+.externalToolBuilders/
+
+# Android SDK
+client/bin/
+gen/
+tmp/
+local.properties
+
+# Maven
+classes/
+target/
+*.releaseBackup
+*.versionsBackup
+release.properties
+
+# Misc
+carbon/.car
+client/assets/
+client-test/assets/
+mi-send-tool/dependency-reduced-pom.xml
+client/gen-external-apklibs/
+
+# Vi temp files
+*.swp
+*~
+
+# Apk
+apk/
+
+client/res/values/com_crashlytics_export_strings.xml
+
+# Crashlytics configuration
+crashlytics.properties
+
+# Gradle
+build/
+client/FILTERED/
+client/build/
+out/
+.gradle
+.cxx
+
+# Exclude the files generated during native code compilation
+client/.externalNativeBuild/
+
+#Exclude fastlane report
+fastlane/report.xml
+
+#Exclude unused.text
+client/unused.txt
+
+#Sonarscanner
+.scannerwork/
+

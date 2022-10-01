@@ -2,13 +2,21 @@ package com.teaagent.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewbinding.BuildConfig
 import com.teaagent.databinding.ActivitySplashBinding
-import com.teaagent.ui.saveentry.SaveEntryActivity
-import kotlinx.coroutines.*
+import com.teaagent.ui.saveentry.SaveCustomerActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class SplashActivity : AppCompatActivity() {
+    val TAG: String = "SplashActivity"
 
     val activityScope = CoroutineScope(Dispatchers.Main)
     private lateinit var binding: ActivitySplashBinding
@@ -19,17 +27,33 @@ class SplashActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        activityScope.launch {
-            delay(5000)
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
-            var intent = Intent(this@SplashActivity, SaveEntryActivity::class.java)
+        showAppVersion()
+        activityScope.launch {
+            delay(1000)
+
+
+
+
+            var intent = Intent(this@SplashActivity, SaveCustomerActivity::class.java)
             startActivity(intent)
             finish()
         }
     }
 
-    override fun onPause() {
-        activityScope.cancel()
-        super.onPause()
+    override fun onStart() {
+        super.onStart()
     }
+
+
+    private fun showAppVersion() {
+        val packageInfo = this.packageManager.getPackageInfo(packageName, 0)
+        val versionCode = packageInfo.versionCode
+        val version = packageInfo.versionName
+        binding.appversion.setText(version)
+    }
+
 }
+
+

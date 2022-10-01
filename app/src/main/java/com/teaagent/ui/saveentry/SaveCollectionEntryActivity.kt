@@ -1,6 +1,7 @@
 package com.teaagent.ui.saveentry
 
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,13 +13,17 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Observer
 import com.teaagent.R
-import com.teaagent.TrackingApplication
-import com.teaagent.databinding.ActivityMainBinding
-import com.teaagent.databinding.ActivityMainBinding.inflate
-import com.teaagent.domain.CustomerEntity
-import com.teaagent.ui.listEntries.ListEntryActivity
+import com.teaagent.TeaAgentApplication
+import com.teaagent.data.FirebaseUtil
+import com.teaagent.databinding.ActivitySaveCollectionBinding
+import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
+import com.teaagent.domain.firemasedbEntities.CollectionEntry
+import com.teaagent.domain.firemasedbEntities.Customer
+import com.teaagent.ui.listEntries.ListTransactionsActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,54 +32,25 @@ import java.util.*
 /**
  * Main Screen
  */
-class SaveEntryActivity : AppCompatActivity() {
+class SaveCollectionEntryActivity : AppCompatActivity() {
     private lateinit var customerName: String
     private var kg: Long = 0
     private var amount: Long = 0
     private var advancedPaymentAmount: Long = 0
-    private var labourAmount: Long = 0
+    var labourAmount: Long = 0
+    var netTotal: Long = 0
+
+    //    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
     private var totalKgAmount: Long = 0
 
-    val TAG: String = "SaveEntryActivity"
-    private lateinit var binding: ActivityMainBinding
+    val TAG: String = "SaveCollectionEntryActivity"
+    private lateinit var binding: ActivitySaveCollectionBinding
 
     // ViewModel
     private val mapsActivityViewModel: SaveEntryViewModel by viewModels {
-        SaveEntryViewModelFactory(getTrackingRepository())
+        SaveEntryViewModelFactory()
     }
 
-    fun addTeaDealEntryRecord(customerEntity: CustomerEntity?) {
-        val trackingEntity = customerEntity?.let {
-            CustomerEntity(
-                System.currentTimeMillis(),
-                dateTime.timeInMillis,
-                it.customerName,
-                it.quantity,
-                it.amount,
-                it.totalamount,
-                it.labourAmount,
-                it.AdvancedPaymentAmount
-            )
-        }
-        if (trackingEntity != null && customerName != null) {
-            Log.v(TAG, trackingEntity.toString())
-            lifecycleScope.launch {
-                val index: Long = mapsActivityViewModel.insert(trackingEntity)
-                if (index > 0) {
-                    Toast.makeText(
-                        applicationContext,
-                        "value added index" + index, Toast.LENGTH_SHORT
-                    ).show()
-                    clearEditTextValues()
-                } else {
-                    Toast.makeText(
-                        applicationContext,
-                        "value not added returned >> "+index, Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Switch to AppTheme for displaying the activity
@@ -82,20 +58,27 @@ class SaveEntryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
         val view = binding.root
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
+
         setContentView(view)
 
-        lifecycleScope.launch {
-            getALLCustomer()
+        showProgressDialog()
+        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            mapsActivityViewModel.getAllCustomerFirebaseDb()
         }
 
-        val packageInfo = this.packageManager.getPackageInfo(packageName, 0)
-        val versionCode = packageInfo.versionCode
-        val version = packageInfo.versionName
-        binding.version.setText(version)
+
+        mapsActivityViewModel.customersLiveData.observe(this, Observer() { it ->
+
+
+            getALLCustomerNamesToSpinner(it as ArrayList<Customer>)
+
+            dismissProgressDialog()
+        })
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
-        binding.todaysDate.setText("currentDate : " + currentDate)
+        binding.todaysDate.setText(currentDate)
 
         // Set up button click events
         binding.saveButton.setOnClickListener {
@@ -105,28 +88,16 @@ class SaveEntryActivity : AppCompatActivity() {
                 binding.editTextLabourAmount.text?.length!! > 0 &&
                 binding.todaysDate.text?.length!! > 0
             ) {
-                val cuustomerEntry = getEditTextValues()
-                addTeaDealEntryRecord(cuustomerEntry);
+                val cuustomerEntry = createCollectionEntryFromEditText()
+                mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)
             } else {
                 showErrorMesage()
             }
         }
-        /* binding.buttonSearchCustomerName.setOnClickListener {
-             val customerName = binding.editTextSearchCustomerName.text.toString()
-             lifecycleScope.launch {
-                 val total = mapsActivityViewModel.getAllEntitiesByCustomerName(customerName)
-                 Log.d(TAG, "total : " + total);
-                 binding.tViewSearchCustomerNameResult.text = total.toString()
-             }
-         }*/
+
         binding.endButton.setOnClickListener {
-            val listActiviTyIntent = Intent(this, ListEntryActivity::class.java)
+            val listActiviTyIntent = Intent(this, ListTransactionsActivity::class.java)
             startActivity(listActiviTyIntent)
-        }
-        // 1
-        mapsActivityViewModel.allTrackingEntities.observe(this) { allTrackingEntities ->
-            if (allTrackingEntities.isEmpty()) {
-            }
         }
 
 
@@ -136,14 +107,16 @@ class SaveEntryActivity : AppCompatActivity() {
             val mMonth = c[Calendar.MONTH]
             val mDay = c[Calendar.DAY_OF_MONTH]
 
-//            dateTime = Calendar.getInstance()
             val datePickerDialog = DatePickerDialog(
                 this,
                 { view, year, monthOfYear, dayOfMonth ->
                     dateTime.set(mYear, monthOfYear, dayOfMonth)
-
                     binding.todaysDate.text =
                         dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+
+                    retrievEditTextData()
+                    calculateNetTotalAmount()
+                    binding.editTextTotalAmount.setText("Net total amount : " + netTotal + "")
                 },
                 mYear,
                 mMonth,
@@ -156,7 +129,7 @@ class SaveEntryActivity : AppCompatActivity() {
     var dateTime = Calendar.getInstance()
 
     // Repository
-    private fun getTrackingApplicationInstance() = application as TrackingApplication
+    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
 
     private fun clearEditTextValues() {
@@ -175,36 +148,50 @@ class SaveEntryActivity : AppCompatActivity() {
         labourAmount = 0
         totalKgAmount = 0
 
-        dateTime.timeInMillis=0
+        dateTime.timeInMillis = 0
         spinner?.setSelection(0)
     }
 
-    private fun getEditTextValues(): CustomerEntity {
+    private fun createCollectionEntryFromEditText(): CollectionEntry {
 
-        customerName = binding.editTextCustomerName.text.toString()
-        kg = binding.editTextKG.text?.toString()?.toLong()!!
-        amount = binding.editTextAmount.text?.toString()?.toLong()!!
-        labourAmount = binding.editTextLabourAmount.text?.toString()?.toLong()!!
+        retrievEditTextData()
 
         // advancedPaymentAmount = binding.editTextAdvancedPaymentAmountt.text?.toString()?.toLong()!!
 
-        totalKgAmount = (kg * amount) - labourAmount
+        calculateNetTotalAmount()
         Log.d(
             TAG,
             "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
         );
-        val customerEntity = CustomerEntity(
-            System.currentTimeMillis(),
-            dateTime.timeInMillis,
-            customerName,
+
+        var entryTimestampDate = dateTime.timeInMillis
+        var entryConvertedDate = CollectionEntry.convertDate(dateTime.timeInMillis)
+
+
+        val tran = CollectionEntry(
+            /*Calendar.getInstance().timeInMillis.toString(),*/
             kg,
             amount,
-            totalKgAmount,
             labourAmount,
-            advancedPaymentAmount
+            netTotal,
+            entryTimestampDate, entryConvertedDate,
+            FirebaseUtil.getCurrentPhoneUser().name,
+            customerName
         )
-        return customerEntity
+        return tran
     }
+
+    private fun retrievEditTextData() {
+        customerName = binding.editTextCustomerName.text.toString()
+        kg = binding.editTextKG.text?.toString()?.toLong()!!
+        amount = binding.editTextAmount.text?.toString()?.toLong()!!
+        labourAmount = binding.editTextLabourAmount.text?.toString()?.toLong()!!
+    }
+
+    private fun calculateNetTotalAmount() {
+        netTotal = (kg * amount) - labourAmount
+    }
+
 
     private fun showErrorMesage() {
         val builder = AlertDialog.Builder(this)
@@ -222,12 +209,19 @@ class SaveEntryActivity : AppCompatActivity() {
     }
 
     var spinner: Spinner? = null
-    private suspend fun getALLCustomer() {
 
-        var list: List<String> = mapsActivityViewModel.getAllCustomerName()
+
+    private fun getALLCustomerNamesToSpinner(list: ArrayList<Customer>) {
+        //todo start progress dialog
+        var customerNames: ArrayList<String> = ArrayList()
+//        var list: ArrayList<Customer> =
+
+        for (customer in list) {
+            customer.name?.let { customerNames.add(it) }
+        }
 
         val hashSet: HashSet<String> = HashSet()
-        hashSet.addAll(list!!)
+        hashSet.addAll(customerNames!!)
 
         val customerNAmes: MutableList<String> = ArrayList()
         customerNAmes.add("Select pre selected name")
@@ -255,7 +249,23 @@ class SaveEntryActivity : AppCompatActivity() {
                 binding.editTextCustomerName.setText("")
             }
         })
+
         spinner?.adapter = adapter
+    }
+
+    var mProgressDialog: ProgressDialog? = null
+    private fun showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = ProgressDialog(this)
+        }
+        mProgressDialog?.setTitle("Loading data...")
+        mProgressDialog?.show()
+    }
+
+    private fun dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog!!.isShowing) {
+            mProgressDialog?.dismiss()
+        }
     }
 
 

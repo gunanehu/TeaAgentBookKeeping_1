@@ -6,6 +6,7 @@
     android:background="@drawable/logo"
     tools:context=".ui.SplashActivity">
 <TextView
+    android:textStyle="italic"
     android:text="app version"
     android:id="@+id/appversion"
     android:textSize="25sp"
