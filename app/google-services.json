@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "990421094291",
-    "project_id": "teaagentbookkeeping",
-    "storage_bucket": "teaagentbookkeeping.appspot.com"
+    "project_number": "255380083216",
+    "project_id": "teaagent-prod",
+    "storage_bucket": "teaagent-prod.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:990421094291:android:882ce2f8c582bef2756266",
+        "mobilesdk_app_id": "1:255380083216:android:c84389772353b7ee93f095",
         "android_client_info": {
           "package_name": "com.teaagent"
         }
       },
       "oauth_client": [
         {
-          "client_id": "990421094291-udd7i6llkqgmq9q6olgnal7i7ntrh2eb.apps.googleusercontent.com",
+          "client_id": "255380083216-9pjb48thaugm4neuc2q2h9u9desqqjh8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCO_1mu3tfDT_AjRnsLyCvdtwQk77tN2dw"
+          "current_key": "AIzaSyCGUyyttQrwrR360LwqYs_jyxidELGcNWM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "990421094291-udd7i6llkqgmq9q6olgnal7i7ntrh2eb.apps.googleusercontent.com",
+              "client_id": "255380083216-9pjb48thaugm4neuc2q2h9u9desqqjh8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
