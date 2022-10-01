@@ -48,12 +48,12 @@ class ListTransactionsActivity : AppCompatActivity() {
 
     // ViewModel
     private val listEntryActivityyViewModel: ListTransactionsViewModel by viewModels {
-        ListTransactionsViewModelFactory(getTrackingRepository())
+        ListTransactionsViewModelFactory()
     }
 
     // ViewModel
     private val saveEntryViewModel: SaveEntryViewModel by viewModels {
-        SaveEntryViewModelFactory(getTrackingRepository())
+        SaveEntryViewModelFactory()
     }
 
     var recyclerview: RecyclerView? = null
@@ -83,16 +83,6 @@ class ListTransactionsActivity : AppCompatActivity() {
 
         buttonCalender()
         sendClick()
-
-        /* listEntryActivityyViewModel.customerNames.observe(this, Observer { it ->
-             dismissProgressDialog()
-             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
-
-             adapter = ItemAdapter(it as ArrayList<String>)
-             recyclerview?.adapter = adapter
-         }
-         )*/
-
 
     }
 

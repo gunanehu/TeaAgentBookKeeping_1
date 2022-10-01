@@ -8,16 +8,16 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
-import com.teaagent.repo.CustomerRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
 
 // 1
-class ListTransactionsViewModel(private val trackingRepository: CustomerRepository) : ViewModel() {
+class ListTransactionsViewModel() : ViewModel() {
     val TAG: String = "ListEntryViewModel"
     val customerNames = MutableLiveData<List<String>>()
     val customerEntities = MutableLiveData<List<CollectionEntry>>()
+    val reportEntities = MutableLiveData<List<CollectionEntry>>()
 
 
     suspend fun getByNameAndDateFromFirebaseDb(
@@ -65,4 +65,33 @@ class ListTransactionsViewModel(private val trackingRepository: CustomerReposito
         }
     }
 
+
+
+    suspend fun getByNameFirebaseDb(
+        customerName: String){
+        var customers: ArrayList<CollectionEntry> = ArrayList()
+        GlobalScope.async {
+            var task: Task<QuerySnapshot>? =
+                FirebaseUtil.getByName(customerName)
+            task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        var c: CollectionEntry = document.toObject(CollectionEntry::class.java)
+                        customers.add(c)
+                        Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
+                    }
+
+                } else {
+                    Log.e(FirebaseUtil.TAG, "Error getting documents: ", task.exception)
+                }
+            })
+            task?.addOnSuccessListener { it ->
+                Log.d(
+                    FirebaseUtil.TAG,
+                    "***************** reportEntities addOnSuccessListener ********************* customers $customers"
+                )
+                reportEntities.postValue(customers)
+            }
+        }
+    }
 }

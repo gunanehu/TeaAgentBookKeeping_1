@@ -48,7 +48,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
     // ViewModel
     private val mapsActivityViewModel: SaveEntryViewModel by viewModels {
-        SaveEntryViewModelFactory(getTrackingRepository())
+        SaveEntryViewModelFactory()
     }
 
 
@@ -99,11 +99,6 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             val listActiviTyIntent = Intent(this, ListTransactionsActivity::class.java)
             startActivity(listActiviTyIntent)
         }
-        // 1
-        mapsActivityViewModel.allTrackingEntities.observe(this) { allTrackingEntities ->
-            if (allTrackingEntities.isEmpty()) {
-            }
-        }
 
 
         binding.buttonsetDate.setOnClickListener {
@@ -116,23 +111,12 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
                 this,
                 { view, year, monthOfYear, dayOfMonth ->
                     dateTime.set(mYear, monthOfYear, dayOfMonth)
-
-
-                    /*   val date = Date()
-                       val stamp: Date = Timestamp(date.time)
-
-                       val ft = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                       val date1String = ft.format(date)
-                       val date2String = ft.format(stamp)
-
-                       val date1 = ft.parse(date1String)
-                       val date2 = ft.parse(date2String)*/
-
-
-
-
                     binding.todaysDate.text =
                         dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+
+                    retrievEditTextData()
+                    calculateNetTotalAmount()
+                    binding.editTextTotalAmount.setText("Net total amount : " + netTotal + "")
                 },
                 mYear,
                 mMonth,
@@ -141,7 +125,6 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
     }
-
 
     var dateTime = Calendar.getInstance()
 
@@ -171,14 +154,11 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
     private fun createCollectionEntryFromEditText(): CollectionEntry {
 
-        customerName = binding.editTextCustomerName.text.toString()
-        kg = binding.editTextKG.text?.toString()?.toLong()!!
-        amount = binding.editTextAmount.text?.toString()?.toLong()!!
-        labourAmount = binding.editTextLabourAmount.text?.toString()?.toLong()!!
+        retrievEditTextData()
 
         // advancedPaymentAmount = binding.editTextAdvancedPaymentAmountt.text?.toString()?.toLong()!!
 
-        netTotal = (kg * amount) - labourAmount
+        calculateNetTotalAmount()
         Log.d(
             TAG,
             "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
@@ -199,6 +179,17 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             customerName
         )
         return tran
+    }
+
+    private fun retrievEditTextData() {
+        customerName = binding.editTextCustomerName.text.toString()
+        kg = binding.editTextKG.text?.toString()?.toLong()!!
+        amount = binding.editTextAmount.text?.toString()?.toLong()!!
+        labourAmount = binding.editTextLabourAmount.text?.toString()?.toLong()!!
+    }
+
+    private fun calculateNetTotalAmount() {
+        netTotal = (kg * amount) - labourAmount
     }
 
 
