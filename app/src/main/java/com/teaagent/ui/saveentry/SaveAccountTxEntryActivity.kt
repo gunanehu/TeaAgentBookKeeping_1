@@ -126,6 +126,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             allAccounts = it
             getALLCustomerNamesToSpinner(it as ArrayList<SaveAccountInfo>)
             dismissProgressDialog()
+
         })
     }
 
@@ -224,24 +225,24 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
     private fun getALLCustomerNamesToSpinner(list: ArrayList<SaveAccountInfo>) {
         //todo start progress dialog
-        var customerNames: ArrayList<String> = ArrayList()
+        var accountInfoDisplayName: ArrayList<String> = ArrayList()
 
         for (customer in list) {
 //            customer.name?.let { customerNames.add(it) }
-            customerNames.add(customer.bankName!! +"-"+customer.acNo)
+            accountInfoDisplayName.add(/*customer.bankName!! + */customer.bankName.toString())
         }
 
-        val hashSet: HashSet<String> = HashSet()
-        hashSet.addAll(customerNames!!)
+        /*  val hashSet: HashSet<String> = HashSet()
+          hashSet.addAll(accountInfoDisplayName!!)
 
-        val customerNAmes: MutableList<String> = ArrayList()
-        customerNAmes.addAll(hashSet)
+          val customerNAmes: MutableList<String> = ArrayList()
+          customerNAmes.addAll(hashSet)*/
 
         spinner = findViewById(R.id.spinnerSearchCustomerName)
         val adapter: ArrayAdapter<Any?> =
             ArrayAdapter<Any?>(
                 this, android.R.layout.simple_spinner_dropdown_item,
-                customerNAmes!! as List<Any?>
+                accountInfoDisplayName!! as List<Any?>
             )
         spinner?.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -250,20 +251,39 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-//                customerName = customerNAmes?.get(position).toString()
+                val customerText = accountInfoDisplayName?.get(position).toString()
 
-                selectedAccountInfo = allAccounts?.get(position)
-                binding.editTextCustomerName.setText(selectedAccountInfo?.bankName)
+                selectedAccountInfo = retrieveSpinnerSelectedItem(customerText, list)
+                binding.editTextCustomerName.setText(selectedAccountInfo?.acNo)
 
                 Log.d(TAG, "onItemSelected selectedAccountInfo " + selectedAccountInfo)
+
+                showtvSelectedAccountDetail(selectedAccountInfo)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
 //                binding.editTextCustomerName.setText("")
+//                selectedAccountInfo = list?.get(0)
             }
         })
 
         spinner?.adapter = adapter
+    }
+
+    private fun retrieveSpinnerSelectedItem(
+        bankName: String,
+        list: ArrayList<SaveAccountInfo>
+    ): SaveAccountInfo? {
+        for (item in list) {
+            if (item.bankName.toString().contentEquals(bankName)) {
+                return item
+            }
+        }
+        return null
+    }
+
+    private fun showtvSelectedAccountDetail(selectedAccountInfo: SaveAccountInfo?) {
+        binding.tvSelectedAccountDetail.setText(selectedAccountInfo.toString())
     }
 
     var mProgressDialog: ProgressDialog? = null

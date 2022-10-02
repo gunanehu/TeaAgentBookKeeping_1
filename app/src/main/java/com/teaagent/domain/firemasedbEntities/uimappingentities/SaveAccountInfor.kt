@@ -20,4 +20,14 @@ open class SaveAccountInfo(
 ) :
     Serializable {
     constructor() : this("", "", "", "", "", "", "", "", "", "", "")
+
+    override fun toString(): String {
+        return "  type='$type  | bankName=$bankName | " +
+                "institutionCode=$institutionCode | " +
+                "address=$address | acNo=$acNo |" +
+                " netBankingUserName=$netBankingUserName |" +
+                " password=$password | " +
+                "atmNo=$atmNo | " +
+                "atmPin=$atmPin "
+    }
 }

@@ -90,8 +90,10 @@
             android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/ll"
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="484dp"
             android:layout_weight="2"
             android:orientation="horizontal">
 
@@ -142,7 +144,16 @@
                 android:text="See Detail Customer"
                 android:textAllCaps="false" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/tvSelectedAccountDetail"
+            android:labelFor="@id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
 
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
