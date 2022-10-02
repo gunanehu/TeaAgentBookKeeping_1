@@ -38,7 +38,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     //    private lateinit var customerName: String
     private var kg: Long = 0
     private var amount: Long = 0
-    private var advancedPaymentAmount: Long = 0
+    private var advancedPaymentAmount  = null
     var labourAmount: Long = 0
     var netTotal: Long = 0
     var allAccounts: List<SaveAccountInfo>? = null
@@ -146,8 +146,8 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 //        customerName = ""
 
         kg = 0
-        amount = 0
-        advancedPaymentAmount = 0
+        amount ?.toLong()!!
+        advancedPaymentAmount = null
         labourAmount = 0
         totalKgAmount = 0
 
@@ -184,8 +184,8 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             selectedAccountInfo!!.type,
             selectedAccountInfo!!.acNo!!,
 
-            amount,
-            System.currentTimeMillis(),
+            amount.toString(),
+            System.currentTimeMillis().toString(),
 
             FirebaseUtil.getCurrentPhoneUser().name,
             selectedAccountInfo?.bankName.toString()
@@ -201,7 +201,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     }
 
     private fun calculateNetTotalAmount() {
-        netTotal = (kg * amount) - labourAmount
+//        netTotal = (kg * amount) - labourAmount
     }
 
 

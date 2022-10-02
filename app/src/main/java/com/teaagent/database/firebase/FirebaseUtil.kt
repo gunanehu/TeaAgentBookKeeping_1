@@ -154,7 +154,7 @@ object FirebaseUtil {
     fun getNetAssetsByName(): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
-            ?.orderBy("timestamp", Query.Direction.ASCENDING)
+//            ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()
     }
 

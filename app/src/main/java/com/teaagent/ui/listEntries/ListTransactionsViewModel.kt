@@ -10,6 +10,7 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import util.StringEncryption
 
 
 // 1
@@ -22,10 +23,14 @@ class ListTransactionsViewModel() : ViewModel() {
 
     fun getTxByTypeFromFirebaseDb(type: String) {
         var balanceTxs: ArrayList<BalanceTx> = ArrayList()
+        val encryptedType = StringEncryption.encryptMsg(type)
+        val d = StringEncryption.decryptMsg(encryptedType)
+
 
         GlobalScope.async {
             var task: Task<QuerySnapshot>? =
-                FirebaseUtil.getByAccountType(type)
+                FirebaseUtil.getByAccountType(d)
+            Log.i(TAG, "encryptedType " + d)
 
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {

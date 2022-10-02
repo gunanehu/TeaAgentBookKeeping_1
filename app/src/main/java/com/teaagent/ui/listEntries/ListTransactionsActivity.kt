@@ -29,6 +29,7 @@ import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import util.StringEncryption
 import java.util.*
 
 
@@ -94,14 +95,37 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
     var total: Long = 0
-    private fun convertCustomersToString(customers: ArrayList<BalanceTx>): ArrayList<String> {
+    private fun convertCustomersToStringList(customers: ArrayList<BalanceTx>): ArrayList<String> {
         total = 0
         var customerString: ArrayList<String> = ArrayList()
         for (customer in customers) {
-            customerString.add(customer.toString())
-            total = total + customer.balanceAmount
+            val customerText: String = convertCustomersToString(customer)
+            customerString.add(customerText)
+
+            val balanceAmount =
+                StringEncryption.decryptMsg(customer?.balanceAmount).toString()
+            total = total + balanceAmount.toLong()
         }
         return customerString
+    }
+
+    private fun convertCustomersToString(balanceTx: BalanceTx): String {
+//        val id = StringEncryption.decryptMsg(balanceTx?.id).toString()
+        val accountType = balanceTx?.accountType.toString()
+        val accountNo =
+            StringEncryption.decryptMsg(balanceTx?.accountNo).toString()
+        val balanceAmount =
+            StringEncryption.decryptMsg(balanceTx?.balanceAmount).toString()
+        val timestamp =
+            StringEncryption.decryptMsg(balanceTx?.timestamp).toString()
+//        val phoneUserName =
+//            StringEncryption.decryptMsg(collectionEntry?.phoneUserName.toString()).toString()
+        val phoneUserName =
+            balanceTx?.phoneUserName.toString()
+        val bankName = StringEncryption.decryptMsg(balanceTx?.bankName)
+
+        val b = BalanceTx("id", accountType, accountNo, balanceAmount, timestamp, phoneUserName, bankName)
+        return b.toString()
     }
 
     private fun buttonCalender() {
@@ -147,7 +171,7 @@ class ListTransactionsActivity : AppCompatActivity() {
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
             var customerString: ArrayList<String> =
-                convertCustomersToString(it as ArrayList<BalanceTx>)
+                convertCustomersToStringList(it as ArrayList<BalanceTx>)
 
             adapter = ItemAdapter(customerString)
             recyclerview?.adapter = adapter

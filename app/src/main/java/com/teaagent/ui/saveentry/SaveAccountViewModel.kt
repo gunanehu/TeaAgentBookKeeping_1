@@ -10,7 +10,9 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
 import com.teaagent.repo.FirebaseEntryAddedCallback
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import util.StringEncryption
 
 // 1
 class SaveAccountViewModel() : ViewModel(),
@@ -31,28 +33,31 @@ class SaveAccountViewModel() : ViewModel(),
     }
 
     fun addTeaTransactionRecord(collectionEntry: BalanceTx?) {
+
+//        val at = StringEncryption.encryptMsg(collectionEntry?.accountType.toString()).toString()
+        val at = collectionEntry?.accountType.toString()
+        val accountNo =
+            StringEncryption.encryptMsg(collectionEntry?.accountNo.toString()).toString()
+        val balanceAmount =
+            StringEncryption.encryptMsg(collectionEntry?.balanceAmount.toString()).toString()
+        val timestamp =
+            StringEncryption.encryptMsg(collectionEntry?.timestamp.toString()).toString()
+//        val phoneUserName =
+//            StringEncryption.encryptMsg(collectionEntry?.phoneUserName.toString()).toString()
+        val phoneUserName =
+            collectionEntry?.phoneUserName.toString()
+        val bankName = StringEncryption.encryptMsg(collectionEntry?.bankName.toString()).toString()
+
         val col = collectionEntry?.let {
-
-            /*
- data class BalanceTx(
-     var accountType: String,
-     var accountNo: String,
-     var balanceAmount: Long,
-     var timestamp: Long,
-
-     var phoneUserName: String?,
-     var customerName: String
- )*/
-
             BalanceTx(
                 "",
-                it.accountType,
-                it.accountNo,
-                it.balanceAmount,
-                it.timestamp,
+                at,
+                accountNo,
+                balanceAmount,
+                timestamp,
 
-                it?.phoneUserName,
-                it?.bankName
+                phoneUserName,
+                bankName
             )
         }
         FirebaseUtil.addCollectionEntry(col)
