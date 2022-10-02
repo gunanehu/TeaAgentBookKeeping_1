@@ -7,7 +7,7 @@ open class InstitutionEntity(
     var type: String,
 
     open var phoneUserName: String?,
-    var institutionCode: String?,
+    var institutionName: String?,
     var address: String?,
 
     open var netBankingUserName: String?,

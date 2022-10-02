@@ -203,7 +203,7 @@ class ListTransactionsActivity : AppCompatActivity() {
 
         var customerNames: ArrayList<String> = ArrayList()
         for (customer in list) {
-            customer.name?.let { customerNames.add(it) }
+            customer.bankName?.let { customerNames.add(it) }
         }
 
         val hashSet: HashSet<String> = HashSet()

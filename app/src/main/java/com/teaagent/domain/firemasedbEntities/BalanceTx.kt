@@ -13,14 +13,15 @@ data class BalanceTx(
     var timestamp: Long,
 
     var phoneUserName: String?,
-    var customerName: String
+    var bankName: String
 ) :
     Serializable {
 
     constructor() : this("", "", "", 0, 0, "", "")
 
     override fun toString(): String {
-        return " convertDate : " + convertDate(timestamp) + " Name : " + customerName + " | " +
+        return " convertDate : " + convertDate(timestamp) +
+                " bankName : " + bankName + " | " +
                 "| accountType : " + accountType + " " +
                 " accountNo : " + accountNo + " - " +
                 " balanceAmount : " + balanceAmount + " "

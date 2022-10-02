@@ -5,7 +5,7 @@ import java.io.Serializable
 open class SaveAccountInfo(
     var id: String,
     var type: String,
-    var name: String?,
+    var bankName: String?,
 
     open var phoneUserName: String?,
     var institutionCode: String?,

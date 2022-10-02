@@ -141,7 +141,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             SaveAccountInfo(
                 it.id,
                 it.type,
-                it.name,
+                it.bankName,
 
                 it.phoneUserName,
                 it.institutionCode,
@@ -170,7 +170,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 //        institutionType = binding.editTextInstituteType.text.toString()
         name = binding.editTextCustomerName.text.toString()
 
-        phoneUserName = binding.editTextPhoneUserName.text.toString()
+        binding.editTextPhoneUserName.setText(FirebaseUtil.getCurrentPhoneUser().toString()+"")
+
         institutionCode = binding.editTextInstituteCode.text.toString()
         address = binding.editTextInstituteAddr.text.toString()
 

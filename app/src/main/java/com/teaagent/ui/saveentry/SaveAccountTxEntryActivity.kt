@@ -34,7 +34,8 @@ import java.util.*
  */
 class SaveAccountTxEntryActivity : AppCompatActivity() {
     private var selectedAccountInfo: SaveAccountInfo? = null
-    private lateinit var customerName: String
+
+    //    private lateinit var customerName: String
     private var kg: Long = 0
     private var amount: Long = 0
     private var advancedPaymentAmount: Long = 0
@@ -75,14 +76,11 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
         // Set up button click events
         binding.saveButton.setOnClickListener {
-            if (binding.editTextCustomerName.text.toString().length > 0 &&
-                binding.editTextKG.text?.length!! > 0 &&
-                binding.editTextAmount.text?.length!! > 0 &&
-                binding.editTextLabourAmount.text?.length!! > 0 &&
-                binding.todaysDate.text?.length!! > 0
+            if (
+                binding.editTextAmount.text?.length!! > 0
             ) {
                 val cuustomerEntry = createCollectionEntryFromEditText()
-                  mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)
+                mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)
             } else {
                 showErrorMesage()
             }
@@ -144,7 +142,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         binding.editTextAmount.setText("")
         binding.editTextAdvancedPaymentAmountt.setText("")
         binding.todaysDate.setText("")
-        customerName = ""
+//        customerName = ""
 
         kg = 0
         amount = 0
@@ -171,15 +169,15 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         var entryTimestampDate = dateTime.timeInMillis
         var entryConvertedDate = BalanceTx.convertDate(dateTime.timeInMillis)
 
-      /*  data class BalanceTx(
-            var accountType: String,
-            var accountNo: String,
-            var balanceAmount: Long,
-            var timestamp: Long,
+        /*  data class BalanceTx(
+              var accountType: String,
+              var accountNo: String,
+              var balanceAmount: Long,
+              var timestamp: Long,
 
-            var phoneUserName: String?,
-            var customerName: String
-        )*/
+              var phoneUserName: String?,
+              var customerName: String
+          )*/
         val tran = BalanceTx(
             "",
             selectedAccountInfo!!.type,
@@ -189,16 +187,16 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             System.currentTimeMillis(),
 
             FirebaseUtil.getCurrentPhoneUser().name,
-            customerName
+            selectedAccountInfo?.bankName.toString()
         )
         return tran
     }
 
     private fun retrievEditTextData() {
-        customerName = binding.editTextCustomerName.text.toString()
-        kg = binding.editTextKG.text?.toString()?.toLong()!!
+//        customerName = binding.editTextCustomerName.text.toString()
+        //  kg = binding.editTextKG.text?.toString()?.toLong()!!
         amount = binding.editTextAmount.text?.toString()?.toLong()!!
-        labourAmount = binding.editTextLabourAmount.text?.toString()?.toLong()!!
+        //  labourAmount = binding.editTextLabourAmount.text?.toString()?.toLong()!!
     }
 
     private fun calculateNetTotalAmount() {
@@ -229,7 +227,8 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         var customerNames: ArrayList<String> = ArrayList()
 
         for (customer in list) {
-            customer.name?.let { customerNames.add(it) }
+//            customer.name?.let { customerNames.add(it) }
+            customerNames.add(customer.bankName!! +"-"+customer.acNo)
         }
 
         val hashSet: HashSet<String> = HashSet()
@@ -251,17 +250,16 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                customerName = customerNAmes?.get(position).toString()
-                binding.editTextCustomerName.setText(customerName)
+//                customerName = customerNAmes?.get(position).toString()
 
                 selectedAccountInfo = allAccounts?.get(position)
+                binding.editTextCustomerName.setText(selectedAccountInfo?.bankName)
 
                 Log.d(TAG, "onItemSelected selectedAccountInfo " + selectedAccountInfo)
-
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
-                binding.editTextCustomerName.setText("")
+//                binding.editTextCustomerName.setText("")
             }
         })
 

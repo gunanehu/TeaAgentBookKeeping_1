@@ -52,7 +52,7 @@ class SaveAccountViewModel() : ViewModel(),
                 it.timestamp,
 
                 it?.phoneUserName,
-                it?.customerName
+                it?.bankName
             )
         }
         FirebaseUtil.addCollectionEntry(col)

@@ -145,7 +145,7 @@ object FirebaseUtil {
     ): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
-            ?.whereEqualTo("name", customerName)
+            ?.whereEqualTo("bankName", customerName)
 //            ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
         return query?.get()
     }
