@@ -23,15 +23,18 @@ class ListTransactionsViewModel() : ViewModel() {
 
     fun getTxByTypeFromFirebaseDb(type: String) {
         var balanceTxs: ArrayList<BalanceTx> = ArrayList()
-        val encryptedType = StringEncryption.encryptMsg(type)
-        val d = StringEncryption.decryptMsg(encryptedType)
-
 
         GlobalScope.async {
-            var task: Task<QuerySnapshot>? =
-                FirebaseUtil.getByAccountType(d)
-            Log.i(TAG, "encryptedType " + d)
 
+            /*val encryptedType =
+                StringEncryption.encryptMsg(type).toString()
+            Log.i(TAG, "encryptedType " + encryptedType)
+            var task: Task<QuerySnapshot>? =
+                FirebaseUtil.getByAccountType(encryptedType)*/
+
+
+            var task: Task<QuerySnapshot>? =
+                FirebaseUtil.getByAccountType(type)
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {

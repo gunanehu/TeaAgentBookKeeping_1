@@ -38,34 +38,6 @@
             android:layout_margin="10dp"
             android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/editTextCustomerName"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:ems="10"
-            android:hint="Institution Name"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/editTextInstituteCode"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:ems="10"
-            android:hint="Institution code" />
-
-        <EditText
-            android:id="@+id/editTextInstituteAddr"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:ems="10"
-            android:hint="Institution Addr" />
-
         <LinearLayout
             android:layout_width="match_parent"
 
@@ -91,18 +63,45 @@
                 android:layout_weight="1" />
 
 
-
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/editTextCustomerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="Institution Name"
+            android:inputType="text" />
 
-        <EditText  android:inputType="none"
-            android:enabled="false"
+        <EditText
+            android:id="@+id/editTextInstituteCode"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="Institution code" />
+
+        <EditText
+            android:id="@+id/editTextInstituteAddr"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="Institution Addr" />
+
+
+        <EditText
             android:id="@+id/editTextPhoneUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="PhoneUserName" />
+            android:enabled="false"
+            android:hint="PhoneUserName"
+            android:inputType="none" />
 
         <EditText
             android:id="@+id/editTextAcNo"

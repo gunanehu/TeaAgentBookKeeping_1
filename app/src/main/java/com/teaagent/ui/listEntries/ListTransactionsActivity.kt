@@ -95,11 +95,11 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
     var total: Long = 0
-    private fun convertCustomersToStringList(customers: ArrayList<BalanceTx>): ArrayList<String> {
+    private fun convertBalanceTxToStringList(customers: ArrayList<BalanceTx>): ArrayList<String> {
         total = 0
         var customerString: ArrayList<String> = ArrayList()
         for (customer in customers) {
-            val customerText: String = convertCustomersToString(customer)
+            val customerText: String = convertBalanceTxToString(customer)
             customerString.add(customerText)
 
             val balanceAmount =
@@ -109,8 +109,10 @@ class ListTransactionsActivity : AppCompatActivity() {
         return customerString
     }
 
-    private fun convertCustomersToString(balanceTx: BalanceTx): String {
-//        val id = StringEncryption.decryptMsg(balanceTx?.id).toString()
+    private fun convertBalanceTxToString(balanceTx: BalanceTx): String {
+//        val id = StringEncryption.decryptMsg(balanceTx?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
+//        val accountType =
+//            StringEncryption.decryptMsg(balanceTx?.accountType).toString()
         val accountType = balanceTx?.accountType.toString()
         val accountNo =
             StringEncryption.decryptMsg(balanceTx?.accountNo).toString()
@@ -171,7 +173,7 @@ class ListTransactionsActivity : AppCompatActivity() {
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
             var customerString: ArrayList<String> =
-                convertCustomersToStringList(it as ArrayList<BalanceTx>)
+                convertBalanceTxToStringList(it as ArrayList<BalanceTx>)
 
             adapter = ItemAdapter(customerString)
             recyclerview?.adapter = adapter

@@ -25,6 +25,7 @@ import com.teaagent.ui.listEntries.ListTransactionsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import util.StringEncryption
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,7 +39,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     //    private lateinit var customerName: String
     private var kg: Long = 0
     private var amount: Long = 0
-    private var advancedPaymentAmount  = null
+    private var advancedPaymentAmount = null
     var labourAmount: Long = 0
     var netTotal: Long = 0
     var allAccounts: List<SaveAccountInfo>? = null
@@ -123,13 +124,75 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         }
 
         mapsActivityViewModel.accountsLiveData.observe(this, Observer() { it ->
-            allAccounts = it
-            getALLCustomerNamesToSpinner(it as ArrayList<SaveAccountInfo>)
+            var saveAccountInfos: ArrayList<SaveAccountInfo> =
+                decryptToAccountDetailsList(it as ArrayList<SaveAccountInfo>)
+
+            allAccounts = saveAccountInfos
+            getALLCustomerNamesToSpinner(saveAccountInfos as ArrayList<SaveAccountInfo>)
             dismissProgressDialog()
 
         })
     }
 
+
+    private fun decryptToAccountDetailsList(arrayList: ArrayList<SaveAccountInfo>): ArrayList<SaveAccountInfo> {
+        var arrayList2: ArrayList<SaveAccountInfo> = ArrayList()
+        /*  open class SaveAccountInfo(
+              var id: String,
+              var type: String,
+              var bankName: String?,
+
+              open var phoneUserName: String?,
+              var institutionCode: String?,
+              var address: String?,
+
+              var acNo: String?,
+              var netBankingUserName: String?,
+              var password: String?,
+              var atmNo: String?,
+              var atmPin: String?
+
+          )*/
+
+        for (accountInfo in arrayList) {
+//        val id = StringEncryption.decryptMsg(accountInfo?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
+            val accountType = accountInfo?.type.toString()
+            val bankName =
+                StringEncryption.decryptMsg(accountInfo?.bankName).toString()
+
+            val phoneUserName =
+                accountInfo?.phoneUserName.toString()
+            val institutionCode =
+                StringEncryption.decryptMsg(accountInfo?.institutionCode).toString()
+            val address =
+                StringEncryption.decryptMsg(accountInfo?.address).toString()
+
+            val acNo =
+                StringEncryption.decryptMsg(accountInfo?.acNo.toString()).toString()
+            val netBankingUserName = StringEncryption.decryptMsg(accountInfo?.netBankingUserName)
+            val password = StringEncryption.decryptMsg(accountInfo?.password)
+            val atmNo = StringEncryption.decryptMsg(accountInfo?.atmNo)
+            val atmPin = StringEncryption.decryptMsg(accountInfo?.atmPin)
+
+            val b =
+                SaveAccountInfo(
+                    "id",
+                    accountType,
+                    bankName,
+                    phoneUserName,
+                    institutionCode,
+                    address,
+                    acNo,
+                    netBankingUserName,
+                    password,
+                    atmNo,
+                    atmPin
+                )
+
+            arrayList2.add(b)
+        }
+        return arrayList2
+    }
 
     // Repository
     private fun getTrackingApplicationInstance() = application as TeaAgentApplication
@@ -146,7 +209,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 //        customerName = ""
 
         kg = 0
-        amount ?.toLong()!!
+        amount?.toLong()!!
         advancedPaymentAmount = null
         labourAmount = 0
         totalKgAmount = 0
@@ -224,7 +287,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
 
     private fun getALLCustomerNamesToSpinner(list: ArrayList<SaveAccountInfo>) {
-        //todo start progress dialog
+        showProgressDialog()
         var accountInfoDisplayName: ArrayList<String> = ArrayList()
 
         for (customer in list) {

@@ -29,7 +29,55 @@ class SaveAccountViewModel() : ViewModel(),
 
     fun addAccountDEtail(customer: SaveAccountInfo?) {
         FirebaseUtil.setFirebaseEntryAddedCallback(this)
-        FirebaseUtil.addAccountDEtail(customer)
+
+        val accountInfo: SaveAccountInfo = convertCustomerToEncrypted(customer)
+        FirebaseUtil.addAccountDEtail(accountInfo)
+    }
+
+    private fun convertCustomerToEncrypted(accountInfo: SaveAccountInfo?): SaveAccountInfo {
+        val type =
+            accountInfo?.type.toString()
+//        val type =
+//            StringEncryption.encryptMsg(accountInfo?.type.toString()).toString()
+        val bankName =
+            StringEncryption.encryptMsg(accountInfo?.bankName.toString()).toString()
+//        val phoneUserName =
+//            StringEncryption.encryptMsg(accountInfo?.phoneUserName.toString()).toString()
+        val phoneUserName =
+            accountInfo?.phoneUserName.toString()
+        val institutionCode =
+            StringEncryption.encryptMsg(accountInfo?.institutionCode.toString()).toString()
+        val address =
+            StringEncryption.encryptMsg(accountInfo?.address.toString()).toString()
+
+        val accountNo =
+            StringEncryption.encryptMsg(accountInfo?.acNo.toString()).toString()
+        val netBankingUserName =
+            StringEncryption.encryptMsg(accountInfo?.netBankingUserName.toString()).toString()
+        val password =
+            StringEncryption.encryptMsg(accountInfo?.password.toString()).toString()
+        val atmNo =
+            StringEncryption.encryptMsg(accountInfo?.atmNo.toString()).toString()
+        val atmPin =
+            StringEncryption.encryptMsg(accountInfo?.atmPin.toString()).toString()
+
+        return SaveAccountInfo(
+            "",
+            type,
+            bankName,
+
+            phoneUserName,
+            institutionCode,
+            address,
+
+            accountNo,
+            netBankingUserName,
+            password,
+            atmNo,
+            atmPin
+        )
+
+
     }
 
     fun addTeaTransactionRecord(collectionEntry: BalanceTx?) {
@@ -92,28 +140,11 @@ class SaveAccountViewModel() : ViewModel(),
         }
 
         job.await()
-//        delay(3000)
-//        return customers
     }
 
     override fun onCustomerAddedSuccessfully(id: String) {
         Log.d(TAG, "onCustomerAddedSuccessfully id " + id)
-
     }
 
-    /* suspend fun getUIAllCustomerFirebaseDb(): ArrayList<Customer> {
-         var customers: ArrayList<Customer> = ArrayList()
-
-         val value = GlobalScope.async { // creates worker thread
-             withContext(Dispatchers.Default) {
-                 customers = getAllCustomerFirebaseDb()
-             }
-         }
-         value.await() //waits for workerthread to finish
-         //runs on ui thread as calling function is on Dispatchers.main
-         customersLiveData.postValue(customers)
-         Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
-         return customers
-     }*/
 }
 
