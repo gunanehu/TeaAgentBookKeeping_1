@@ -19,8 +19,8 @@ import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivitySaveCollectionBinding
 import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
-import com.teaagent.domain.firemasedbEntities.CollectionEntry
-import com.teaagent.domain.firemasedbEntities.Customer
+import com.teaagent.domain.firemasedbEntities.BalanceTx
+import com.teaagent.domain.firemasedbEntities.InstitutionEntity
 import com.teaagent.ui.listEntries.ListTransactionsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -71,7 +71,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         mapsActivityViewModel.customersLiveData.observe(this, Observer() { it ->
 
 
-            getALLCustomerNamesToSpinner(it as ArrayList<Customer>)
+            getALLCustomerNamesToSpinner(it as ArrayList<InstitutionEntity>)
 
             dismissProgressDialog()
         })
@@ -152,7 +152,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         spinner?.setSelection(0)
     }
 
-    private fun createCollectionEntryFromEditText(): CollectionEntry {
+    private fun createCollectionEntryFromEditText(): BalanceTx {
 
         retrievEditTextData()
 
@@ -165,11 +165,18 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         );
 
         var entryTimestampDate = dateTime.timeInMillis
-        var entryConvertedDate = CollectionEntry.convertDate(dateTime.timeInMillis)
+        var entryConvertedDate = BalanceTx.convertDate(dateTime.timeInMillis)
 
+      /*  data class BalanceTx(
+            var accountType: String,
+            var accountNo: String,
+            var balanceAmount: Long,
+            var timestamp: Long,
 
-        val tran = CollectionEntry(
-            /*Calendar.getInstance().timeInMillis.toString(),*/
+            var phoneUserName: String?,
+            var customerName: String
+        )*/
+        val tran = BalanceTx(
             kg,
             amount,
             labourAmount,
@@ -211,7 +218,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     var spinner: Spinner? = null
 
 
-    private fun getALLCustomerNamesToSpinner(list: ArrayList<Customer>) {
+    private fun getALLCustomerNamesToSpinner(list: ArrayList<InstitutionEntity>) {
         //todo start progress dialog
         var customerNames: ArrayList<String> = ArrayList()
 //        var list: ArrayList<Customer> =

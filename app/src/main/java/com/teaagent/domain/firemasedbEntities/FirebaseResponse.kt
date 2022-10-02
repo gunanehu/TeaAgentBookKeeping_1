@@ -1,6 +1,6 @@
 package com.teaagent.domain.firemasedbEntities
 
 data class FirebaseResponse(
-    var products: List<Customer>? = null,
+    var products: List<InstitutionEntity>? = null,
     var exception: Exception? = null
 )

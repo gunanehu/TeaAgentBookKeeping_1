@@ -20,8 +20,8 @@ import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTxListBinding
-import com.teaagent.domain.firemasedbEntities.CollectionEntry
-import com.teaagent.domain.firemasedbEntities.Customer
+import com.teaagent.domain.firemasedbEntities.BalanceTx
+import com.teaagent.domain.firemasedbEntities.InstitutionEntity
 import com.teaagent.ui.report.ReportActivity
 import com.teaagent.ui.saveentry.SaveEntryViewModel
 import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
@@ -75,7 +75,7 @@ class ListTransactionsActivity : AppCompatActivity() {
         }
 
         saveEntryViewModel.customersLiveData.observe(this, Observer() { it ->
-            getALLCustomer(it as ArrayList<Customer>)
+            getALLCustomer(it as ArrayList<InstitutionEntity>)
             dismissProgressDialog()
         })
 
@@ -87,12 +87,12 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
     var total: Long = 0
-    private fun convertCustomersToString(customers: ArrayList<CollectionEntry>): ArrayList<String> {
+    private fun convertCustomersToString(customers: ArrayList<BalanceTx>): ArrayList<String> {
         total = 0
         var customerString: ArrayList<String> = ArrayList()
         for (customer in customers) {
             customerString.add(customer.toString())
-            total = total + customer.netTotal
+//            total = total + customer.netTotal
         }
         return customerString
     }
@@ -138,7 +138,7 @@ class ListTransactionsActivity : AppCompatActivity() {
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
             var customerString: ArrayList<String> =
-                convertCustomersToString(it as ArrayList<CollectionEntry>)
+                convertCustomersToString(it as ArrayList<BalanceTx>)
             adapter = ItemAdapter(customerString)
             recyclerview?.adapter = adapter
 
@@ -179,7 +179,7 @@ class ListTransactionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getALLCustomer(list: ArrayList<Customer>) {
+    private fun getALLCustomer(list: ArrayList<InstitutionEntity>) {
 
         var customerNames: ArrayList<String> = ArrayList()
         for (customer in list) {

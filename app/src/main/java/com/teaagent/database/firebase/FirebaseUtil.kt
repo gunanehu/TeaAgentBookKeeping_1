@@ -10,8 +10,8 @@ import com.google.firebase.firestore.*
 import com.teaagent.AppHelper
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil.addToPreferenceTabId
-import com.teaagent.domain.firemasedbEntities.CollectionEntry
-import com.teaagent.domain.firemasedbEntities.Customer
+import com.teaagent.domain.firemasedbEntities.BalanceTx
+import com.teaagent.domain.firemasedbEntities.InstitutionEntity
 import com.teaagent.domain.firemasedbEntities.PhoneUser
 import com.teaagent.repo.FirebaseEntryAddedCallback
 
@@ -49,7 +49,7 @@ object FirebaseUtil {
     }
 
 
-    fun addCustomer(customer: Customer?) {
+    fun addCustomer(customer: InstitutionEntity?) {
         if (customer != null) {
             tableCustomer?.add(customer)
                 ?.addOnFailureListener(OnFailureListener { e ->
@@ -101,7 +101,7 @@ object FirebaseUtil {
         }
     }
 
-    fun addCollectionEntry(collectionEntry: CollectionEntry?) {
+    fun addCollectionEntry(collectionEntry: BalanceTx?) {
         if (collectionEntry != null) {
             tableCollectionEntry?.add(collectionEntry)
                 ?.addOnFailureListener(OnFailureListener { e ->

@@ -16,17 +16,17 @@ import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityReportBinding
-import com.teaagent.domain.firemasedbEntities.CollectionEntry
+import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.ui.listEntries.ListTransactionsViewModel
 import com.teaagent.ui.listEntries.ListTransactionsViewModelFactory
 import com.teaagent.ui.saveentry.SaveEntryViewModel
 import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class ReportActivity : AppCompatActivity() {
+class ReportActivity : AppCompatActivity()
+/*
+{
 
     val TAG: String = "ReportActivity"
     private lateinit var binding: ActivityReportBinding
@@ -43,7 +43,7 @@ class ReportActivity : AppCompatActivity() {
     var presenter: PaymentsHTMLReportCreator? = null
     private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
-    var data = ArrayList<CollectionEntry>()
+    var data = ArrayList<BalanceTx>()
     public val ReportActivityBundleTag: String = "ReportActivityBundleTag"
     var customerName: String? = null
 
@@ -74,7 +74,7 @@ class ReportActivity : AppCompatActivity() {
 
         listEntryActivityyViewModel.reportEntities.observe(this, Observer { it ->
 
-            val listOfStrings: ArrayList<CollectionEntry> = ArrayList()
+            val listOfStrings: ArrayList<BalanceTx> = ArrayList()
             listOfStrings.addAll(it)
             data = listOfStrings
             Log.d(
@@ -82,7 +82,7 @@ class ReportActivity : AppCompatActivity() {
                 "******reportEntities MutableLiveData<List<CollectionEntry>> *********** ********************* customers $it"
             )
 
-            val collectionEntry: CollectionEntry? = presenter?.getCommonCustomerDetail(data.get(0))
+            val collectionEntry: BalanceTx? = presenter?.getCommonCustomerDetail(data.get(0))
             commonCustomerDetails = presenter?.getCommonCustomerDetailsText(collectionEntry)
 //            presenter?.setCommonCustomerDetails(commonCustomerDetails)
 
@@ -100,7 +100,7 @@ class ReportActivity : AppCompatActivity() {
 
 
     suspend fun getALLByCustomers() {
-        var collectionEntrys: java.util.ArrayList<CollectionEntry> = java.util.ArrayList()
+        var collectionEntrys: java.util.ArrayList<BalanceTx> = java.util.ArrayList()
 
         if (customerName != null) {
 
@@ -131,14 +131,16 @@ class ReportActivity : AppCompatActivity() {
     }
 
 
-    /**
+    */
+/**
      * Callback method that confirms required @permission is granted or not, if yes then email
      * the report else show the message
      *
      * @param requestCode
      * @param permissions
      * @param grantResults
-     */
+     *//*
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
@@ -169,4 +171,4 @@ class ReportActivity : AppCompatActivity() {
         )
     }
 
-}
+}*/

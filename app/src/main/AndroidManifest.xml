@@ -41,7 +41,7 @@
 
         </activity>
         <activity
-            android:name=".ui.saveentry.SaveCustomerActivity"
+            android:name=".ui.saveentry.SaveInstitutionActivity"
             android:exported="true">
 
         </activity>

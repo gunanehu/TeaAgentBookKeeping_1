@@ -7,7 +7,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import com.teaagent.data.FirebaseUtil
-import com.teaagent.domain.firemasedbEntities.CollectionEntry
+import com.teaagent.domain.firemasedbEntities.BalanceTx
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
@@ -16,15 +16,15 @@ import kotlinx.coroutines.async
 class ListTransactionsViewModel() : ViewModel() {
     val TAG: String = "ListEntryViewModel"
     val customerNames = MutableLiveData<List<String>>()
-    val customerEntities = MutableLiveData<List<CollectionEntry>>()
-    val reportEntities = MutableLiveData<List<CollectionEntry>>()
+    val customerEntities = MutableLiveData<List<BalanceTx>>()
+    val reportEntities = MutableLiveData<List<BalanceTx>>()
 
 
     suspend fun getByNameAndDateFromFirebaseDb(
         customerName: String,
         startDate: Long
     )/*: ArrayList<String> */ {
-        var customers: ArrayList<CollectionEntry> = ArrayList()
+        var customers: ArrayList<BalanceTx> = ArrayList()
 //        var customers: ArrayList<String> = ArrayList()
 
         var entryTimestampDate = startDate
@@ -34,20 +34,20 @@ class ListTransactionsViewModel() : ViewModel() {
             var task: Task<QuerySnapshot>? =
                 FirebaseUtil.getByNameAndDate(
                     customerName,
-                    CollectionEntry.convertDate(entryTimestampDate)
+                    BalanceTx.convertDate(entryTimestampDate)
                 )
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
 
-                        var c: CollectionEntry = document.toObject(CollectionEntry::class.java)
+                        var c: BalanceTx = document.toObject(BalanceTx::class.java)
 
 //                        customers.add(c.toString())
                         customers.add(c)
 
 //                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
                         Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
-                        Log.d(FirebaseUtil.TAG, "netTotal" + " => " + c.netTotal)
+//                        Log.d(FirebaseUtil.TAG, "netTotal" + " => " + c.netTotal)
                     }
 
                 } else {
@@ -69,14 +69,14 @@ class ListTransactionsViewModel() : ViewModel() {
 
     suspend fun getByNameFirebaseDb(
         customerName: String){
-        var customers: ArrayList<CollectionEntry> = ArrayList()
+        var customers: ArrayList<BalanceTx> = ArrayList()
         GlobalScope.async {
             var task: Task<QuerySnapshot>? =
                 FirebaseUtil.getByName(customerName)
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        var c: CollectionEntry = document.toObject(CollectionEntry::class.java)
+                        var c: BalanceTx = document.toObject(BalanceTx::class.java)
                         customers.add(c)
                         Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
                     }

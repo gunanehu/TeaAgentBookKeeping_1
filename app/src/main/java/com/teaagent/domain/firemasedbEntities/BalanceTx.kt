@@ -4,29 +4,26 @@ import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class CollectionEntry(
-//    var collectionEntryId: String,
-    var quantity: Long,
-    var amount: Long,
-    var labourAmount: Long,
-    var netTotal: Long,
+data class BalanceTx(
+    var accountType: String,
+    var accountNo: String,
+    var balanceAmount: Long,
     var timestamp: Long,
-    var convertedTimestampDate: String,
+
     var phoneUserName: String?,
     var customerName: String
 ) :
     Serializable {
 
-    constructor() : this(/*"",*/ 0, 0, 0, 0, 0, "", "", "")
+    constructor() : this("", "", 0, 0, "", "")
 
     override fun toString(): String {
         /* "Name : " + customerName + " | " +*/
 //                " phoneUserName : " + phoneUserName + " | " +
-        return "|| " + convertDate(timestamp) +
-                "| Quantity : " + quantity + "* " +
-                " amount : " + amount + " - " +
-                " labourAmount : " + labourAmount + "= " +
-                " total : " + netTotal
+        return "| accountType : " + accountType + "* " +
+                " accountNo : " + accountNo + " - " +
+                " balanceAmount : " + balanceAmount + "= " +
+                " convertDate : " + convertDate(timestamp)
 
 
     }

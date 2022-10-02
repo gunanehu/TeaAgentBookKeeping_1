@@ -2,17 +2,14 @@ package com.teaagent.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.teaagent.databinding.ActivitySplashBinding
-import com.teaagent.ui.saveentry.SaveCustomerActivity
+import com.teaagent.domain.firemasedbEntities.AccountInfo
+import com.teaagent.ui.saveentry.SaveInstitutionActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class SplashActivity : AppCompatActivity() {
@@ -33,10 +30,7 @@ class SplashActivity : AppCompatActivity() {
         activityScope.launch {
             delay(1000)
 
-
-
-
-            var intent = Intent(this@SplashActivity, SaveCustomerActivity::class.java)
+            var intent = Intent(this@SplashActivity, SaveInstitutionActivity::class.java)
             startActivity(intent)
             finish()
         }

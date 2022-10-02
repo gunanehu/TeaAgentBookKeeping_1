@@ -12,7 +12,7 @@ import com.teaagent.R
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
-import com.teaagent.domain.firemasedbEntities.Customer
+import com.teaagent.domain.firemasedbEntities.InstitutionEntity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,12 +20,12 @@ import java.util.*
 /**
  * Main Screen
  */
-class SaveCustomerActivity : AppCompatActivity() {
+class SaveInstitutionActivity : AppCompatActivity() {
 
-    val TAG: String = "SaveCustomerActivity"
+    val TAG: String = "SaveInstitutionActivity"
 
-    private lateinit var customerName: String
-    private lateinit var additionalInfo: String
+    private lateinit var name: String
+    private lateinit var institutionType: String
     var spinner: Spinner? = null
     var dateTime = Calendar.getInstance()
 
@@ -95,13 +95,21 @@ class SaveCustomerActivity : AppCompatActivity() {
     }
 
 
-    fun addCustomer(customerEntity: Customer?) {
+    fun addCustomer(customerEntity: InstitutionEntity?) {
         val customer = customerEntity?.let {
-            Customer(
-                /*   dateTime.timeInMillis.toString(),*/
+            /*    data class InstitutionEntity(
+          var name: String?,
+          var type:String,
+          var phoneUserName: String?,
+          var institutionCode: String?,
+          var address: String?
+
+      ):*/
+            InstitutionEntity(
                 it.name,
-                it.AdditionalInfo,
-                it.phoneUserName
+                it.type, it.phoneUserName,
+                it.institutionCode,
+                ""
             )
         }
         saveEntryViewModel.addCustomer(customer)
@@ -110,20 +118,28 @@ class SaveCustomerActivity : AppCompatActivity() {
     private fun clearEditTextValues() {
         binding.editTextCustomerName.setText("")
         binding.todaysDate.setText("")
-        customerName = ""
-        additionalInfo = ""
+        name = ""
+        institutionType = ""
         dateTime.timeInMillis = 0
         spinner?.setSelection(0)
     }
 
-    private fun getEditTextValues(): Customer {
-        customerName = binding.editTextCustomerName.text.toString()
-        additionalInfo = binding.editTextAdditionalInfo.text.toString()
-        return Customer(
-            /*      dateTime.timeInMillis.toString(),*/
-            customerName,
-            additionalInfo,
-            FirebaseUtil.phoneUser.name
+    private fun getEditTextValues(): InstitutionEntity {
+        name = binding.editTextCustomerName.text.toString()
+        institutionType = binding.editTextAdditionalInfo.text.toString()
+        /*    data class InstitutionEntity(
+                var name: String?,
+                var type:String,
+                var phoneUserName: String?,
+                var institutionCode: String?,
+                var address: String?
+
+            ):*/
+        return InstitutionEntity(
+            name,
+            institutionType,
+            FirebaseUtil.phoneUser.name,
+            ",", ""//todo empty for now
         )
     }
 

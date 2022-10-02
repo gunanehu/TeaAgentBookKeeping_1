@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center_vertical|center_horizontal"
-            android:text="Save Customer "
+            android:text="Save Institution "
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="enter Customer Name"
+            android:hint="Institution Name"
             android:inputType="text" />
 
         <EditText
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="additional customer info" />
+            android:hint="Institution type" />
 
 
         <Button
