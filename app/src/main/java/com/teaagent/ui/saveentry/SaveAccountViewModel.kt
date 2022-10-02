@@ -45,6 +45,7 @@ class SaveAccountViewModel() : ViewModel(),
  )*/
 
             BalanceTx(
+                "",
                 it.accountType,
                 it.accountNo,
                 it.balanceAmount,
@@ -69,7 +70,6 @@ class SaveAccountViewModel() : ViewModel(),
                         var c: SaveAccountInfo = document.toObject(SaveAccountInfo::class.java)
                         customers.add(c)
                         Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
-                        Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.name)
                         Log.d(FirebaseUtil.TAG, "=======================")
                     }
 

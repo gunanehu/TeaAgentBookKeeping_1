@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class BalanceTx(
+    var id: String,
+
     var accountType: String,
     var accountNo: String,
     var balanceAmount: Long,
@@ -15,7 +17,7 @@ data class BalanceTx(
 ) :
     Serializable {
 
-    constructor() : this("", "", 0, 0, "", "")
+    constructor() : this("", "", "", 0, 0, "", "")
 
     override fun toString(): String {
         /* "Name : " + customerName + " | " +*/

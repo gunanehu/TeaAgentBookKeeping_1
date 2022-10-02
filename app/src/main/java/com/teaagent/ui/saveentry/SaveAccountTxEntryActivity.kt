@@ -33,12 +33,15 @@ import java.util.*
  * Main Screen
  */
 class SaveAccountTxEntryActivity : AppCompatActivity() {
+    private var selectedAccountInfo: SaveAccountInfo? = null
     private lateinit var customerName: String
     private var kg: Long = 0
     private var amount: Long = 0
     private var advancedPaymentAmount: Long = 0
     var labourAmount: Long = 0
     var netTotal: Long = 0
+    var allAccounts: List<SaveAccountInfo>? = null
+    var dateTime = Calendar.getInstance()
 
     //    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
     private var totalKgAmount: Long = 0
@@ -63,14 +66,8 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         setContentView(view)
 
         showProgressDialog()
-        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
-            mapsActivityViewModel.getAllAccountDetailsFirebaseDb()
-        }
 
-        mapsActivityViewModel.accountsLiveData.observe(this, Observer() { it ->
-            getALLCustomerNamesToSpinner(it as ArrayList<SaveAccountInfo>)
-            dismissProgressDialog()
-        })
+        getAllAccountDetailsFirebaseDb()
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
@@ -84,8 +81,8 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
                 binding.editTextLabourAmount.text?.length!! > 0 &&
                 binding.todaysDate.text?.length!! > 0
             ) {
-              /* todo  val cuustomerEntry = createCollectionEntryFromEditText()
-                mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)*/
+                val cuustomerEntry = createCollectionEntryFromEditText()
+                  mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)
             } else {
                 showErrorMesage()
             }
@@ -122,7 +119,18 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         }
     }
 
-    var dateTime = Calendar.getInstance()
+    private fun getAllAccountDetailsFirebaseDb() {
+        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            mapsActivityViewModel.getAllAccountDetailsFirebaseDb()
+        }
+
+        mapsActivityViewModel.accountsLiveData.observe(this, Observer() { it ->
+            allAccounts = it
+            getALLCustomerNamesToSpinner(it as ArrayList<SaveAccountInfo>)
+            dismissProgressDialog()
+        })
+    }
+
 
     // Repository
     private fun getTrackingApplicationInstance() = application as TeaAgentApplication
@@ -148,41 +156,43 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         spinner?.setSelection(0)
     }
 
-//    private fun createCollectionEntryFromEditText(): BalanceTx? {
-//
-//        retrievEditTextData()
-//
-//        // advancedPaymentAmount = binding.editTextAdvancedPaymentAmountt.text?.toString()?.toLong()!!
-//
-//        calculateNetTotalAmount()
-//        Log.d(
-//            TAG,
-//            "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
-//        );
-//
-//        var entryTimestampDate = dateTime.timeInMillis
-//        var entryConvertedDate = BalanceTx.convertDate(dateTime.timeInMillis)
-//
-//      /*  data class BalanceTx(
-//            var accountType: String,
-//            var accountNo: String,
-//            var balanceAmount: Long,
-//            var timestamp: Long,
-//
-//            var phoneUserName: String?,
-//            var customerName: String
-//        )*/
-//        val tran = BalanceTx(
-//            kg,
-//            amount,
-//            labourAmount,
-//            netTotal,
-//            entryTimestampDate, entryConvertedDate,
-//            FirebaseUtil.getCurrentPhoneUser().name,
-//            customerName
-//        )
-//        return tran
-//    }
+    private fun createCollectionEntryFromEditText(): BalanceTx? {
+
+        retrievEditTextData()
+
+        // advancedPaymentAmount = binding.editTextAdvancedPaymentAmountt.text?.toString()?.toLong()!!
+
+        calculateNetTotalAmount()
+        Log.d(
+            TAG,
+            "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
+        );
+
+        var entryTimestampDate = dateTime.timeInMillis
+        var entryConvertedDate = BalanceTx.convertDate(dateTime.timeInMillis)
+
+      /*  data class BalanceTx(
+            var accountType: String,
+            var accountNo: String,
+            var balanceAmount: Long,
+            var timestamp: Long,
+
+            var phoneUserName: String?,
+            var customerName: String
+        )*/
+        val tran = BalanceTx(
+            "",
+            selectedAccountInfo!!.type,
+            selectedAccountInfo!!.acNo!!,
+
+            amount,
+            System.currentTimeMillis(),
+
+            FirebaseUtil.getCurrentPhoneUser().name,
+            customerName
+        )
+        return tran
+    }
 
     private fun retrievEditTextData() {
         customerName = binding.editTextCustomerName.text.toString()
@@ -217,7 +227,6 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     private fun getALLCustomerNamesToSpinner(list: ArrayList<SaveAccountInfo>) {
         //todo start progress dialog
         var customerNames: ArrayList<String> = ArrayList()
-//        var list: ArrayList<Customer> =
 
         for (customer in list) {
             customer.name?.let { customerNames.add(it) }
@@ -227,7 +236,6 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         hashSet.addAll(customerNames!!)
 
         val customerNAmes: MutableList<String> = ArrayList()
-        customerNAmes.add("Select pre selected name")
         customerNAmes.addAll(hashSet)
 
         spinner = findViewById(R.id.spinnerSearchCustomerName)
@@ -244,8 +252,12 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
                 id: Long
             ) {
                 customerName = customerNAmes?.get(position).toString()
-                Log.d(TAG, "onItemSelected customerName " + customerName)
                 binding.editTextCustomerName.setText(customerName)
+
+                selectedAccountInfo = allAccounts?.get(position)
+
+                Log.d(TAG, "onItemSelected selectedAccountInfo " + selectedAccountInfo)
+
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {

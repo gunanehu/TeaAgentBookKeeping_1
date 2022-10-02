@@ -50,8 +50,6 @@ object FirebaseUtil {
 
 
     fun addAccountDEtail(customer: SaveAccountInfo?) {
-
-
         var doc = tableAccountInfo?.document()?.id// this is the id
         if (doc != null) {
             customer?.id = doc
@@ -60,15 +58,10 @@ object FirebaseUtil {
         if (customer != null) {
             tableAccountInfo?.document(doc!!)?.set(customer)
                 ?.addOnSuccessListener {
-                    Log.i(TAG, "OnSuccessListener documentReference " + doc)
-
+                    Log.i(TAG, "SaveAccountInfo addOnSuccessListener documentReference " + doc)
                     firebaseEntryAddedCallback?.onCustomerAddedSuccessfully(doc)
-
-
                 }
         }
-
-
     }
 
     fun addPhoneUser(phoneUser: PhoneUser?) {
@@ -105,6 +98,19 @@ object FirebaseUtil {
     }
 
     fun addCollectionEntry(collectionEntry: BalanceTx?) {
+        var doc = tableCollectionEntry?.document()?.id// this is the id
+        if (doc != null) {
+            collectionEntry?.id = doc
+        }
+
+        if (collectionEntry != null) {
+            tableCollectionEntry?.document(doc!!)?.set(collectionEntry)
+                ?.addOnSuccessListener {
+                    Log.i(TAG, " BalanceTx addOnSuccessListener documentReference " + doc)
+                }
+        }
+    }
+    /*{
         if (collectionEntry != null) {
             tableCollectionEntry?.add(collectionEntry)
                 ?.addOnFailureListener(OnFailureListener { e ->
@@ -119,7 +125,7 @@ object FirebaseUtil {
                     Log.i(TAG, " OnCompleteListener documentReference " + task.result.get())
                 })
         }
-    }
+    }*/
 
     ///get calls
 
