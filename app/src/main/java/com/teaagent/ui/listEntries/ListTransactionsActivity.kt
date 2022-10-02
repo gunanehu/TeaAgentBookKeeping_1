@@ -73,7 +73,8 @@ class ListTransactionsActivity : AppCompatActivity() {
         declareTypeSpinner()
 
         getAccountDetails()
-        searchTransactions()
+        setSearchTransactionsClickListener()
+        getNetAssetsByNameTransactionsClickListener()
 
         buttonCalender()
         sendClick()
@@ -98,7 +99,7 @@ class ListTransactionsActivity : AppCompatActivity() {
         var customerString: ArrayList<String> = ArrayList()
         for (customer in customers) {
             customerString.add(customer.toString())
-//            total = total + customer.netTotal
+            total = total + customer.balanceAmount
         }
         return customerString
     }
@@ -127,18 +128,21 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
     var mProgressDialog: ProgressDialog? = null
-    private fun searchTransactions() {
+
+    private fun setSearchTransactionsClickListener() {
         showProgressDialog()
         binding.buttonSearchCustomerName.setOnClickListener {
-
             GlobalScope.launch(Dispatchers.Main) {
                 listEntryActivityyViewModel.getTxByTypeFromFirebaseDb(
                     institutionType!!
                 )
             }
         }
+        blanceTxMutableLiveDataCallback()
 
+    }
 
+    private fun blanceTxMutableLiveDataCallback() {
         listEntryActivityyViewModel.blanceTxMutableLiveData.observe(this, Observer { it ->
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
@@ -152,6 +156,16 @@ class ListTransactionsActivity : AppCompatActivity() {
             dismissProgressDialog()
 
         })
+    }
+
+    fun getNetAssetsByNameTransactionsClickListener() {
+        showProgressDialog()
+        binding.buttonGetNetAssetsByName.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                listEntryActivityyViewModel.getNetAssetsByName()
+            }
+        }
+        blanceTxMutableLiveDataCallback()
     }
 
     private fun showProgressDialog() {
@@ -225,8 +239,8 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
 
-    var accountType: String? = null
     var institutionType: String? = null
+
     private fun declareTypeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerInstituteType)
         val enumValues: List<Enum<*>> = ArrayList(
@@ -247,14 +261,12 @@ class ListTransactionsActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                accountType = enumValues?.get(position).toString()
-                institutionType = accountType as String
+                institutionType = enumValues?.get(position).toString()
                 Log.d(TAG, "onItemSelected accountType " + institutionType)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
-                accountType = enumValues?.get(0).toString()
-                institutionType=accountType
+                institutionType = enumValues?.get(0).toString()
                 Log.d(TAG, "default onItemSelected accountType " + institutionType)
 
             }

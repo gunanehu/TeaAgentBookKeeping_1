@@ -14,76 +14,77 @@ import kotlinx.coroutines.async
 
 // 1
 class ListTransactionsViewModel() : ViewModel() {
-    val TAG: String = "ListEntryViewModel"
+    val TAG: String = "ListTransactionsViewModel"
     val customerNames = MutableLiveData<List<String>>()
     val blanceTxMutableLiveData = MutableLiveData<List<BalanceTx>>()
     val reportEntities = MutableLiveData<List<BalanceTx>>()
 
 
-    suspend fun getTxByTypeFromFirebaseDb(type: String) {
+    fun getTxByTypeFromFirebaseDb(type: String) {
         var balanceTxs: ArrayList<BalanceTx> = ArrayList()
 
-        val job = GlobalScope.async {
+        GlobalScope.async {
             var task: Task<QuerySnapshot>? =
-                FirebaseUtil.getByAccountType(
-                    type
-                )
+                FirebaseUtil.getByAccountType(type)
 
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
 
                         var c: BalanceTx = document.toObject(BalanceTx::class.java)
-
 //                        customers.add(c.toString())
                         balanceTxs.add(c)
 
-                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
-                        Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
+                        Log.d(TAG, document.id + " => " + document.data)
+                        Log.d(TAG, "toObject" + " => " + c.toString())
 //                        Log.d(FirebaseUtil.TAG, "netTotal" + " => " + c.netTotal)
                     }
 
                 } else {
-                    Log.e(FirebaseUtil.TAG, "Error getting documents: ", task.exception)
+                    Log.e(TAG, "Error getting documents: ", task.exception)
                 }
             })
             task?.addOnSuccessListener { it ->
                 Log.d(
-                    FirebaseUtil.TAG,
-                    "*****************addOnSuccessListener ********************* customers $balanceTxs"
+                    TAG,
+                    "*****************addOnSuccessListener ********************* balanceTxs $balanceTxs"
                 )
-//                customerNames.postValue(customers)
                 blanceTxMutableLiveData.postValue(balanceTxs)
             }
         }
     }
 
 
-    suspend fun getByNameFirebaseDb(
-        customerName: String
-    ) {
-        var customers: ArrayList<BalanceTx> = ArrayList()
+    suspend fun getNetAssetsByName() {
+        var balanceTxs: ArrayList<BalanceTx> = ArrayList()
+
         GlobalScope.async {
             var task: Task<QuerySnapshot>? =
-                FirebaseUtil.getByName(customerName)
+                FirebaseUtil.getNetAssetsByName()
+
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
+
                         var c: BalanceTx = document.toObject(BalanceTx::class.java)
-                        customers.add(c)
-                        Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
+//                        customers.add(c.toString())
+                        balanceTxs.add(c)
+
+                        Log.d(TAG, document.id + " => " + document.data)
+                        Log.d(TAG, "toObject" + " => " + c.toString())
+//                        Log.d(FirebaseUtil.TAG, "netTotal" + " => " + c.netTotal)
                     }
 
                 } else {
-                    Log.e(FirebaseUtil.TAG, "Error getting documents: ", task.exception)
+                    Log.e(TAG, "Error getting documents: ", task.exception)
                 }
             })
             task?.addOnSuccessListener { it ->
                 Log.d(
-                    FirebaseUtil.TAG,
-                    "***************** reportEntities addOnSuccessListener ********************* customers $customers"
+                    TAG,
+                    "*****************addOnSuccessListener ********************* balanceTxs $balanceTxs"
                 )
-                reportEntities.postValue(customers)
+                blanceTxMutableLiveData.postValue(balanceTxs)
             }
         }
     }

@@ -37,13 +37,13 @@
 
         <EditText
             android:id="@+id/editTextKG"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
             android:hint="enter Kg"
-            android:inputType="number" />
+            android:inputType="number"
+            android:visibility="gone" />
 
 
         <EditText
@@ -52,28 +52,32 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="enter per KG Amount in Rs"
+            android:hint="Balance "
             android:inputType="number" />
+
         <EditText
             android:id="@+id/editTextTotalAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:ems="10"
-            android:textColor="@color/black_overlay"
-            android:enabled="false"
-            android:hint="Net total amount :"
-            android:inputType="none"
-            />
-        <EditText
-            android:id="@+id/editTextLabourAmount"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
+            android:enabled="false"
+            android:hint="Net total amount :"
+            android:inputType="none"
+            android:textColor="@color/black_overlay"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/editTextLabourAmount"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
             android:hint="enter Labour Amount in Rs"
-            android:inputType="number" />
+            android:inputType="number"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/editTextAdvancedPaymentAmountt"

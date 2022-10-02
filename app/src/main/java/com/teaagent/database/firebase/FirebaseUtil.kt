@@ -151,10 +151,9 @@ object FirebaseUtil {
     }
 
 
-    fun getByName(customerName: String): Task<QuerySnapshot>? {
+    fun getNetAssetsByName(): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
-            ?.whereEqualTo("name", customerName)
             ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()
     }
@@ -162,8 +161,7 @@ object FirebaseUtil {
     fun getByAccountType(customerName: String): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
-            ?.whereEqualTo("type", customerName)
-//            ?.orderBy("timestamp", Query.Direction.ASCENDING)
+            ?.whereEqualTo("accountType", customerName)
         return query?.get()
     }
 }

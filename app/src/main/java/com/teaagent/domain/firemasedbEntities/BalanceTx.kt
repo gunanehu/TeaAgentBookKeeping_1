@@ -20,12 +20,10 @@ data class BalanceTx(
     constructor() : this("", "", "", 0, 0, "", "")
 
     override fun toString(): String {
-        /* "Name : " + customerName + " | " +*/
-//                " phoneUserName : " + phoneUserName + " | " +
-        return "| accountType : " + accountType + "* " +
+        return " convertDate : " + convertDate(timestamp) + " Name : " + customerName + " | " +
+                "| accountType : " + accountType + " " +
                 " accountNo : " + accountNo + " - " +
-                " balanceAmount : " + balanceAmount + "= " +
-                " convertDate : " + convertDate(timestamp)
+                " balanceAmount : " + balanceAmount + " "
 
 
     }
