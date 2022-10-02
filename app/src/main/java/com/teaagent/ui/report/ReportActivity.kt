@@ -1,27 +1,6 @@
 package com.teaagent.ui.report
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Bundle
-import android.util.Log
-import android.webkit.WebSettings
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import com.teaagent.R
-import com.teaagent.TeaAgentApplication
-import com.teaagent.data.FirebaseUtil
-import com.teaagent.databinding.ActivityReportBinding
-import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.ui.listEntries.ListTransactionsViewModel
-import com.teaagent.ui.listEntries.ListTransactionsViewModelFactory
-import com.teaagent.ui.saveentry.SaveEntryViewModel
-import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
-import kotlinx.coroutines.launch
 
 
 class ReportActivity : AppCompatActivity()

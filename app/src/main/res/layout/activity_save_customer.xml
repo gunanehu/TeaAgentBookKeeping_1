@@ -11,18 +11,6 @@
 
 
         <TextView
-            android:id="@+id/version"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center_vertical"
-            android:text="App version:  "
-            android:textSize="10sp"
-            android:textStyle="italic"
-       />
-
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -59,27 +47,100 @@
             android:ems="10"
             android:hint="Institution Name"
             android:inputType="text" />
-
         <EditText
-            android:id="@+id/editTextAdditionalInfo"
+            android:id="@+id/editTextInstituteCode"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="Institution type" />
+            android:hint="Institution code" />
+        <EditText
+            android:id="@+id/editTextInstituteAddr"
 
-
-        <Button
-            android:id="@+id/buttonsetDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="set Date"
-            android:textAllCaps="false"
-            android:visibility="gone" />
+            android:ems="10"
+            android:hint="Institution Addr" />
+        <LinearLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Institution type "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerInstituteType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/editTextInstituteType"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:ems="10"
+                android:hint="Institution type" />
+
+        </LinearLayout>
 
 
+        <EditText
+            android:id="@+id/editTextPhoneUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="PhoneUserName" />
+        <EditText
+            android:id="@+id/editTextAcNo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="AcNo" />
+        <EditText
+            android:id="@+id/editTextNetBAnkingUserNAme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="NetBAnkingUserName" />
+        <EditText
+            android:id="@+id/editTextNetBAnkingPwrd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="NetBAnkingPwrd" />
+        <EditText
+            android:id="@+id/editTextAtmNo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="AtmNo" />
+        <EditText
+            android:id="@+id/editTextAtmPin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="AtmPin" />
     </LinearLayout>
 
     <LinearLayout

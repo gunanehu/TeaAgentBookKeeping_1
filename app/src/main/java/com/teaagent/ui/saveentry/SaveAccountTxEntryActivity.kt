@@ -20,7 +20,7 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivitySaveCollectionBinding
 import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.InstitutionEntity
+import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
 import com.teaagent.ui.listEntries.ListTransactionsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,7 +32,7 @@ import java.util.*
 /**
  * Main Screen
  */
-class SaveCollectionEntryActivity : AppCompatActivity() {
+class SaveAccountTxEntryActivity : AppCompatActivity() {
     private lateinit var customerName: String
     private var kg: Long = 0
     private var amount: Long = 0
@@ -43,11 +43,11 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     //    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
     private var totalKgAmount: Long = 0
 
-    val TAG: String = "SaveCollectionEntryActivity"
+    val TAG: String = "SaveAccountTxEntryActivity"
     private lateinit var binding: ActivitySaveCollectionBinding
 
     // ViewModel
-    private val mapsActivityViewModel: SaveEntryViewModel by viewModels {
+    private val mapsActivityViewModel: SaveAccountViewModel by viewModels {
         SaveEntryViewModelFactory()
     }
 
@@ -64,15 +64,11 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
         showProgressDialog()
         GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
-            mapsActivityViewModel.getAllCustomerFirebaseDb()
+            mapsActivityViewModel.getAllAccountDetailsFirebaseDb()
         }
 
-
-        mapsActivityViewModel.customersLiveData.observe(this, Observer() { it ->
-
-
-            getALLCustomerNamesToSpinner(it as ArrayList<InstitutionEntity>)
-
+        mapsActivityViewModel.accountsLiveData.observe(this, Observer() { it ->
+            getALLCustomerNamesToSpinner(it as ArrayList<SaveAccountInfo>)
             dismissProgressDialog()
         })
 
@@ -88,8 +84,8 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
                 binding.editTextLabourAmount.text?.length!! > 0 &&
                 binding.todaysDate.text?.length!! > 0
             ) {
-                val cuustomerEntry = createCollectionEntryFromEditText()
-                mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)
+              /* todo  val cuustomerEntry = createCollectionEntryFromEditText()
+                mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)*/
             } else {
                 showErrorMesage()
             }
@@ -152,41 +148,41 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
         spinner?.setSelection(0)
     }
 
-    private fun createCollectionEntryFromEditText(): BalanceTx {
-
-        retrievEditTextData()
-
-        // advancedPaymentAmount = binding.editTextAdvancedPaymentAmountt.text?.toString()?.toLong()!!
-
-        calculateNetTotalAmount()
-        Log.d(
-            TAG,
-            "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
-        );
-
-        var entryTimestampDate = dateTime.timeInMillis
-        var entryConvertedDate = BalanceTx.convertDate(dateTime.timeInMillis)
-
-      /*  data class BalanceTx(
-            var accountType: String,
-            var accountNo: String,
-            var balanceAmount: Long,
-            var timestamp: Long,
-
-            var phoneUserName: String?,
-            var customerName: String
-        )*/
-        val tran = BalanceTx(
-            kg,
-            amount,
-            labourAmount,
-            netTotal,
-            entryTimestampDate, entryConvertedDate,
-            FirebaseUtil.getCurrentPhoneUser().name,
-            customerName
-        )
-        return tran
-    }
+//    private fun createCollectionEntryFromEditText(): BalanceTx? {
+//
+//        retrievEditTextData()
+//
+//        // advancedPaymentAmount = binding.editTextAdvancedPaymentAmountt.text?.toString()?.toLong()!!
+//
+//        calculateNetTotalAmount()
+//        Log.d(
+//            TAG,
+//            "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
+//        );
+//
+//        var entryTimestampDate = dateTime.timeInMillis
+//        var entryConvertedDate = BalanceTx.convertDate(dateTime.timeInMillis)
+//
+//      /*  data class BalanceTx(
+//            var accountType: String,
+//            var accountNo: String,
+//            var balanceAmount: Long,
+//            var timestamp: Long,
+//
+//            var phoneUserName: String?,
+//            var customerName: String
+//        )*/
+//        val tran = BalanceTx(
+//            kg,
+//            amount,
+//            labourAmount,
+//            netTotal,
+//            entryTimestampDate, entryConvertedDate,
+//            FirebaseUtil.getCurrentPhoneUser().name,
+//            customerName
+//        )
+//        return tran
+//    }
 
     private fun retrievEditTextData() {
         customerName = binding.editTextCustomerName.text.toString()
@@ -218,7 +214,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
     var spinner: Spinner? = null
 
 
-    private fun getALLCustomerNamesToSpinner(list: ArrayList<InstitutionEntity>) {
+    private fun getALLCustomerNamesToSpinner(list: ArrayList<SaveAccountInfo>) {
         //todo start progress dialog
         var customerNames: ArrayList<String> = ArrayList()
 //        var list: ArrayList<Customer> =

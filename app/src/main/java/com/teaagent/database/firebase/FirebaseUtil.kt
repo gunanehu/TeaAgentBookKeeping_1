@@ -11,8 +11,8 @@ import com.teaagent.AppHelper
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil.addToPreferenceTabId
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.InstitutionEntity
 import com.teaagent.domain.firemasedbEntities.PhoneUser
+import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
 import com.teaagent.repo.FirebaseEntryAddedCallback
 
 
@@ -30,13 +30,13 @@ object FirebaseUtil {
 
     //firebeCloudStorage
     private var tablePhoneUser: CollectionReference? = null
-    private var tableCustomer: CollectionReference? = null
+    private var tableAccountInfo: CollectionReference? = null
     private var tableCollectionEntry: CollectionReference? = null
 
     init {
-        tableCustomer = firestoreDb.collection("Customer")
+        tableAccountInfo = firestoreDb.collection("AccountInfo")
         tablePhoneUser = firestoreDb.collection("PhoneUser")
-        tableCollectionEntry = firestoreDb.collection("Transactions")
+        tableCollectionEntry = firestoreDb.collection("BalanceTx")
         //TODO use only one in lifetime for that user
         addPhoneUser(phoneUser)
     }
@@ -49,22 +49,25 @@ object FirebaseUtil {
     }
 
 
-    fun addCustomer(customer: InstitutionEntity?) {
-        if (customer != null) {
-            tableCustomer?.add(customer)
-                ?.addOnFailureListener(OnFailureListener { e ->
-                    {
-                        Log.e(TAG, "OnSuccessListener documentReference " + e.message)
-                    }
-                })
-                ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
-                    Log.i(TAG, "OnSuccessListener documentReference " + documentReference.id)
-                    firebaseEntryAddedCallback?.onCustomerAddedSuccessfully(documentReference.id)
-                })
-                ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
-                    Log.i(TAG, " OnCompleteListener documentReference " + task.result.get())
-                })
+    fun addAccountDEtail(customer: SaveAccountInfo?) {
+
+
+        var doc = tableAccountInfo?.document()?.id// this is the id
+        if (doc != null) {
+            customer?.id = doc
         }
+
+        if (customer != null) {
+            tableAccountInfo?.document(doc!!)?.set(customer)
+                ?.addOnSuccessListener {
+                    Log.i(TAG, "OnSuccessListener documentReference " + doc)
+
+                    firebaseEntryAddedCallback?.onCustomerAddedSuccessfully(doc)
+
+
+                }
+        }
+
 
     }
 
@@ -125,8 +128,8 @@ object FirebaseUtil {
 
     }
 
-    fun getAllCustomers(): Task<QuerySnapshot>? {
-        val query = tableCustomer?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+    fun getAllAccountDEtail(): Task<QuerySnapshot>? {
+        val query = tableAccountInfo?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
         return query?.get()
     }
 
@@ -136,8 +139,8 @@ object FirebaseUtil {
     ): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
-            ?.whereEqualTo("customerName", customerName)
-            ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
+            ?.whereEqualTo("name", customerName)
+//            ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
         return query?.get()
     }
 
@@ -145,8 +148,16 @@ object FirebaseUtil {
     fun getByName(customerName: String): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
-            ?.whereEqualTo("customerName", customerName)
+            ?.whereEqualTo("name", customerName)
             ?.orderBy("timestamp", Query.Direction.ASCENDING)
+        return query?.get()
+    }
+
+    fun getByAccountType(customerName: String): Task<QuerySnapshot>? {
+        val query = tableCollectionEntry
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+            ?.whereEqualTo("type", customerName)
+//            ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()
     }
 }

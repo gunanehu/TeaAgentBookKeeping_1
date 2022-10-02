@@ -8,15 +8,16 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.InstitutionEntity
+import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
 import com.teaagent.repo.FirebaseEntryAddedCallback
 import kotlinx.coroutines.*
 
 // 1
-class SaveEntryViewModel() : ViewModel(),
+class SaveAccountViewModel() : ViewModel(),
     FirebaseEntryAddedCallback {
     val TAG: String = "MapsActivityViewModel"
-    val customersLiveData = MutableLiveData<List<InstitutionEntity>>()
+    val accountsLiveData = MutableLiveData<List<SaveAccountInfo>>()
+
 
     // 2
 
@@ -24,21 +25,31 @@ class SaveEntryViewModel() : ViewModel(),
     val currentNumberOfStepCount = MutableLiveData(0)
     var initialStepCount = 0
 
-    fun addCustomer(customer: InstitutionEntity?) {
+    fun addAccountDEtail(customer: SaveAccountInfo?) {
         FirebaseUtil.setFirebaseEntryAddedCallback(this)
-        FirebaseUtil.addCustomer(customer)
+        FirebaseUtil.addAccountDEtail(customer)
     }
 
     fun addTeaTransactionRecord(collectionEntry: BalanceTx?) {
         val col = collectionEntry?.let {
+
+            /*
+ data class BalanceTx(
+     var accountType: String,
+     var accountNo: String,
+     var balanceAmount: Long,
+     var timestamp: Long,
+
+     var phoneUserName: String?,
+     var customerName: String
+ )*/
+
             BalanceTx(
-     /*           it.collectionEntryId,*/
-                it.quantity,
-                it.amount,
-                it.labourAmount,
-                it.netTotal,
+                it.accountType,
+                it.accountNo,
+                it.balanceAmount,
                 it.timestamp,
-                BalanceTx.convertDate(it.timestamp),
+
                 it?.phoneUserName,
                 it?.customerName
             )
@@ -47,15 +58,15 @@ class SaveEntryViewModel() : ViewModel(),
 
     }
 
-    suspend fun getAllCustomerFirebaseDb()/*: ArrayList<Customer>*/ {
-        var customers: ArrayList<InstitutionEntity> = ArrayList()
-        var task: Task<QuerySnapshot>? = FirebaseUtil.getAllCustomers()
+    suspend fun getAllAccountDetailsFirebaseDb()/*: ArrayList<Customer>*/ {
+        var customers: ArrayList<SaveAccountInfo> = ArrayList()
+        var task: Task<QuerySnapshot>? = FirebaseUtil.getAllAccountDEtail()
 
         val job = GlobalScope.async {
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        var c: InstitutionEntity = document.toObject(InstitutionEntity::class.java)
+                        var c: SaveAccountInfo = document.toObject(SaveAccountInfo::class.java)
                         customers.add(c)
                         Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
                         Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.name)
@@ -68,8 +79,11 @@ class SaveEntryViewModel() : ViewModel(),
             })
         }
         task?.addOnSuccessListener { it ->
-            Log.d(FirebaseUtil.TAG, "*****************addOnSuccessListener ********************* customers $customers")
-            customersLiveData.postValue(customers)
+            Log.d(
+                FirebaseUtil.TAG,
+                "*****************addOnSuccessListener ********************* customers $customers"
+            )
+            accountsLiveData.postValue(customers)
         }
 
         job.await()
@@ -82,19 +96,19 @@ class SaveEntryViewModel() : ViewModel(),
 
     }
 
-   /* suspend fun getUIAllCustomerFirebaseDb(): ArrayList<Customer> {
-        var customers: ArrayList<Customer> = ArrayList()
+    /* suspend fun getUIAllCustomerFirebaseDb(): ArrayList<Customer> {
+         var customers: ArrayList<Customer> = ArrayList()
 
-        val value = GlobalScope.async { // creates worker thread
-            withContext(Dispatchers.Default) {
-                customers = getAllCustomerFirebaseDb()
-            }
-        }
-        value.await() //waits for workerthread to finish
-        //runs on ui thread as calling function is on Dispatchers.main
-        customersLiveData.postValue(customers)
-        Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
-        return customers
-    }*/
-    }
+         val value = GlobalScope.async { // creates worker thread
+             withContext(Dispatchers.Default) {
+                 customers = getAllCustomerFirebaseDb()
+             }
+         }
+         value.await() //waits for workerthread to finish
+         //runs on ui thread as calling function is on Dispatchers.main
+         customersLiveData.postValue(customers)
+         Log.d(FirebaseUtil.TAG, "***************** ********************* customers $customers")
+         return customers
+     }*/
+}
 

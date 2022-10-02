@@ -4,8 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.teaagent.databinding.ActivitySplashBinding
-import com.teaagent.domain.firemasedbEntities.AccountInfo
-import com.teaagent.ui.saveentry.SaveInstitutionActivity
+import com.teaagent.ui.saveentry.SaveAccountDetailActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
         activityScope.launch {
             delay(1000)
 
-            var intent = Intent(this@SplashActivity, SaveInstitutionActivity::class.java)
+            var intent = Intent(this@SplashActivity, SaveAccountDetailActivity::class.java)
             startActivity(intent)
             finish()
         }

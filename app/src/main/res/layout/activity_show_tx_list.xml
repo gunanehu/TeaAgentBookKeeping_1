@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="3">
 
         <TextView
             android:layout_width="match_parent"
@@ -34,6 +34,13 @@
 
         <Spinner
             android:id="@+id/spinnerSearchCustomerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerInstituteType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

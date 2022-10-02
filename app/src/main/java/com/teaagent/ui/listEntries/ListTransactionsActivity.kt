@@ -20,10 +20,11 @@ import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTxListBinding
+import com.teaagent.domain.firemasedbEntities.AccountType
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.InstitutionEntity
+import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
 import com.teaagent.ui.report.ReportActivity
-import com.teaagent.ui.saveentry.SaveEntryViewModel
+import com.teaagent.ui.saveentry.SaveAccountViewModel
 import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,7 +34,7 @@ import java.util.*
 
 class ListTransactionsActivity : AppCompatActivity() {
     val TAG: String = "ListTransactions"
-    private lateinit var customerName: String
+    private lateinit var instituteName: String
     private var kg: Double = 0.0
     private var amount: Double = 0.0
     private lateinit var binding: ActivityShowTxListBinding
@@ -52,7 +53,7 @@ class ListTransactionsActivity : AppCompatActivity() {
     }
 
     // ViewModel
-    private val saveEntryViewModel: SaveEntryViewModel by viewModels {
+    private val saveAccountDetailViewModel: SaveAccountViewModel by viewModels {
         SaveEntryViewModelFactory()
     }
 
@@ -65,25 +66,30 @@ class ListTransactionsActivity : AppCompatActivity() {
         val view = binding.root
         getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
-        setContentView(view)
         recyclerview = binding.list
         recyclerview!!.layoutManager = LinearLayoutManager(this)
 
-        lifecycleScope.launch {
-            showProgressDialog()
-            saveEntryViewModel.getAllCustomerFirebaseDb()
-        }
+        setContentView(view)
+        declareTypeSpinner()
 
-        saveEntryViewModel.customersLiveData.observe(this, Observer() { it ->
-            getALLCustomer(it as ArrayList<InstitutionEntity>)
-            dismissProgressDialog()
-        })
-
+        getAccountDetails()
         searchTransactions()
 
         buttonCalender()
         sendClick()
 
+    }
+
+    private fun getAccountDetails() {
+        lifecycleScope.launch {
+            showProgressDialog()
+            saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
+        }
+
+        saveAccountDetailViewModel.accountsLiveData.observe(this, Observer() { it ->
+            getAccountInfos(it as ArrayList<SaveAccountInfo>)
+            dismissProgressDialog()
+        })
     }
 
     var total: Long = 0
@@ -126,19 +132,19 @@ class ListTransactionsActivity : AppCompatActivity() {
         binding.buttonSearchCustomerName.setOnClickListener {
 
             GlobalScope.launch(Dispatchers.Main) {
-                listEntryActivityyViewModel.getByNameAndDateFromFirebaseDb(
-                    customerName,
-                    dateTime.timeInMillis
+                listEntryActivityyViewModel.getTxByTypeFromFirebaseDb(
+                    institutionType!!
                 )
             }
         }
 
 
-        listEntryActivityyViewModel.customerEntities.observe(this, Observer { it ->
+        listEntryActivityyViewModel.blanceTxMutableLiveData.observe(this, Observer { it ->
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
             var customerString: ArrayList<String> =
                 convertCustomersToString(it as ArrayList<BalanceTx>)
+
             adapter = ItemAdapter(customerString)
             recyclerview?.adapter = adapter
 
@@ -166,9 +172,9 @@ class ListTransactionsActivity : AppCompatActivity() {
 
     private fun sendClick() {
         binding.buttonShareScreen.setOnClickListener {
-            if (customerName.length > 0) {
+            if (instituteName.length > 0) {
                 val listActiviTyIntent = Intent(this, ReportActivity::class.java)
-                listActiviTyIntent.putExtra(ReportActivityBundleTag, customerName)
+                listActiviTyIntent.putExtra(ReportActivityBundleTag, instituteName)
                 startActivity(listActiviTyIntent)
             } else {
                 Toast.makeText(
@@ -179,7 +185,7 @@ class ListTransactionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getALLCustomer(list: ArrayList<InstitutionEntity>) {
+    private fun getAccountInfos(list: ArrayList<SaveAccountInfo>) {
 
         var customerNames: ArrayList<String> = ArrayList()
         for (customer in list) {
@@ -192,6 +198,7 @@ class ListTransactionsActivity : AppCompatActivity() {
         val customerNAmes: MutableList<String> = ArrayList()
         customerNAmes.add("Select name")
         customerNAmes.addAll(hashSet)
+
 
         val spinner: Spinner = findViewById(R.id.spinnerSearchCustomerName)
         val adapter: ArrayAdapter<Any?> =
@@ -206,8 +213,8 @@ class ListTransactionsActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                customerName = customerNAmes?.get(position).toString()
-                Log.d(TAG, "onItemSelected customerName " + customerName)
+                instituteName = customerNAmes?.get(position).toString()
+                Log.d(TAG, "onItemSelected instituteName " + instituteName)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
@@ -216,6 +223,45 @@ class ListTransactionsActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
     }
+
+
+    var accountType: String? = null
+    var institutionType: String? = null
+    private fun declareTypeSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerInstituteType)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                AccountType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                accountType = enumValues?.get(position).toString()
+                institutionType = accountType as String
+                Log.d(TAG, "onItemSelected accountType " + institutionType)
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                accountType = enumValues?.get(0).toString()
+                institutionType=accountType
+                Log.d(TAG, "default onItemSelected accountType " + institutionType)
+
+            }
+        })
+        spinner.adapter = adapter
+    }
+
 
 }
 

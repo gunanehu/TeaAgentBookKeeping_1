@@ -8,9 +8,9 @@ class SaveEntryViewModelFactory():
     ViewModelProvider.Factory {
   override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
-    if (modelClass.isAssignableFrom(SaveEntryViewModel::class.java)) {
+    if (modelClass.isAssignableFrom(SaveAccountViewModel::class.java)) {
       @Suppress("UNCHECKED_CAST")
-      return SaveEntryViewModel() as T
+      return SaveAccountViewModel() as T
     }
     throw IllegalArgumentException("Unknown ViewModel class")
   }

@@ -2,15 +2,20 @@ package com.teaagent.domain.firemasedbEntities
 
 import java.io.Serializable
 
- open class InstitutionEntity(
-//    var customerId: String?,
-     var name: String?,
-     var type:String,
-     open var phoneUserName: String?,
-     var institutionCode: String?,
-     var address: String?
+open class InstitutionEntity(
+    var name: String?,
+    var type: String,
 
-):
-    Serializable{
-    constructor() : this(/*"", */"", "","","","")
+    open var phoneUserName: String?,
+    var institutionCode: String?,
+    var address: String?,
+
+    open var netBankingUserName: String?,
+    open var password: String?,
+    open var atmNo: String?,
+    open var atmPin: String?
+
+) :
+    Serializable {
+    constructor() : this("", "", "", "", "", "", "", "", "")
 }

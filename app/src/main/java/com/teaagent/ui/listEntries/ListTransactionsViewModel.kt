@@ -16,26 +16,19 @@ import kotlinx.coroutines.async
 class ListTransactionsViewModel() : ViewModel() {
     val TAG: String = "ListEntryViewModel"
     val customerNames = MutableLiveData<List<String>>()
-    val customerEntities = MutableLiveData<List<BalanceTx>>()
+    val blanceTxMutableLiveData = MutableLiveData<List<BalanceTx>>()
     val reportEntities = MutableLiveData<List<BalanceTx>>()
 
 
-    suspend fun getByNameAndDateFromFirebaseDb(
-        customerName: String,
-        startDate: Long
-    )/*: ArrayList<String> */ {
-        var customers: ArrayList<BalanceTx> = ArrayList()
-//        var customers: ArrayList<String> = ArrayList()
-
-        var entryTimestampDate = startDate
-
+    suspend fun getTxByTypeFromFirebaseDb(type: String) {
+        var balanceTxs: ArrayList<BalanceTx> = ArrayList()
 
         val job = GlobalScope.async {
             var task: Task<QuerySnapshot>? =
-                FirebaseUtil.getByNameAndDate(
-                    customerName,
-                    BalanceTx.convertDate(entryTimestampDate)
+                FirebaseUtil.getByAccountType(
+                    type
                 )
+
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
@@ -43,9 +36,9 @@ class ListTransactionsViewModel() : ViewModel() {
                         var c: BalanceTx = document.toObject(BalanceTx::class.java)
 
 //                        customers.add(c.toString())
-                        customers.add(c)
+                        balanceTxs.add(c)
 
-//                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
+                    Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
                         Log.d(FirebaseUtil.TAG, "toObject" + " => " + c.toString())
 //                        Log.d(FirebaseUtil.TAG, "netTotal" + " => " + c.netTotal)
                     }
@@ -57,18 +50,18 @@ class ListTransactionsViewModel() : ViewModel() {
             task?.addOnSuccessListener { it ->
                 Log.d(
                     FirebaseUtil.TAG,
-                    "*****************addOnSuccessListener ********************* customers $customers"
+                    "*****************addOnSuccessListener ********************* customers $balanceTxs"
                 )
 //                customerNames.postValue(customers)
-                customerEntities.postValue(customers)
+                blanceTxMutableLiveData.postValue(balanceTxs)
             }
         }
     }
 
 
-
     suspend fun getByNameFirebaseDb(
-        customerName: String){
+        customerName: String
+    ) {
         var customers: ArrayList<BalanceTx> = ArrayList()
         GlobalScope.async {
             var task: Task<QuerySnapshot>? =

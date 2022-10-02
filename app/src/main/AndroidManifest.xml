@@ -36,12 +36,12 @@
         </activity><!-- Main Activity -->
 
         <activity
-            android:name=".ui.saveentry.SaveCollectionEntryActivity"
+            android:name=".ui.saveentry.SaveAccountTxEntryActivity"
             android:exported="true">
 
         </activity>
         <activity
-            android:name=".ui.saveentry.SaveInstitutionActivity"
+            android:name=".ui.saveentry.SaveAccountDetailActivity"
             android:exported="true">
 
         </activity>
