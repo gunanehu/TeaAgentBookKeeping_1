@@ -1,0 +1,9 @@
+
+[kotlin:S1172m"7Use "_" instead of this unused lambda parameter "view".(¼ÙÁ üÿÿÿÿ8š™À÷¹0
+ykotlin:S6306€"TUsing "GlobalScope" here leads to the breaking of structured concurrency principles.(äÕ”øÿÿÿÿ8›™À÷¹0
+Ckotlin:S1874™"#Deprecated code should not be used.(õÓİ8şÀ½÷¹0
+Gkotlin:S1874"#Deprecated code should not be used.(·•¥¦ûÿÿÿÿ8 ™À÷¹0
+Bkotlin:S1874{"#Deprecated code should not be used.(ÿ™ùú8 ™À÷¹0
+Ckotlin:S1874™"#Deprecated code should not be used.(õÓİ8 ™À÷¹0
+Akotlin:S6310€"Avoid hardcoded dispatchers.(äÕ”øÿÿÿÿ8¡™À÷¹0
+Ykotlin:S1144+":Remove this unused private "getTrackingRepository" method.(¶øÌÍ8¢™À÷¹0

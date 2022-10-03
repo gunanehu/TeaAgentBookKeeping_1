@@ -38,7 +38,7 @@ object FirebaseUtil {
         tablePhoneUser = firestoreDb.collection("PhoneUser")
         tableCollectionEntry = firestoreDb.collection("Transactions")
         //TODO use only one in lifetime for that user
-        addPhoneUser(phoneUser)
+//        addPhoneUser(account.id, phoneUser)
     }
 
 
@@ -68,12 +68,14 @@ object FirebaseUtil {
 
     }
 
-    fun addPhoneUser(phoneUser: PhoneUser?) {
+    fun addPhoneUser(id: String?, phoneUser: PhoneUser?) {
         val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
         if (phoneId.equals("")) {
             if (phoneUser != null) {
-                addToPreferenceTabId()//save to local preference such that u never call again and again/
+                if (id != null) {
+                    addToPreferenceTabId(id)
+                }//save to local preference such that u never call again and again/
                 // / todo check after installation to check the same phoneid in firebase
 
                 tablePhoneUser?.add(phoneUser)
