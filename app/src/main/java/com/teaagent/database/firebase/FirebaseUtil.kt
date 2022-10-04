@@ -24,7 +24,6 @@ object FirebaseUtil {
 
     var firestoreDb = FirebaseFirestore.getInstance()
     var TAG = "FirebaseUtil"
-    val phoneUser: PhoneUser = getCurrentPhoneUser()
     private var firebaseEntryAddedCallback: FirebaseEntryAddedCallback? = null
 
 
@@ -122,13 +121,13 @@ object FirebaseUtil {
 
     ///get calls
 
-    fun getCurrentPhoneUser(): PhoneUser {
-        return PhoneUser(AppHelper.getInstance().uniqueUserID)
+    fun getCurrentPhoneUser(uniqueUserID: String): PhoneUser {
+        return PhoneUser(uniqueUserID)
 
     }
 
     fun getAllCustomers(): Task<QuerySnapshot>? {
-        val query = tableCustomer?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+        val query = tableCustomer?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
         return query?.get()
     }
 
@@ -136,8 +135,9 @@ object FirebaseUtil {
         customerName: String,
         convertedTimestampDate: String
     ): Task<QuerySnapshot>? {
+
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
             ?.whereEqualTo("customerName", customerName)
             ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
         return query?.get()
@@ -146,7 +146,7 @@ object FirebaseUtil {
 
     fun getByName(customerName: String): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
             ?.whereEqualTo("customerName", customerName)
             ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()

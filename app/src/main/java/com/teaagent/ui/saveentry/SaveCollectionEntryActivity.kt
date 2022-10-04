@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
+import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCollectionBinding
 import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
 import com.teaagent.domain.firemasedbEntities.CollectionEntry
@@ -53,7 +54,9 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Switch to AppTheme for displaying the activity
+        Log.d(
+            TAG,
+            "onCreate")
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
@@ -175,7 +178,7 @@ class SaveCollectionEntryActivity : AppCompatActivity() {
             labourAmount,
             netTotal,
             entryTimestampDate, entryConvertedDate,
-            FirebaseUtil.getCurrentPhoneUser().name,
+            FirebaseUtil.getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name,
             customerName
         )
         return tran

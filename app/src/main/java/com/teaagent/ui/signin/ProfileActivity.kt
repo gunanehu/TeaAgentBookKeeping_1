@@ -21,6 +21,10 @@ import com.google.android.gms.common.ConnectionResult
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityProfileBinding
 import com.teaagent.domain.firemasedbEntities.PhoneUser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.lang.NullPointerException
 
 class ProfileActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
@@ -85,10 +89,18 @@ class ProfileActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedL
             userId!!.text = account.id
             Log.i(TAG, "Login Unsuccessful. account.getId() " + account.id)
             try {
+
                 Glide.with(this).load(account.photoUrl).into(profileImage!!)
-                val phoneUser: PhoneUser = FirebaseUtil.getCurrentPhoneUser()
+
+                val phoneUser: PhoneUser = account.id?.let { FirebaseUtil.getCurrentPhoneUser(it) }!!
                 //TODO use only one in lifetime for that user
                 FirebaseUtil.addPhoneUser(account.id,phoneUser)
+
+                val activityScope = CoroutineScope(Dispatchers.Main)
+                activityScope.launch {
+                    delay(3000)
+                }
+
 
                 gotoMainActivity()
             } catch (e: NullPointerException) {
