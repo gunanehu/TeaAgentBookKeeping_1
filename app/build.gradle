@@ -55,6 +55,13 @@ kapt {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+
+  implementation platform('com.google.firebase:firebase-bom:30.5.0')
+
+  // Add the dependencies for the Crashlytics and Analytics libraries
+  // When using the BoM, you don't specify versions in Firebase library dependencies
+  implementation 'com.google.firebase:firebase-crashlytics'
+  implementation 'com.google.firebase:firebase-analytics'
   // Kotlin
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -106,12 +113,9 @@ dependencies {
   implementation "com.opencsv:opencsv:5.3"
   implementation 'com.google.firebase:firebase-analytics'
   // Import the Firebase BoM
-  implementation platform('com.google.firebase:firebase-bom:30.5.0')
 
   // When using the BoM, you don't specify versions in Firebase library dependencies
 
-  // Add the dependency for the Firebase SDK for Google Analytics
-  implementation 'com.google.firebase:firebase-analytics'
 
   // TODO: Add the dependencies for any other Firebase products you want to use
   // See https://firebase.google.com/docs/android/setup#available-libraries
@@ -125,4 +129,5 @@ dependencies {
 
 }
 
-  apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
