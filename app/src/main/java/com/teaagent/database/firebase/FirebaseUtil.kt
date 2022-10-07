@@ -24,7 +24,6 @@ object FirebaseUtil {
 
     var firestoreDb = FirebaseFirestore.getInstance()
     var TAG = "FirebaseUtil"
-    val phoneUser: PhoneUser = getCurrentPhoneUser()
     private var firebaseEntryAddedCallback: FirebaseEntryAddedCallback? = null
 
 
@@ -38,7 +37,7 @@ object FirebaseUtil {
         tablePhoneUser = firestoreDb.collection("PhoneUser")
         tableCollectionEntry = firestoreDb.collection("Transactions")
         //TODO use only one in lifetime for that user
-        addPhoneUser(phoneUser)
+//        addPhoneUser(account.id, phoneUser)
     }
 
 
@@ -68,12 +67,14 @@ object FirebaseUtil {
 
     }
 
-    fun addPhoneUser(phoneUser: PhoneUser?) {
+    fun addPhoneUser(id: String?, phoneUser: PhoneUser?) {
         val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
         if (phoneId.equals("")) {
             if (phoneUser != null) {
-                addToPreferenceTabId()//save to local preference such that u never call again and again/
+                if (id != null) {
+                    addToPreferenceTabId(id)
+                }//save to local preference such that u never call again and again/
                 // / todo check after installation to check the same phoneid in firebase
 
                 tablePhoneUser?.add(phoneUser)
@@ -120,13 +121,13 @@ object FirebaseUtil {
 
     ///get calls
 
-    fun getCurrentPhoneUser(): PhoneUser {
-        return PhoneUser(AppHelper.getInstance().uniqueUserID)
+    fun getCurrentPhoneUser(uniqueUserID: String): PhoneUser {
+        return PhoneUser(uniqueUserID)
 
     }
 
     fun getAllCustomers(): Task<QuerySnapshot>? {
-        val query = tableCustomer?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+        val query = tableCustomer?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
         return query?.get()
     }
 
@@ -134,8 +135,9 @@ object FirebaseUtil {
         customerName: String,
         convertedTimestampDate: String
     ): Task<QuerySnapshot>? {
+
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
             ?.whereEqualTo("customerName", customerName)
             ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
         return query?.get()
@@ -144,7 +146,7 @@ object FirebaseUtil {
 
     fun getByName(customerName: String): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
             ?.whereEqualTo("customerName", customerName)
             ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()

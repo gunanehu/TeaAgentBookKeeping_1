@@ -123,7 +123,7 @@ class SaveCustomerActivity : AppCompatActivity() {
             /*      dateTime.timeInMillis.toString(),*/
             customerName,
             additionalInfo,
-            FirebaseUtil.phoneUser.name
+            FirebaseUtil.getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
         )
     }
 

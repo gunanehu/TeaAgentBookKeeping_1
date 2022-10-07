@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "990421094291-s8v4gqci39lp2gqvgg33bq4bsaf2fhva.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teaagent",
+            "certificate_hash": "a0035e4a7f0b6d3b475c37a2b36769515cd2243d"
+          }
+        },
+        {
           "client_id": "990421094291-udd7i6llkqgmq9q6olgnal7i7ntrh2eb.apps.googleusercontent.com",
           "client_type": 3
         }
