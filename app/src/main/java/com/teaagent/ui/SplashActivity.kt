@@ -8,6 +8,7 @@ import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySplashBinding
 import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.ui.saveentry.SaveAccountDetailActivity
+import com.teaagent.ui.signin.SignInActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,8 +34,9 @@ class SplashActivity : AppCompatActivity() {
             delay(1000)
 
             startLogTradingTime()
+            var intent = Intent(this@SplashActivity, SignInActivity::class.java)
 
-            var intent = Intent(this@SplashActivity, SaveAccountDetailActivity::class.java)
+//            var intent = Intent(this@SplashActivity, SaveAccountDetailActivity::class.java)
             startActivity(intent)
             finish()
         }

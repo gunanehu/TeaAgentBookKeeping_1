@@ -15,11 +15,10 @@ object TeaAgentsharedPreferenceUtil {
     // Creating an Editor object to edit(write to the file)
     var myEdit: SharedPreferences.Editor? = sharedPreferences?.edit()
 
-    fun addToPreferenceTabId() {
-        val getTabletId: String = AppHelper.getInstance().uniqueUserID
+    fun addToPreferenceTabId( id: String) {
 
-        Log.i(TAG, " added PhoneUser addToPreferenceTabId " + getTabletId)
-        myEdit?.putString("AppId", getTabletId);
+        Log.i(TAG, " added PhoneUser addToPreferenceTabId " + id)
+        myEdit?.putString("AppId", id);
         myEdit?.commit();
     }
 
