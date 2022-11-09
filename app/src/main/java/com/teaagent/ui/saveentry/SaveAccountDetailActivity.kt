@@ -17,7 +17,6 @@ import com.teaagent.R
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
-import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.*
@@ -35,7 +34,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     val TAG: String = "SaveInstitutionActivity"
 
     private lateinit var stockName: String
-    private lateinit var institutionType: String  //
+//    private lateinit var institutionType: String  //
 
     private lateinit var phoneUserName: String  //= binding.editTextPhoneUserName.text.toString()
     private lateinit var entryPrice: String  //= binding.editTextInstituteCode.text.toString()
@@ -417,7 +416,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 id: Long
             ) {
                 accountType = enumValues?.get(position).toString()
-                institutionType = accountType as String
+//                institutionType = accountType as String
                 Log.d(TAG, "onItemSelected accountType " + accountType)
             }
 
@@ -464,14 +463,15 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
+    /* todo
     private fun clearEditTextValues() {
-        binding.editTextStock.setText("")
-        binding.todaysDate.setText("")
-        stockName = ""
-        institutionType = ""
-        dateTime.timeInMillis = 0
-        spinner?.setSelection(0)
-    }
+         binding.editTextStock.setText("")
+         binding.todaysDate.setText("")
+         stockName = ""
+         institutionType = ""
+         dateTime.timeInMillis = 0
+         spinner?.setSelection(0)
+     }*/
 
 
 /*
@@ -501,6 +501,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         slPrice = binding.etSLPrice.text.toString()
 
         exitPrice = binding.etExitPrice.text.toString()
+
         note = binding.etNote.text.toString()
 
         /*  TradeAnalysis(
@@ -524,7 +525,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             ) */
         return TradeAnalysis(
             "",
-            FirebaseUtil.getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name,
+            FirebaseUtil.getCurrentPhoneUser(
+                TeaAgentsharedPreferenceUtil.getAppId().toString()
+            ).name,
             accountType!!,
             stockName,
 
@@ -532,11 +535,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             slPrice,
             exitPrice,
 
-            higherTimeFarameLocation,
-            higherTimeFarameTrend,
-            intermediateTimeFarameTrend,
-            excutionTimeTimeFarameLocation,
-            entryEmotion,
+            higherTimeFarameLocation!!,
+            higherTimeFarameTrend!!,
+            intermediateTimeFarameTrend!!,
+            excutionTimeTimeFarameLocation!!,
+            entryEmotion!!,
             System.currentTimeMillis().toString(),
             note
 

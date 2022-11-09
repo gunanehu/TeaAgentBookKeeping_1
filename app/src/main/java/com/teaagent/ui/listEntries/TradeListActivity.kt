@@ -23,7 +23,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.teaagent.R
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTradeListBinding
-import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.TradeIncomeType
 import com.teaagent.ui.report.ReportActivity
@@ -51,10 +50,10 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     var dateTime = Calendar.getInstance()
     var data = ArrayList<String>()
 
-    //    // ViewModel
-    private val listEntryActivityyViewModel: ListTransactionsViewModel by viewModels {
-        ListTransactionsViewModelFactory()
-    }
+//    //    // ViewModel
+//    private val listEntryActivityyViewModel: ListTransactionsViewModel by viewModels {
+//        ListTransactionsViewModelFactory()
+//    }
 
 
     // ViewModel
@@ -132,6 +131,17 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         val phoneUserName =
             tradeAnalysis?.phoneUserName.toString()
 
+        val HTFLocation =
+            tradeAnalysis?.HTFLocation
+        val HTFTrend =
+            tradeAnalysis?.HTFTrend
+        val ITFTrend =
+            tradeAnalysis?.ITFTrend
+        val ExecutionZone =
+            tradeAnalysis?.ExecutionZone
+        val note =
+            tradeAnalysis?.note
+
         val entryEmotion = tradeAnalysis?.entryEmotion
 
         val b =
@@ -144,14 +154,14 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 SLPrice,
                 ExitPrice,
 
-                "HTFLocation",//todo
-                "HTFTrend",
-                "ITFTrend",
-                "ExecutionZone",
+                HTFLocation,
+                HTFTrend,
+                ITFTrend,
+                ExecutionZone,
 
                 entryEmotion,
                 timestampTradePlanned,
-                "note"
+                note
 
             )
         return b.toString()
@@ -221,7 +231,6 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 //        showProgressDialog()
         binding.buttonGetNetAssetsByName.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-//                listEntryActivityyViewModel.getNetAssetsByName()
                 saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
             }
         }
