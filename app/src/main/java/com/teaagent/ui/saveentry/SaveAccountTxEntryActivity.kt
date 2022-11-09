@@ -41,7 +41,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     private var advancedPaymentAmount = null
     var labourAmount: Long = 0
     var netTotal: Long = 0
-    var allAccounts: List<TradeAnalysis>? = null
+    var allTrades: List<TradeAnalysis>? = null
     var dateTime = Calendar.getInstance()
 
     //    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
@@ -124,11 +124,11 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             mapsActivityViewModel.getAllAccountDetailsFirebaseDb()
         }
 
-        mapsActivityViewModel.accountsLiveData.observe(this, Observer() { it ->
+        mapsActivityViewModel.tradeDetailsLiveData.observe(this, Observer() { it ->
             var tradeAnalyses: ArrayList<TradeAnalysis> =
                 decryptToAccountDetailsList(it as ArrayList<TradeAnalysis>)
 
-            allAccounts = tradeAnalyses
+            allTrades = tradeAnalyses
             getALLCustomerNamesToSpinner(tradeAnalyses as ArrayList<TradeAnalysis>)
             dismissProgressDialog()
 

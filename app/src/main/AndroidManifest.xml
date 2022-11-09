@@ -46,6 +46,7 @@
 
         </activity>
         <activity android:name=".ui.listEntries.ListTransactionsActivity" />
+        <activity android:name=".ui.listEntries.TradeListActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -21,6 +21,7 @@ import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.*
+import com.teaagent.ui.listEntries.TradeListActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,7 +46,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private lateinit var password: String  //= binding.editTextNetBAnkingPwrd.text.toString()
     private lateinit var atmNo: String  //= binding.editTextAtmNo.text.toString()
     private lateinit var atmPin: String  //
-    var balanceTx: BalanceTx? = null
+    var balanceTx: TradeAnalysis? = null
     var spinner: Spinner? = null
     var dateTime = Calendar.getInstance()
 
@@ -65,7 +66,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        balanceTx = intent.getSerializableExtra("balanceTx") as BalanceTx?
+        balanceTx = intent.getSerializableExtra("balanceTx") as TradeAnalysis?
         if (balanceTx != null) {
             toUpdate = true
         }
@@ -106,7 +107,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
               }*/
 
                 if (toUpdate) {
-                    cuustomerEntry.id = balanceTx!!?.accountId
+                    cuustomerEntry.id = balanceTx!!?.id
                 }
 //                Log.d(TAG, "*****  cuustomerEntry.id " + cuustomerEntry.id)
                 addAccountInfo(cuustomerEntry, toUpdate)
@@ -117,7 +118,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
 
         binding.nextButton.setOnClickListener {
-            val listActiviTyIntent = Intent(this, SaveAccountTxEntryActivity::class.java)
+//            val listActiviTyIntent = Intent(this, SaveAccountTxEntryActivity::class.java)
+            val listActiviTyIntent = Intent(this, TradeListActivity::class.java)
             startActivity(listActiviTyIntent)
         }
 
@@ -560,7 +562,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     override fun onBackPressed() {
         AlertDialog.Builder(this)
             .setIcon(android.R.drawable.ic_dialog_alert)
-            .setTitle("Exiting "+this.getString(R.string.app_name))
+            .setTitle("Exiting " + this.getString(R.string.app_name))
             .setMessage("Are you sure you are done with your TRADING ?")
             .setPositiveButton(
                 "Yes"

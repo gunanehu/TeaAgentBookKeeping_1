@@ -21,9 +21,8 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.teaagent.R
-import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
-import com.teaagent.databinding.ActivityShowTxListBinding
+import com.teaagent.databinding.ActivityShowTradeListBinding
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.TradeIncomeType
@@ -37,16 +36,14 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
+class TradeListActivity : AppCompatActivity(), ItemClickListener {
     val TAG: String = "ListTransactions"
     private lateinit var instituteName: String
     private var kg: Double = 0.0
     private var amount: Double = 0.0
-    private lateinit var binding: ActivityShowTxListBinding
+    private lateinit var binding: ActivityShowTradeListBinding
 
     // Repository
-    private fun getTrackingApplicationInstance() = application as TeaAgentApplication
-    private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
 
     var recycleViewAdapter: CustomAdapter? = null
 
@@ -54,10 +51,11 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
     var dateTime = Calendar.getInstance()
     var data = ArrayList<String>()
 
-    // ViewModel
+    //    // ViewModel
     private val listEntryActivityyViewModel: ListTransactionsViewModel by viewModels {
         ListTransactionsViewModelFactory()
     }
+
 
     // ViewModel
     private val saveAccountDetailViewModel: SaveAccountViewModel by viewModels {
@@ -69,7 +67,7 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        binding = ActivityShowTxListBinding.inflate(layoutInflater)
+        binding = ActivityShowTradeListBinding.inflate(layoutInflater)
         val view = binding.root
         getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
@@ -80,8 +78,8 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
         setContentView(view)
         declareTypeSpinner()
 
-        getAccountDetails()
-        setSearchTransactionsClickListener()
+        // getAccountDetails()
+        // setSearchTransactionsClickListener()
         getNetAssetsByNameTransactionsClickListener()
 
         buttonCalender()
@@ -102,15 +100,15 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
     }
 
     var total: Long = 0
-    private fun convertBalanceTxToStringList(customers: ArrayList<BalanceTx>): ArrayList<String> {
+    private fun convertBalanceTxToStringList(customers: ArrayList<TradeAnalysis>): ArrayList<String> {
         total = 0
         var customerString: ArrayList<String> = ArrayList()
         for (customer in customers) {
             val customerText: String = convertBalanceTxToString(customer)
             customerString.add(customerText)
 
-            val balanceAmount =
-            customer?.balanceAmount
+//            val balanceAmount =
+//                customer?.balanceAmount
 //            val balanceAmount =
 //                StringEncryption.decryptMsg(customer?.balanceAmount).toString()
             total = 0;//TODO commented temp total + balanceAmount.toLong()
@@ -118,47 +116,44 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
         return customerString
     }
 
-    private fun convertBalanceTxToString(balanceTx: BalanceTx): String {
-//        val id = StringEncryption.decryptMsg(balanceTx?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
-//        val accountType =
-//            StringEncryption.decryptMsg(balanceTx?.accountType).toString()
-        val accountId =
-            balanceTx?.accountId
-        val accountType = balanceTx?.accountType.toString()
-        val accountNo =
-         balanceTx?.accountNo
-        val balanceAmount =
-           balanceTx?.balanceAmount
-        val timestamp =
-           balanceTx?.timestamp
-
-/*        val accountType = balanceTx?.accountType.toString()
-        val accountNo =
-            StringEncryption.decryptMsg(balanceTx?.accountNo).toString()
-        val balanceAmount =
-            StringEncryption.decryptMsg(balanceTx?.balanceAmount).toString()
-        val timestamp =
-            StringEncryption.decryptMsg(balanceTx?.timestamp).toString()
-               val bankName = StringEncryption.decryptMsg(balanceTx?.bankName)
-
-            */
-//        val phoneUserName =
-//            StringEncryption.decryptMsg(collectionEntry?.phoneUserName.toString()).toString()
+    private fun convertBalanceTxToString(tradeAnalysis: TradeAnalysis): String {
+        val id = tradeAnalysis?.id
+        val stockName =
+            tradeAnalysis?.stockName
+        val tradeIncomeType = tradeAnalysis?.tradeIncomeType.toString()
+        val EntryPrice =
+            tradeAnalysis?.EntryPrice
+        val ExitPrice =
+            tradeAnalysis?.ExitPrice
+        val SLPrice =
+            tradeAnalysis?.SLPrice
+        val timestampTradePlanned =
+            tradeAnalysis?.timestampTradePlanned
         val phoneUserName =
-            balanceTx?.phoneUserName.toString()
+            tradeAnalysis?.phoneUserName.toString()
 
-        val bankName = balanceTx?.bankName
+        val entryEmotion = tradeAnalysis?.entryEmotion
 
-        val b = BalanceTx(
-            "id",
-            accountId,
-            accountType,
-            accountNo,
-            balanceAmount,
-            timestamp,
-            phoneUserName,
-            bankName
-        )
+        val b =
+            TradeAnalysis(
+                id,
+                phoneUserName,
+                tradeIncomeType,
+                stockName,
+                EntryPrice,
+                SLPrice,
+                ExitPrice,
+
+                "HTFLocation",//todo
+                "HTFTrend",
+                "ITFTrend",
+                "ExecutionZone",
+
+                entryEmotion,
+                timestampTradePlanned,
+                "note"
+
+            )
         return b.toString()
     }
 
@@ -187,28 +182,28 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
 
     var mProgressDialog: ProgressDialog? = null
 
-    private fun setSearchTransactionsClickListener() {
-        showProgressDialog()
-        binding.buttonSearchCustomerName.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
-                listEntryActivityyViewModel.getTxByTypeFromFirebaseDb(
-                    institutionType!!
-                )
-            }
-        }
-        blanceTxMutableLiveDataCallback()
+    /* private fun setSearchTransactionsClickListener() {
+         showProgressDialog()
+         binding.buttonSearchCustomerName.setOnClickListener {
+             GlobalScope.launch(Dispatchers.Main) {
+                 listEntryActivityyViewModel.getTxByTypeFromFirebaseDb(
+                     institutionType!!
+                 )
+             }
+         }
+         allTradeDetailsMutableLiveDataCallback()
 
-    }
-
+     }
+ */
     var customerString: ArrayList<String>? = null
-    var customers: ArrayList<BalanceTx>? = null
+    var customers: ArrayList<TradeAnalysis>? = null
 
 
-    private fun blanceTxMutableLiveDataCallback() {
-        listEntryActivityyViewModel.blanceTxMutableLiveData.observe(this, Observer { it ->
+    private suspend fun allTradeDetailsMutableLiveDataCallback() {
+        saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer { it ->
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
-            customerString = convertBalanceTxToStringList(it as ArrayList<BalanceTx>)
+            customerString = convertBalanceTxToStringList(it as ArrayList<TradeAnalysis>)
             customers = it /*as ArrayList<BalanceTx>*/
 //            recycleViewAdapter = ItemAdapter(customerString!!)
             recycleViewAdapter = CustomAdapter(customerString, this)
@@ -223,13 +218,16 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
     }
 
     fun getNetAssetsByNameTransactionsClickListener() {
-        showProgressDialog()
+//        showProgressDialog()
         binding.buttonGetNetAssetsByName.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-                listEntryActivityyViewModel.getNetAssetsByName()
+//                listEntryActivityyViewModel.getNetAssetsByName()
+                saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
             }
         }
-        blanceTxMutableLiveDataCallback()
+        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            allTradeDetailsMutableLiveDataCallback()
+        }
     }
 
     private fun showProgressDialog() {
@@ -340,10 +338,11 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
 
 
     override fun onClick(position: Int) {
-        val balanceTx: BalanceTx? = customers?.get(position)
+        val balanceTx: TradeAnalysis? = customers?.get(position)
         val txId = balanceTx?.id
         var task: Task<DocumentSnapshot>? = FirebaseUtil.getTxById(txId!!)
-        task?.addOnSuccessListener(OnSuccessListener { it ->it.data
+        task?.addOnSuccessListener(OnSuccessListener { it ->
+            it.data
 
 
             val i = Intent(this, SaveAccountDetailActivity::class.java)

@@ -17,7 +17,7 @@ import kotlinx.coroutines.async
 class SaveAccountViewModel() : ViewModel(),
     FirebaseEntryAddedCallback {
     val TAG: String = "MapsActivityViewModel"
-    val accountsLiveData = MutableLiveData<List<TradeAnalysis>>()
+    val tradeDetailsLiveData = MutableLiveData<List<TradeAnalysis>>()
 
 
     // 2
@@ -141,7 +141,7 @@ class SaveAccountViewModel() : ViewModel(),
 
     suspend fun getAllAccountDetailsFirebaseDb()/*: ArrayList<Customer>*/ {
         var customers: ArrayList<TradeAnalysis> = ArrayList()
-        var task: Task<QuerySnapshot>? = FirebaseUtil.getAllAccountDEtail()
+        var task: Task<QuerySnapshot>? = FirebaseUtil.getAllTradeDetails()
 
         val job = GlobalScope.async {
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
@@ -163,7 +163,7 @@ class SaveAccountViewModel() : ViewModel(),
                 FirebaseUtil.TAG,
                 "*****************addOnSuccessListener ********************* customers $customers"
             )
-            accountsLiveData.postValue(customers)
+            tradeDetailsLiveData.postValue(customers)
         }
 
         job.await()
