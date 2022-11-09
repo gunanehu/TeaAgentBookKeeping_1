@@ -49,6 +49,26 @@ object FirebaseUtil {
     }
 
 
+    fun updateAccountDEtail(customer: SaveAccountInfo?) {
+        if (customer != null) {
+            val id = customer?.id.toString()//.replace("/", "_")
+
+            tableAccountInfo?.
+            document(id)?.
+            set(customer)?.addOnSuccessListener {
+                Log.i(TAG, "SaveAccountInfo addOnSuccessListener documentReference ")
+                firebaseEntryAddedCallback?.onCustomerAddedSuccessfully(id)
+            }
+
+            var doc = id// this is the id
+            if (doc != null) {
+                customer?.id = doc
+            }
+
+
+        }
+    }
+
     fun addAccountDEtail(customer: SaveAccountInfo?) {
         var doc = tableAccountInfo?.document()?.id// this is the id
         if (doc != null) {
@@ -163,5 +183,9 @@ object FirebaseUtil {
             ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)
             ?.whereEqualTo("accountType", customerName)
         return query?.get()
+    }
+
+    fun getTxById(id: String): Task<DocumentSnapshot>? {
+        return tableCollectionEntry?.document(id)?.get()
     }
 }

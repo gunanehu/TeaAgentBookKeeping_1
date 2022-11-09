@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "990421094291",
-    "firebase_url": "https://teaagentbookkeeping-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "teaagentbookkeeping",
-    "storage_bucket": "teaagentbookkeeping.appspot.com"
+    "project_number": "794901982066",
+    "project_id": "tradingjournal-ee100",
+    "storage_bucket": "tradingjournal-ee100.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:990421094291:android:882ce2f8c582bef2756266",
+        "mobilesdk_app_id": "1:794901982066:android:de41b7482bcf2b12e7cbeb",
         "android_client_info": {
-          "package_name": "com.teaagent"
+          "package_name": "com.trading.tradingjournal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "990421094291-udd7i6llkqgmq9q6olgnal7i7ntrh2eb.apps.googleusercontent.com",
+          "client_id": "794901982066-s57l90o1vlu659ahtosr8ho2m9i7enfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trading.tradingjournal",
+            "certificate_hash": "a0035e4a7f0b6d3b475c37a2b36769515cd2243d"
+          }
+        },
+        {
+          "client_id": "794901982066-82o1eioutsfpavpb1ljlk61nrejolv5r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCO_1mu3tfDT_AjRnsLyCvdtwQk77tN2dw"
+          "current_key": "AIzaSyANbCTL7Ef4bv-xFS2z7pQ7ff5GN21jyTU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "990421094291-udd7i6llkqgmq9q6olgnal7i7ntrh2eb.apps.googleusercontent.com",
+              "client_id": "794901982066-82o1eioutsfpavpb1ljlk61nrejolv5r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

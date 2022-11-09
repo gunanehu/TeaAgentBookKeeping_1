@@ -38,32 +38,37 @@
             android:layout_margin="10dp"
             android:visibility="gone" />
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Institution type " />
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-            <Spinner
-                android:id="@+id/spinnerInstituteType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1" />
+                <TextView
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Institution type " />
+
+                <Spinner
+                    android:id="@+id/spinnerInstituteType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1" />
 
 
-        </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <EditText
             android:id="@+id/editTextCustomerName"
@@ -144,31 +149,35 @@
             android:hint="AtmPin" />
     </LinearLayout>
 
-    <LinearLayout
-
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="25dip"
         android:gravity="bottom">
 
-        <Button
-            android:id="@+id/saveCustomerButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="Save"
-            android:textAllCaps="false" />
+        <LinearLayout
 
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="Add Tea collection"
-            android:textAllCaps="false" />
-    </LinearLayout>
+            android:layout_marginTop="25dip">
 
+            <Button
+                android:id="@+id/saveCustomerButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="Save"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="Add Tea collection"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

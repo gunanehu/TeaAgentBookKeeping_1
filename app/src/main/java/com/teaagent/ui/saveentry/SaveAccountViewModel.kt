@@ -34,12 +34,19 @@ class SaveAccountViewModel() : ViewModel(),
         FirebaseUtil.addAccountDEtail(accountInfo)
     }
 
+    fun updateAccountDEtail(customer: SaveAccountInfo?) {
+        FirebaseUtil.setFirebaseEntryAddedCallback(this)
+
+        val accountInfo: SaveAccountInfo = convertCustomerToEncrypted(customer)
+        FirebaseUtil.updateAccountDEtail(accountInfo)
+    }
+
     private fun convertCustomerToEncrypted(accountInfo: SaveAccountInfo?): SaveAccountInfo {
         val type =
             accountInfo?.type.toString()
 //        val type =
 //            StringEncryption.encryptMsg(accountInfo?.type.toString()).toString()
-        val bankName =
+       /* val bankName =
             StringEncryption.encryptMsg(accountInfo?.bankName.toString()).toString()
 //        val phoneUserName =
 //            StringEncryption.encryptMsg(accountInfo?.phoneUserName.toString()).toString()
@@ -59,10 +66,35 @@ class SaveAccountViewModel() : ViewModel(),
         val atmNo =
             StringEncryption.encryptMsg(accountInfo?.atmNo.toString()).toString()
         val atmPin =
-            StringEncryption.encryptMsg(accountInfo?.atmPin.toString()).toString()
+            StringEncryption.encryptMsg(accountInfo?.atmPin.toString()).toString()*/
+
+        val id =
+            accountInfo?.id.toString()
+        val bankName =
+            accountInfo?.bankName.toString()
+//        val phoneUserName =
+//            StringEncryption.encryptMsg(accountInfo?.phoneUserName.toString()).toString()
+        val phoneUserName =
+            accountInfo?.phoneUserName.toString()
+        val institutionCode =
+            accountInfo?.institutionCode.toString()
+        val address =
+            accountInfo?.address.toString()
+
+        val accountNo =
+            accountInfo?.acNo.toString()
+        val netBankingUserName =
+           accountInfo?.netBankingUserName.toString()
+        val password =
+           accountInfo?.password.toString()
+        val atmNo =
+           accountInfo?.atmNo.toString()
+        val atmPin =
+           accountInfo?.atmPin.toString()
+
 
         return SaveAccountInfo(
-            "",
+            id,
             type,
             bankName,
 
@@ -83,7 +115,7 @@ class SaveAccountViewModel() : ViewModel(),
     fun addTeaTransactionRecord(collectionEntry: BalanceTx?) {
 
 //        val at = StringEncryption.encryptMsg(collectionEntry?.accountType.toString()).toString()
-        val at = collectionEntry?.accountType.toString()
+        /*val at = collectionEntry?.accountType.toString()
         val accountNo =
             StringEncryption.encryptMsg(collectionEntry?.accountNo.toString()).toString()
         val balanceAmount =
@@ -95,10 +127,27 @@ class SaveAccountViewModel() : ViewModel(),
         val phoneUserName =
             collectionEntry?.phoneUserName.toString()
         val bankName = StringEncryption.encryptMsg(collectionEntry?.bankName.toString()).toString()
+*/
+
+        val at = collectionEntry?.accountType.toString()
+        val accountId = collectionEntry?.accountId.toString()
+
+        val accountNo =
+            collectionEntry?.accountNo.toString()
+        val balanceAmount =
+           collectionEntry?.balanceAmount.toString()
+        val timestamp =
+           collectionEntry?.timestamp.toString()
+//        val phoneUserName =
+//            StringEncryption.encryptMsg(collectionEntry?.phoneUserName.toString()).toString()
+        val phoneUserName =
+            collectionEntry?.phoneUserName.toString()
+        val bankName = collectionEntry?.bankName.toString()
 
         val col = collectionEntry?.let {
             BalanceTx(
                 "",
+                accountId,
                 at,
                 accountNo,
                 balanceAmount,

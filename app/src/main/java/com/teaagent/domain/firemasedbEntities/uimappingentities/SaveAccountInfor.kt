@@ -28,6 +28,7 @@ open class SaveAccountInfo(
                 " netBankingUserName=$netBankingUserName |" +
                 " password=$password | " +
                 "atmNo=$atmNo | " +
-                "atmPin=$atmPin "
+                "atmPin=$atmPin "+
+                "id=$id "
     }
 }

@@ -80,7 +80,9 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             if (
                 binding.editTextAmount.text?.length!! > 0
             ) {
-                val cuustomerEntry = createCollectionEntryFromEditText()
+                val cuustomerEntry  : BalanceTx= createCollectionEntryFromEditText()!!
+
+                cuustomerEntry.accountId= selectedAccountInfo?.id!!
                 mapsActivityViewModel.addTeaTransactionRecord(cuustomerEntry)
             } else {
                 showErrorMesage()
@@ -157,12 +159,27 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         for (accountInfo in arrayList) {
 //        val id = StringEncryption.decryptMsg(accountInfo?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
             val accountType = accountInfo?.type.toString()
-            val bankName =
-                StringEncryption.decryptMsg(accountInfo?.bankName).toString()
+//            val bankName =
+//                StringEncryption.decryptMsg(accountInfo?.bankName).toString()
+            val id =
+                accountInfo?.id
 
+            val bankName =
+               accountInfo?.bankName
             val phoneUserName =
-                accountInfo?.phoneUserName.toString()
+                accountInfo?.phoneUserName
             val institutionCode =
+               accountInfo?.institutionCode
+            val address =
+               accountInfo?.address
+
+            val acNo =
+                accountInfo?.acNo.toString()
+            val netBankingUserName =accountInfo?.netBankingUserName
+            val password = accountInfo?.password
+            val atmNo =accountInfo?.atmNo
+            val atmPin = accountInfo?.atmPin
+           /* val institutionCode =
                 StringEncryption.decryptMsg(accountInfo?.institutionCode).toString()
             val address =
                 StringEncryption.decryptMsg(accountInfo?.address).toString()
@@ -172,11 +189,11 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             val netBankingUserName = StringEncryption.decryptMsg(accountInfo?.netBankingUserName)
             val password = StringEncryption.decryptMsg(accountInfo?.password)
             val atmNo = StringEncryption.decryptMsg(accountInfo?.atmNo)
-            val atmPin = StringEncryption.decryptMsg(accountInfo?.atmPin)
+            val atmPin = StringEncryption.decryptMsg(accountInfo?.atmPin)*/
 
             val b =
                 SaveAccountInfo(
-                    "id",
+                    id,
                     accountType,
                     bankName,
                     phoneUserName,
@@ -227,8 +244,9 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         calculateNetTotalAmount()
         Log.d(
             TAG,
-            "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis
-        );
+            "totalKgAmount before insert : " + totalKgAmount + " timeInMillis " + dateTime.timeInMillis+" selectedAccountInfo!!.id "+            selectedAccountInfo!!.id,
+
+            );
 
         var entryTimestampDate = dateTime.timeInMillis
         var entryConvertedDate = BalanceTx.convertDate(dateTime.timeInMillis)
@@ -244,6 +262,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
           )*/
         val tran = BalanceTx(
             "",
+            selectedAccountInfo!!.id,
             selectedAccountInfo!!.type,
             selectedAccountInfo!!.acNo!!,
 

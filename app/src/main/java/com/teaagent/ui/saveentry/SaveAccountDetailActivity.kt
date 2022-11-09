@@ -16,6 +16,7 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
 import com.teaagent.domain.firemasedbEntities.AccountType
+import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,6 +27,7 @@ import java.util.*
  */
 class SaveAccountDetailActivity : AppCompatActivity() {
 
+    private var toUpdate: Boolean = false
     val TAG: String = "SaveInstitutionActivity"
 
     private lateinit var name: String
@@ -40,7 +42,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private lateinit var password: String  //= binding.editTextNetBAnkingPwrd.text.toString()
     private lateinit var atmNo: String  //= binding.editTextAtmNo.text.toString()
     private lateinit var atmPin: String  //
-
+    var balanceTx: BalanceTx? = null
     var spinner: Spinner? = null
     var dateTime = Calendar.getInstance()
 
@@ -60,6 +62,10 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        balanceTx = intent.getSerializableExtra("balanceTx") as BalanceTx?
+        if (balanceTx != null) {
+            toUpdate = true
+        }
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
         binding.todaysDate.setText("currentDate : " + currentDate)
@@ -87,7 +93,18 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                       it.atmPin
                   )
               }*/
-                addAccountInfo(cuustomerEntry);
+                /*       if(toUpdate){
+                           updateAccountInfo(cuustomerEntry)
+                           toUpdate=false;
+                       }
+                      else{*/
+                if (toUpdate){
+                    cuustomerEntry.id = balanceTx!!?.accountId
+                }
+                Log.d(TAG, "*****  cuustomerEntry.id " + cuustomerEntry.id)
+
+                addAccountInfo(cuustomerEntry, toUpdate)
+                /*  };*/
             } else {
                 showErrorMesage()
             }
@@ -95,6 +112,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         binding.nextButton.setOnClickListener {
             val listActiviTyIntent = Intent(this, SaveAccountTxEntryActivity::class.java)
+//            listActiviTyIntent.putExtra(ReportActivityBundleTag, instituteName)
+
             startActivity(listActiviTyIntent)
         }
 
@@ -136,7 +155,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     }
 
 
-    fun addAccountInfo(customerEntity: SaveAccountInfo?) {
+    fun addAccountInfo(customerEntity: SaveAccountInfo?, toUpdate: Boolean) {
         val customer = customerEntity?.let {
             SaveAccountInfo(
                 it.id,
@@ -154,7 +173,15 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 it.atmPin
             )
         }
-        saveEntryViewModel.addAccountDEtail(customer)
+        //            setEditTextValues(customer)
+        //            toUpdate=false;
+        if (toUpdate)
+        {
+            saveEntryViewModel.updateAccountDEtail(customer)
+        }
+        else {
+            saveEntryViewModel.addAccountDEtail(customer)
+        }
     }
 
     private fun clearEditTextValues() {
@@ -166,11 +193,30 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         spinner?.setSelection(0)
     }
 
+
+    private fun setEditTextValues(balanceTx: BalanceTx) {
+//        institutionType = binding.editTextInstituteType.text.toString()
+        binding.editTextCustomerName.setText(balanceTx.bankName)
+
+//        binding.editTextPhoneUserName.setText(FirebaseUtil.getCurrentPhoneUser().toString() + "")
+
+        binding.editTextInstituteCode.setText(balanceTx.accountType)
+//        address = binding.editTextInstituteAddr.text.toString()
+//
+//        acNo = binding.editTextAcNo.text.toString()
+//        netBankingUserName = binding.editTextNetBAnkingUserNAme.text.toString()
+//        password = binding.editTextNetBAnkingPwrd.text.toString()
+//        atmNo = binding.editTextAtmNo.text.toString()
+//        atmPin = binding.editTextAtmPin.text.toString()
+
+
+    }
+
     private fun getEditTextValues(): SaveAccountInfo {
 //        institutionType = binding.editTextInstituteType.text.toString()
         name = binding.editTextCustomerName.text.toString()
 
-        binding.editTextPhoneUserName.setText(FirebaseUtil.getCurrentPhoneUser().toString()+"")
+        binding.editTextPhoneUserName.setText(FirebaseUtil.getCurrentPhoneUser().toString() + "")
 
         institutionCode = binding.editTextInstituteCode.text.toString()
         address = binding.editTextInstituteAddr.text.toString()
@@ -197,7 +243,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                     it.atmPin
                 )
             }*/
-        return SaveAccountInfo( "",
+        return SaveAccountInfo(
+            "",
             institutionType,
             name,
 

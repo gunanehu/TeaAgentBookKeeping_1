@@ -16,6 +16,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
@@ -24,6 +28,7 @@ import com.teaagent.domain.firemasedbEntities.AccountType
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
 import com.teaagent.ui.report.ReportActivity
+import com.teaagent.ui.saveentry.SaveAccountDetailActivity
 import com.teaagent.ui.saveentry.SaveAccountViewModel
 import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +38,7 @@ import util.StringEncryption
 import java.util.*
 
 
-class ListTransactionsActivity : AppCompatActivity() {
+class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
     val TAG: String = "ListTransactions"
     private lateinit var instituteName: String
     private var kg: Double = 0.0
@@ -44,7 +49,9 @@ class ListTransactionsActivity : AppCompatActivity() {
     private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
 
-    var adapter: ItemAdapter? = null
+    var recycleViewAdapter: CustomAdapter? = null
+
+    //    var recycleViewAdapter: ItemAdapter? = null
     var dateTime = Calendar.getInstance()
     var data = ArrayList<String>()
 
@@ -68,6 +75,7 @@ class ListTransactionsActivity : AppCompatActivity() {
         getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
         recyclerview = binding.list
+
         recyclerview!!.layoutManager = LinearLayoutManager(this)
 
         setContentView(view)
@@ -103,8 +111,10 @@ class ListTransactionsActivity : AppCompatActivity() {
             customerString.add(customerText)
 
             val balanceAmount =
-                StringEncryption.decryptMsg(customer?.balanceAmount).toString()
-            total = total + balanceAmount.toLong()
+            customer?.balanceAmount
+//            val balanceAmount =
+//                StringEncryption.decryptMsg(customer?.balanceAmount).toString()
+            total = 0;//TODO commented temp total + balanceAmount.toLong()
         }
         return customerString
     }
@@ -113,20 +123,43 @@ class ListTransactionsActivity : AppCompatActivity() {
 //        val id = StringEncryption.decryptMsg(balanceTx?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
 //        val accountType =
 //            StringEncryption.decryptMsg(balanceTx?.accountType).toString()
+        val accountId =
+            balanceTx?.accountId
         val accountType = balanceTx?.accountType.toString()
+        val accountNo =
+         balanceTx?.accountNo
+        val balanceAmount =
+           balanceTx?.balanceAmount
+        val timestamp =
+           balanceTx?.timestamp
+
+/*        val accountType = balanceTx?.accountType.toString()
         val accountNo =
             StringEncryption.decryptMsg(balanceTx?.accountNo).toString()
         val balanceAmount =
             StringEncryption.decryptMsg(balanceTx?.balanceAmount).toString()
         val timestamp =
             StringEncryption.decryptMsg(balanceTx?.timestamp).toString()
+               val bankName = StringEncryption.decryptMsg(balanceTx?.bankName)
+
+            */
 //        val phoneUserName =
 //            StringEncryption.decryptMsg(collectionEntry?.phoneUserName.toString()).toString()
         val phoneUserName =
             balanceTx?.phoneUserName.toString()
-        val bankName = StringEncryption.decryptMsg(balanceTx?.bankName)
 
-        val b = BalanceTx("id", accountType, accountNo, balanceAmount, timestamp, phoneUserName, bankName)
+        val bankName = balanceTx?.bankName
+
+        val b = BalanceTx(
+            "id",
+            accountId,
+            accountType,
+            accountNo,
+            balanceAmount,
+            timestamp,
+            phoneUserName,
+            bankName
+        )
         return b.toString()
     }
 
@@ -168,15 +201,21 @@ class ListTransactionsActivity : AppCompatActivity() {
 
     }
 
+    var customerString: ArrayList<String>? = null
+    var customers: ArrayList<BalanceTx>? = null
+
+
     private fun blanceTxMutableLiveDataCallback() {
         listEntryActivityyViewModel.blanceTxMutableLiveData.observe(this, Observer { it ->
             Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
 
-            var customerString: ArrayList<String> =
-                convertBalanceTxToStringList(it as ArrayList<BalanceTx>)
+            customerString = convertBalanceTxToStringList(it as ArrayList<BalanceTx>)
+            customers = it /*as ArrayList<BalanceTx>*/
+//            recycleViewAdapter = ItemAdapter(customerString!!)
+            recycleViewAdapter = CustomAdapter(customerString, this)
 
-            adapter = ItemAdapter(customerString)
-            recyclerview?.adapter = adapter
+            recyclerview?.adapter = recycleViewAdapter
+//            recycleViewAdapter!!.setClickListener(this);
 
             binding.totalAmount.setText("Total amount : " + total)
             dismissProgressDialog()
@@ -298,6 +337,37 @@ class ListTransactionsActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+    }
+
+
+    override fun onClick(position: Int) {
+        val balanceTx: BalanceTx? = customers?.get(position)
+        val txId = balanceTx?.id
+        var task: Task<DocumentSnapshot>? = FirebaseUtil.getTxById(txId!!)
+        task?.addOnSuccessListener(OnSuccessListener { it ->it.data
+
+
+            val i = Intent(this, SaveAccountDetailActivity::class.java)
+            i.putExtra("balanceTx", balanceTx)
+            this.startActivity(i)
+
+            Toast.makeText(
+                this,
+                it.data.toString(),
+                Toast.LENGTH_LONG
+            ).show()
+
+        })
+        task?.addOnCompleteListener(OnCompleteListener { it ->
+
+            Toast.makeText(
+                this,
+                "completed ",
+                Toast.LENGTH_LONG
+            ).show()
+        })
+
+
     }
 
 

@@ -18,11 +18,11 @@ android {
   }
 
   defaultConfig {
-    applicationId "com.teaagent"
+    applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode 10
-    versionName "version-00010"
+    versionName "version-0001"
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

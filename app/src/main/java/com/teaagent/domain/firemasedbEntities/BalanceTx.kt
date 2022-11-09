@@ -6,7 +6,7 @@ import java.util.*
 
 data class BalanceTx(
     var id: String,
-
+    var accountId: String,
     var accountType: String,
     var accountNo: String,
     var balanceAmount: String,
@@ -14,10 +14,11 @@ data class BalanceTx(
 
     var phoneUserName: String?,
     var bankName: String
+
 ) :
     Serializable {
 
-    constructor() : this("", "", "", "", "", "", "")
+    constructor() : this("", "","", "", "", "", "", "")
 
     override fun toString(): String {
          /*" convertDate : " + convertDate(timestamp) +*/
