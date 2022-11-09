@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_google_signin_btn_text_light_default"
+
+    android:background="#5E52A9"
     android:orientation="vertical">
 
     <ScrollView
@@ -15,43 +16,100 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="Save Stock analysis "
-                android:textSize="30sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/todays_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical"
-                android:text="Today's date "
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
-            <Spinner
-                android:id="@+id/spinnerSearchCustomerName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:visibility="gone" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Save Stock analysis "
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/todays_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:text="Today's date "
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+
+                <Spinner
+                    android:id="@+id/spinnerSearchCustomerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#355478"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Trade Income Type " />
+
+                        <Spinner
+                            android:id="@+id/spinnerInstituteType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#355478"
+
+                    android:orientation="vertical">
+                <EditText
+                    android:id="@+id/editTextStock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:ems="10"
+                    android:hint="Stock Name"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/editTextEntryPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:ems="10"
+                    android:hint="Entry"
+                    android:inputType="numberDecimal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,110 +119,65 @@
                     android:orientation="horizontal"
                     android:weightSum="2">
 
+                    <EditText
+                        android:id="@+id/etSLPrice"
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:ems="10"
+
+                        android:hint="SLPrice"
+                        android:inputType="numberDecimal" />
+
                     <TextView
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvSLPercent"
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <EditText
+                        android:id="@+id/etExitPrice"
+                        android:layout_width="0dp"
 
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Trade Income Type " />
+                        android:ems="10"
+                        android:hint="ExitPrice"
+                        android:inputType="numberDecimal" />
 
-                    <Spinner
-                        android:id="@+id/spinnerInstituteType"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tvProfitPercent"
+                        android:layout_width="0dp"
+
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1" />
-
-
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <EditText
-                android:id="@+id/editTextStock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:ems="10"
-                android:hint="Stock Name"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/editTextEntryPrice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:ems="10"
-                android:hint="Entry"
-                android:inputType="numberDecimal" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <EditText
-                    android:id="@+id/etSLPrice"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-
-                    android:hint="SLPrice"
-                    android:inputType="numberDecimal" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:id="@+id/tvSLPercent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                   />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <EditText
-                    android:id="@+id/etExitPrice"
-                    android:layout_weight="1"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:ems="10"
-                    android:hint="ExitPrice"
-                    android:inputType="numberDecimal" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:id="@+id/tvProfitPercent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                     />
-            </LinearLayout>
+                </LinearLayout></androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-
                         android:layout_height="wrap_content"
+                        android:background="#355478"
 
                         android:orientation="vertical">
 

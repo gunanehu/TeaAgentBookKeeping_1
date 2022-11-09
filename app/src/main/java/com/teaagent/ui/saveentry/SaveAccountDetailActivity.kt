@@ -20,7 +20,6 @@ import com.teaagent.databinding.ActivitySaveCustomerBinding
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.*
-import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -126,7 +125,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private fun registerEditTextChangeListenerrs() {
         binding.etSLPrice.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                val loss =   calculateSLPercentage()
+                val loss = calculateSLPercentage()
                 binding.tvSLPercent.setText(loss.toString())
             }
 
@@ -140,7 +139,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val loss =   calculateSLPercentage()
+                val loss = calculateSLPercentage()
                 binding.tvSLPercent.setText(loss.toString())
             }
         })
@@ -149,8 +148,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.etExitPrice.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                val profit =  calculateProfitPercentage()
-                binding.tvProfitPercent.setText(profit.toString())
+                val profit = calculateProfitPercentage()
+                binding.tvProfitPercent.setText(profit.toString() + " %")
             }
 
 
@@ -164,8 +163,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val profit =  calculateProfitPercentage()
-                binding.tvProfitPercent.setText(profit.toString())
+                val profit = calculateProfitPercentage()
+                binding.tvProfitPercent.setText(profit.toString() + " %")
             }
         })
 
@@ -173,18 +172,29 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     }
 
     private fun calculateProfitPercentage(): Float {
-        val exit = binding.etExitPrice.text?.toString()?.toFloat()
-        val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
-        val profit = exit!! - entry!!
-        return profit/entry
+        try {
+            val exit = binding.etExitPrice.text?.toString()?.toFloat()
+            val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
+            val profit = exit!! - entry!!
+            return profit / entry * 100
+        } catch (e: NumberFormatException) {
+
+        }
+        return 0F
     }
 
 
     private fun calculateSLPercentage(): Float {
-        val sl = binding.etSLPrice.text!!?.toString()!!?.toFloat()
-        val entry = binding.editTextEntryPrice.text!!?.toString()?.toFloat()
-        val loss = sl!! - entry!!
-        return loss/entry
+        try {
+            val sl = binding.etSLPrice.text?.toString()?.toFloat()
+            val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
+            val loss = sl!! - entry!!
+            return loss / entry * 100
+
+        } catch (e: NumberFormatException) {
+
+        }
+        return 0F
     }
 
     var higherTimeFarameLocation: String? = null
