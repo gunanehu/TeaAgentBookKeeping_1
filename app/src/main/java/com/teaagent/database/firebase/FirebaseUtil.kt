@@ -12,6 +12,7 @@ import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil.addToPreferenceTabId
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.PhoneUser
+import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.repo.FirebaseEntryAddedCallback
 
@@ -32,11 +33,13 @@ object FirebaseUtil {
     private var tablePhoneUser: CollectionReference? = null
     private var tableAccountInfo: CollectionReference? = null
     private var tableCollectionEntry: CollectionReference? = null
+    private var tableTimerLogEntry: CollectionReference? = null
 
     init {
         tableAccountInfo = firestoreDb.collection("AccountInfo")
         tablePhoneUser = firestoreDb.collection("PhoneUser")
         tableCollectionEntry = firestoreDb.collection("BalanceTx")
+        tableTimerLogEntry = firestoreDb.collection("TimerLog")
         //TODO use only one in lifetime for that user
         addPhoneUser(phoneUser)
     }
@@ -66,6 +69,20 @@ object FirebaseUtil {
             }
 
 
+        }
+    }
+
+    fun addTimerLog(timerLog: TimerLog?) {
+        var doc = tableTimerLogEntry?.document()?.id// this is the id
+        if (doc != null) {
+            timerLog?.id = doc
+        }
+
+        if (timerLog != null) {
+            tableTimerLogEntry?.document(doc!!)?.set(timerLog)
+                ?.addOnSuccessListener {
+                    Log.i(TAG, "tableTimerLogEntry addOnSuccessListener tableTimerLogEntry " + doc)
+TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeMillis())                }
         }
     }
 

@@ -26,7 +26,12 @@ object TeaAgentsharedPreferenceUtil {
     fun getAppId(): String? {
         return sharedPreferences?.getString("AppId", "")
     }
-
-
+    fun addToPreferenceCurrentStartTime(millli:Long) {
+        myEdit?.putLong("TimeLog", millli);
+        myEdit?.commit();
+    }
+    fun getToPreferenceCurrentStartTime():Long?{
+        return sharedPreferences?.getLong("TimeLog", 0)
+    }
     val TAG: String = "Application"
 }

@@ -18,6 +18,7 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
 import com.teaagent.domain.firemasedbEntities.BalanceTx
+import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.*
 import java.text.SimpleDateFormat
@@ -556,4 +557,23 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     }
 
 
+    override fun onBackPressed() {
+        AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle("Exiting "+this.getString(R.string.app_name))
+            .setMessage("Are you sure you are done with your TRADING ?")
+            .setPositiveButton(
+                "Yes"
+            ) { dialog, which ->
+
+                val startStoredTime = TeaAgentsharedPreferenceUtil.getToPreferenceCurrentStartTime()
+                val timediff = System.currentTimeMillis() - startStoredTime!!
+                val timerlog = TimerLog("", startStoredTime, System.currentTimeMillis(), timediff)
+
+                FirebaseUtil.addTimerLog(timerlog)
+                finish()
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
 }

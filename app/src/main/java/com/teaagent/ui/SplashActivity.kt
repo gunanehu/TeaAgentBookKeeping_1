@@ -3,7 +3,10 @@ package com.teaagent.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.teaagent.data.FirebaseUtil
+import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySplashBinding
+import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.ui.saveentry.SaveAccountDetailActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,11 +32,16 @@ class SplashActivity : AppCompatActivity() {
         activityScope.launch {
             delay(1000)
 
+            startLogTradingTime()
+
             var intent = Intent(this@SplashActivity, SaveAccountDetailActivity::class.java)
             startActivity(intent)
             finish()
         }
     }
+
+    private fun startLogTradingTime() {
+        TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeMillis())            }
 
     override fun onStart() {
         super.onStart()
