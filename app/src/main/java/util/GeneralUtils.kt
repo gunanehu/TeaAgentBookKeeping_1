@@ -12,5 +12,13 @@ class GeneralUtils {
             val time: String = sdf.format(timeD)
             return time
         }
+
+        fun convertDisplayDate(timestamp: Long): String  {
+            val timeD =
+                Date(timestamp)
+            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+            val time: String = sdf.format(timeD)
+            return time
+        }
     }
 }

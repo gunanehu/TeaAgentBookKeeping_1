@@ -1,5 +1,6 @@
 package com.teaagent.domain.firemasedbEntities
 
+import android.graphics.fonts.Font
 import util.GeneralUtils
 import java.io.Serializable
 
@@ -34,22 +35,28 @@ open class TradeAnalysis(
 
 ) :
     Serializable {
-    constructor() : this("", "", "", "", "","", "", "", "", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "", "", "", "", "", "", "", "")
 
     override fun toString(): String {
-        return " TradeIncomeType='     $tradeIncomeType    '," +
-                " stockName=$stockName  ," +
-                " EntryPrice=$EntryPrice   ," +
-                " SLPrice=$SLPrice   ," +
-                " ExitPrice=$ExitPrice  ," +
-                " HTFLocation=$HTFLocation   , " +
-                "HTFTrend=$HTFTrend   ," +
-                " ITFTrend=$ITFTrend   , " +
-                "ExecutionZone=$ExecutionZone   , " +
-                "entryEmotion=$entryEmotion   , " +
+        val str=                  GeneralUtils.convertDisplayDate(timestampTradePlanned?.toLong()!!)+"\n" +
+                " " + " $stockName  \n" +
+                " Type='     $tradeIncomeType    \n" +
+                " EntryPrice  = $EntryPrice   " +
+                " SLPrice = $SLPrice    " +
+                " ExitPrice = $ExitPrice  \n" +
+                /*  " HTFLocation=$HTFLocation   , " +
+                  "HTFTrend=$HTFTrend   ," +
+                  " ITFTrend=$ITFTrend   , " +*/
 
-                //  GeneralUtils.convertDate(timestampTradePlanned?.toLong()!!)+
-                "note=$note "
+
+                "ExecutionZone=$ExecutionZone    \n " +
+                "entryEmotion=$entryEmotion   \n" +
+                "note=$note                                                               " +
+                "" +
+                ""
+
+        return str
+
     }
 
     /* override fun toString(): String {*/

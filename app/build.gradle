@@ -21,8 +21,8 @@ android {
     applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 10
-    versionName "version-0001"
+    versionCode 03
+    versionName "version-0003"
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
