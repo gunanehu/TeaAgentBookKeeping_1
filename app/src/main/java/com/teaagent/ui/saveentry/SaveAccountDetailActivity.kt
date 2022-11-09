@@ -524,7 +524,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             ) */
         return TradeAnalysis(
             "",
-            FirebaseUtil.phoneUser.name,
+            FirebaseUtil.getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name,
             accountType!!,
             stockName,
 

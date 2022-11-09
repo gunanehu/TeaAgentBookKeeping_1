@@ -3,6 +3,7 @@ package util;
 import android.util.Base64;
 
 import com.teaagent.data.FirebaseUtil;
+import com.teaagent.database.TeaAgentsharedPreferenceUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -29,9 +30,9 @@ public class StringEncryption {
     private static final SecureRandom random = new SecureRandom();
 
 
+/*
     public static String encryptMsg(String plaintext) {
-        String password = FirebaseUtil.INSTANCE.getCurrentPhoneUser().toString();
-
+        String password = FirebaseUtil.INSTANCE.getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString())
         byte[] salt = generateSalt();
         SecretKey key = deriveKey(password, salt);
 
@@ -61,7 +62,9 @@ public class StringEncryption {
             throw new RuntimeException(e);
         }
     }
+*/
 
+/*
     public static String decryptMsg(String ciphertext) {
         String password = FirebaseUtil.INSTANCE.getCurrentPhoneUser().toString();
 
@@ -86,6 +89,7 @@ public class StringEncryption {
             throw new RuntimeException(e);
         }
     }
+*/
 
     private static byte[] generateSalt() {
         byte[] b = new byte[PKCS5_SALT_LENGTH];

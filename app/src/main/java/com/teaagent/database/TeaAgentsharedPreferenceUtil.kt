@@ -22,7 +22,7 @@ object TeaAgentsharedPreferenceUtil {
         myEdit?.commit();
     }
 
-    fun getAppId(): String? {
+  public  fun getAppId(): String? {
         return sharedPreferences?.getString("AppId", "")
     }
     fun addToPreferenceCurrentStartTime(millli:Long) {

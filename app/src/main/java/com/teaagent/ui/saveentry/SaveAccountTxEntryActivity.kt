@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
+import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCollectionBinding
 import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
 import com.teaagent.domain.firemasedbEntities.BalanceTx
@@ -289,7 +290,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             amount.toString(),
             System.currentTimeMillis().toString(),
 
-            FirebaseUtil.getCurrentPhoneUser().name,
+            FirebaseUtil.getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name,
             selectedAccountInfo?.stockName.toString()
         )
         return tran

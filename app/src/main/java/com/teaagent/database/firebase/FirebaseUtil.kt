@@ -101,38 +101,38 @@ TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeM
         }
     }
 
-    fun addPhoneUser(phoneUser: PhoneUser?) {
-        val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
-
-        if (phoneId.equals("")) {
-            if (phoneUser != null) {
-                phoneUser.name?.let { addToPreferenceTabId(it) }//save to local preference such that u never call again and again/
-                // / todo check after installation to check the same phoneid in firebase
-
-                tablePhoneUser?.add(phoneUser)
-                    ?.addOnFailureListener(OnFailureListener { e ->
-                        {
-                            Log.e(
-                                TAG,
-                                "addPhoneUser OnFailureListener documentReference " + e.message
-                            )
-                        }
-                    })
-                    ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
-                        Log.i(
-                            TAG,
-                            "addPhoneUser OnSuccessListener  documentReference " + documentReference
-                        )
-                    })
-                    ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
-                        Log.i(
-                            TAG,
-                            "  addPhoneUser OnCompleteListener documentReference " + task.result
-                        )
-                    })
-            }
-        }
-    }
+//    fun addPhoneUser(phoneUser: PhoneUser?) {
+//        val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
+//
+//        if (phoneId.equals("")) {
+//            if (phoneUser != null) {
+//                phoneUser.name?.let { addToPreferenceTabId(it) }//save to local preference such that u never call again and again/
+//                // / todo check after installation to check the same phoneid in firebase
+//
+//                tablePhoneUser?.add(phoneUser)
+//                    ?.addOnFailureListener(OnFailureListener { e ->
+//                        {
+//                            Log.e(
+//                                TAG,
+//                                "addPhoneUser OnFailureListener documentReference " + e.message
+//                            )
+//                        }
+//                    })
+//                    ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
+//                        Log.i(
+//                            TAG,
+//                            "addPhoneUser OnSuccessListener  documentReference " + documentReference
+//                        )
+//                    })
+//                    ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
+//                        Log.i(
+//                            TAG,
+//                            "  addPhoneUser OnCompleteListener documentReference " + task.result
+//                        )
+//                    })
+//            }
+//        }
+//    }
 
     fun addCollectionEntry(collectionEntry: BalanceTx?) {
         var doc = tableCollectionEntry?.document()?.id// this is the id
@@ -166,19 +166,54 @@ TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeM
 
     ///get calls
 
-    fun getCurrentPhoneUser(): PhoneUser {
-        return PhoneUser(AppHelper.getInstance().uniqueUserID)
+    fun getCurrentPhoneUser(uniqueUserID: String): PhoneUser {
+        return PhoneUser(uniqueUserID)
 
     }
+//    fun addPhoneUser(id: String?, phoneUser: PhoneUser?) {
+//        val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
+//
+//        if (phoneId.equals("")) {
+//            if (phoneUser != null) {
+//                if (id != null) {
+//                    addToPreferenceTabId(id)
+//                }//save to local preference such that u never call again and again/
+//                // / todo check after installation to check the same phoneid in firebase
+//
+//                tablePhoneUser?.add(phoneUser)
+//                    ?.addOnFailureListener(OnFailureListener { e ->
+//                        {
+//                            Log.e(
+//                                TAG,
+//                                "addPhoneUser OnFailureListener documentReference " + e.message
+//                            )
+//                        }
+//                    })
+//                    ?.addOnSuccessListener(OnSuccessListener<DocumentReference?> { documentReference -> //this gets triggered when I run
+//                        Log.i(
+//                            TAG,
+//                            "addPhoneUser OnSuccessListener  documentReference " + documentReference
+//                        )
+//                    })
+//                    ?.addOnCompleteListener(OnCompleteListener<DocumentReference?> { task -> //this also gets triggered when I run
+//                        Log.i(
+//                            TAG,
+//                            "  addPhoneUser OnCompleteListener documentReference " + task.result
+//                        )
+//                    })
+//            }
+//        }
+//    }
+
 
     fun getAllAccountDEtail(): Task<QuerySnapshot>? {
-        val query = tableTradeAnalysisEntry?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)//getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+        val query = tableTradeAnalysisEntry?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
         return query?.get()
     }
 
 
     fun getAllTradeDetails(): Task<QuerySnapshot>? {
-        val query = tableTradeAnalysisEntry?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)//getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+        val query = tableTradeAnalysisEntry?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
         return query?.get()
     }
     fun getByNameAndDate(
@@ -186,7 +221,7 @@ TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeM
         convertedTimestampDate: String
     ): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)//getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
             ?.whereEqualTo("bankName", customerName)
 //            ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
         return query?.get()
@@ -195,14 +230,14 @@ TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeM
 
     fun getNetAssetsByName(): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)//getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
 //            ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()
     }
 
     fun getByAccountType(customerName: String): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser().name)//getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
             ?.whereEqualTo("accountType", customerName)
         return query?.get()
     }
