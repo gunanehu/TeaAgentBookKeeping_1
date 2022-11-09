@@ -20,12 +20,11 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivitySaveCollectionBinding
 import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
+import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.ui.listEntries.ListTransactionsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import util.StringEncryption
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,7 +33,7 @@ import java.util.*
  * Main Screen
  */
 class SaveAccountTxEntryActivity : AppCompatActivity() {
-    private var selectedAccountInfo: SaveAccountInfo? = null
+    private var selectedAccountInfo: TradeAnalysis? = null
 
     //    private lateinit var customerName: String
     private var kg: Long = 0
@@ -42,7 +41,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     private var advancedPaymentAmount = null
     var labourAmount: Long = 0
     var netTotal: Long = 0
-    var allAccounts: List<SaveAccountInfo>? = null
+    var allAccounts: List<TradeAnalysis>? = null
     var dateTime = Calendar.getInstance()
 
     //    var phoneUserAndCustomer: PhoneUserAndCustomer? = null
@@ -126,85 +125,106 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         }
 
         mapsActivityViewModel.accountsLiveData.observe(this, Observer() { it ->
-            var saveAccountInfos: ArrayList<SaveAccountInfo> =
-                decryptToAccountDetailsList(it as ArrayList<SaveAccountInfo>)
+            var tradeAnalyses: ArrayList<TradeAnalysis> =
+                decryptToAccountDetailsList(it as ArrayList<TradeAnalysis>)
 
-            allAccounts = saveAccountInfos
-            getALLCustomerNamesToSpinner(saveAccountInfos as ArrayList<SaveAccountInfo>)
+            allAccounts = tradeAnalyses
+            getALLCustomerNamesToSpinner(tradeAnalyses as ArrayList<TradeAnalysis>)
             dismissProgressDialog()
 
         })
     }
 
 
-    private fun decryptToAccountDetailsList(arrayList: ArrayList<SaveAccountInfo>): ArrayList<SaveAccountInfo> {
-        var arrayList2: ArrayList<SaveAccountInfo> = ArrayList()
-        /*  open class SaveAccountInfo(
-              var id: String,
-              var type: String,
-              var bankName: String?,
-
-              open var phoneUserName: String?,
-              var institutionCode: String?,
-              var address: String?,
-
-              var acNo: String?,
-              var netBankingUserName: String?,
-              var password: String?,
-              var atmNo: String?,
-              var atmPin: String?
-
-          )*/
+    private fun decryptToAccountDetailsList(arrayList: ArrayList<TradeAnalysis>): ArrayList<TradeAnalysis> {
+        var arrayList2: ArrayList<TradeAnalysis> = ArrayList()
 
         for (accountInfo in arrayList) {
 //        val id = StringEncryption.decryptMsg(accountInfo?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
-            val accountType = accountInfo?.type.toString()
+            val accountType = accountInfo?.tradeIncomeType.toString()
 //            val bankName =
 //                StringEncryption.decryptMsg(accountInfo?.bankName).toString()
             val id =
                 accountInfo?.id
 
-            val bankName =
-               accountInfo?.bankName
+            val stockName =
+               accountInfo?.stockName
             val phoneUserName =
                 accountInfo?.phoneUserName
-            val institutionCode =
-               accountInfo?.institutionCode
-            val address =
-               accountInfo?.address
+            val tradeIncomeType =
+                accountInfo?.tradeIncomeType
 
-            val acNo =
-                accountInfo?.acNo.toString()
-            val netBankingUserName =accountInfo?.netBankingUserName
-            val password = accountInfo?.password
-            val atmNo =accountInfo?.atmNo
-            val atmPin = accountInfo?.atmPin
-           /* val institutionCode =
-                StringEncryption.decryptMsg(accountInfo?.institutionCode).toString()
-            val address =
-                StringEncryption.decryptMsg(accountInfo?.address).toString()
+            val EntryPrice =
+               accountInfo?.EntryPrice
+            val SLPrice =
+               accountInfo?.SLPrice
 
-            val acNo =
-                StringEncryption.decryptMsg(accountInfo?.acNo.toString()).toString()
-            val netBankingUserName = StringEncryption.decryptMsg(accountInfo?.netBankingUserName)
-            val password = StringEncryption.decryptMsg(accountInfo?.password)
-            val atmNo = StringEncryption.decryptMsg(accountInfo?.atmNo)
-            val atmPin = StringEncryption.decryptMsg(accountInfo?.atmPin)*/
+            val ExitPrice =
+                accountInfo?.ExitPrice.toString()
+            val ITFTrend =accountInfo?.ITFTrend
+            val HTFTrend = accountInfo?.HTFTrend
+
+
+            val HTFLocation =accountInfo?.HTFLocation
+            val ExecutionZone = accountInfo?.ExecutionZone
+
+            val entryEmotion = accountInfo?.entryEmotion
+
+            val timestampTradePlanned =accountInfo?.timestampTradePlanned
+            val note = accountInfo?.note
 
             val b =
-                SaveAccountInfo(
+                TradeAnalysis(
                     id,
-                    accountType,
-                    bankName,
                     phoneUserName,
-                    institutionCode,
-                    address,
-                    acNo,
-                    netBankingUserName,
-                    password,
-                    atmNo,
-                    atmPin
+                    tradeIncomeType,
+                    stockName,
+                    EntryPrice,
+                    SLPrice,
+                    ExitPrice,
+
+                    HTFLocation,
+                    HTFTrend,
+                    ITFTrend,
+                    ExecutionZone,
+
+                    entryEmotion,
+                    timestampTradePlanned,
+                    note
+
                 )
+
+          /*  class TradeAnalysis(
+                var id: String,
+                open var phoneUserName: String?,
+
+                var tradeIncomeType: String,
+                var stockName: String?,
+
+                //Trade entry/sl/exit planned prices
+                var EntryPrice: String?,
+                var SLPrice: String?,
+                var ExitPrice: String?,
+
+                //Trade analysis
+//    Higher time frame
+                var HTFLocation: String?,
+                var HTFTrend: String?,
+
+                //    Intermediate time frame
+                var ITFTrend: String?,
+
+                //Execution time frame-type2/3
+                var ExecutionZone: String?,
+
+                var entryEmotion: String?,
+
+//timestamp when trde is planned
+                var timestampTradePlanned: String?,
+                var note: String?
+
+            )*/
+
 
             arrayList2.add(b)
         }
@@ -215,7 +235,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     private fun getTrackingApplicationInstance() = application as TeaAgentApplication
     private fun getTrackingRepository() = getTrackingApplicationInstance().trackingRepository
 
-    private fun clearEditTextValues() {
+  /*  private fun clearEditTextValues() {
         binding.editTextCustomerName.setText("")
         binding.editTextKG.setText("")
         binding.editTextAmount.setText("")
@@ -233,7 +253,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
         dateTime.timeInMillis = 0
         spinner?.setSelection(0)
-    }
+    }*/
 
     private fun createCollectionEntryFromEditText(): BalanceTx? {
 
@@ -263,14 +283,14 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         val tran = BalanceTx(
             "",
             selectedAccountInfo!!.id,
-            selectedAccountInfo!!.type,
-            selectedAccountInfo!!.acNo!!,
+            selectedAccountInfo!!.tradeIncomeType,
+            selectedAccountInfo!!.ExitPrice!!,
 
             amount.toString(),
             System.currentTimeMillis().toString(),
 
             FirebaseUtil.getCurrentPhoneUser().name,
-            selectedAccountInfo?.bankName.toString()
+            selectedAccountInfo?.stockName.toString()
         )
         return tran
     }
@@ -305,13 +325,13 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     var spinner: Spinner? = null
 
 
-    private fun getALLCustomerNamesToSpinner(list: ArrayList<SaveAccountInfo>) {
+    private fun getALLCustomerNamesToSpinner(list: ArrayList<TradeAnalysis>) {
         showProgressDialog()
         var accountInfoDisplayName: ArrayList<String> = ArrayList()
 
         for (customer in list) {
 //            customer.name?.let { customerNames.add(it) }
-            accountInfoDisplayName.add(/*customer.bankName!! + */customer.bankName.toString())
+            accountInfoDisplayName.add(/*customer.bankName!! + */customer.stockName.toString())
         }
 
         /*  val hashSet: HashSet<String> = HashSet()
@@ -336,7 +356,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
                 val customerText = accountInfoDisplayName?.get(position).toString()
 
                 selectedAccountInfo = retrieveSpinnerSelectedItem(customerText, list)
-                binding.editTextCustomerName.setText(selectedAccountInfo?.acNo)
+//                binding.editTextCustomerName.setText(selectedAccountInfo?.ExitPrice)        //TODO with actual value
 
                 Log.d(TAG, "onItemSelected selectedAccountInfo " + selectedAccountInfo)
 
@@ -354,17 +374,17 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
     private fun retrieveSpinnerSelectedItem(
         bankName: String,
-        list: ArrayList<SaveAccountInfo>
-    ): SaveAccountInfo? {
+        list: ArrayList<TradeAnalysis>
+    ): TradeAnalysis? {
         for (item in list) {
-            if (item.bankName.toString().contentEquals(bankName)) {
+            if (item.stockName.toString().contentEquals(bankName)) {
                 return item
             }
         }
         return null
     }
 
-    private fun showtvSelectedAccountDetail(selectedAccountInfo: SaveAccountInfo?) {
+    private fun showtvSelectedAccountDetail(selectedAccountInfo: TradeAnalysis?) {
         binding.tvSelectedAccountDetail.setText(selectedAccountInfo.toString())
     }
 

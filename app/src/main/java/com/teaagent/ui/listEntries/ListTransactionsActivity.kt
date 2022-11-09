@@ -24,9 +24,9 @@ import com.teaagent.R
 import com.teaagent.TeaAgentApplication
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTxListBinding
-import com.teaagent.domain.firemasedbEntities.AccountType
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
+import com.teaagent.domain.firemasedbEntities.TradeAnalysis
+import com.teaagent.domain.firemasedbEntities.enums.TradeIncomeType
 import com.teaagent.ui.report.ReportActivity
 import com.teaagent.ui.saveentry.SaveAccountDetailActivity
 import com.teaagent.ui.saveentry.SaveAccountViewModel
@@ -34,7 +34,6 @@ import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import util.StringEncryption
 import java.util.*
 
 
@@ -97,7 +96,7 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
         }
 
         saveAccountDetailViewModel.accountsLiveData.observe(this, Observer() { it ->
-            getAccountInfos(it as ArrayList<SaveAccountInfo>)
+            getAccountInfos(it as ArrayList<TradeAnalysis>)
             dismissProgressDialog()
         })
     }
@@ -264,11 +263,11 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
         }
     }
 
-    private fun getAccountInfos(list: ArrayList<SaveAccountInfo>) {
+    private fun getAccountInfos(list: ArrayList<TradeAnalysis>) {
 
         var customerNames: ArrayList<String> = ArrayList()
         for (customer in list) {
-            customer.bankName?.let { customerNames.add(it) }
+            customer.stockName?.let { customerNames.add(it) }
         }
 
         val hashSet: HashSet<String> = HashSet()
@@ -310,7 +309,7 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
         val spinner: Spinner = findViewById(R.id.spinnerInstituteType)
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
-                AccountType::class.java
+                TradeIncomeType::class.java
             )
         )
 

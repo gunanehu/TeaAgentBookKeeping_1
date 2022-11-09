@@ -2,6 +2,8 @@ package com.teaagent.ui.saveentry
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -15,9 +17,10 @@ import com.teaagent.R
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
-import com.teaagent.domain.firemasedbEntities.AccountType
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
+import com.teaagent.domain.firemasedbEntities.TradeAnalysis
+import com.teaagent.domain.firemasedbEntities.enums.*
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,15 +33,15 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private var toUpdate: Boolean = false
     val TAG: String = "SaveInstitutionActivity"
 
-    private lateinit var name: String
+    private lateinit var stockName: String
     private lateinit var institutionType: String  //
 
     private lateinit var phoneUserName: String  //= binding.editTextPhoneUserName.text.toString()
-    private lateinit var institutionCode: String  //= binding.editTextInstituteCode.text.toString()
-    private lateinit var address: String  //= binding.editTextInstituteAddr.text.toString()
+    private lateinit var entryPrice: String  //= binding.editTextInstituteCode.text.toString()
+    private lateinit var slPrice: String  //= binding.editTextInstituteAddr.text.toString()
 
-    private lateinit var acNo: String  //= binding.editTextAcNo.text.toString()
-    private lateinit var netBankingUserName: String  //= binding.editTextNetBAnkingUserNAme.text.toString()
+    private lateinit var exitPrice: String  //= binding.editTextAcNo.text.toString()
+    private lateinit var note: String  //= binding.editTextNetBAnkingUserNAme.text.toString()
     private lateinit var password: String  //= binding.editTextNetBAnkingPwrd.text.toString()
     private lateinit var atmNo: String  //= binding.editTextAtmNo.text.toString()
     private lateinit var atmPin: String  //
@@ -72,11 +75,19 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
-        declareTypeSpinner()
+        declareIncomeTypeSpinner()
+        declareHigherTimeFarameLocationSpinner()
+        declareHigherTimeFarameTrendSpinner()
+        declareIntermediateTimeFarameTrendSpinner()
+        declareExecutionTimeFarameSpinner()
 
+        registerEditTextChangeListenerrs()
+
+
+        declareEntryEmotionTypeSpinner()
         // Set up button click events
         binding.saveCustomerButton.setOnClickListener {
-            if (binding.editTextCustomerName.text.toString().length > 0) {
+            if (binding.editTextStock.text.toString().length > 0) {
                 val cuustomerEntry = getEditTextValues()
                 /*  SaveAccountInfo(
                       it.type,
@@ -93,18 +104,13 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                       it.atmPin
                   )
               }*/
-                /*       if(toUpdate){
-                           updateAccountInfo(cuustomerEntry)
-                           toUpdate=false;
-                       }
-                      else{*/
-                if (toUpdate){
+
+                if (toUpdate) {
                     cuustomerEntry.id = balanceTx!!?.accountId
                 }
-                Log.d(TAG, "*****  cuustomerEntry.id " + cuustomerEntry.id)
-
+//                Log.d(TAG, "*****  cuustomerEntry.id " + cuustomerEntry.id)
                 addAccountInfo(cuustomerEntry, toUpdate)
-                /*  };*/
+
             } else {
                 showErrorMesage()
             }
@@ -112,19 +118,276 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         binding.nextButton.setOnClickListener {
             val listActiviTyIntent = Intent(this, SaveAccountTxEntryActivity::class.java)
-//            listActiviTyIntent.putExtra(ReportActivityBundleTag, instituteName)
-
             startActivity(listActiviTyIntent)
         }
 
     }
 
+    private fun registerEditTextChangeListenerrs() {
+        binding.etSLPrice.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                val loss =   calculateSLPercentage()
+                binding.tvSLPercent.setText(loss.toString())
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                val loss =   calculateSLPercentage()
+                binding.tvSLPercent.setText(loss.toString())
+            }
+        })
+
+
+        binding.etExitPrice.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                val profit =  calculateProfitPercentage()
+                binding.tvProfitPercent.setText(profit.toString())
+            }
+
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                val profit =  calculateProfitPercentage()
+                binding.tvProfitPercent.setText(profit.toString())
+            }
+        })
+
+
+    }
+
+    private fun calculateProfitPercentage(): Float {
+        val exit = binding.etExitPrice.text?.toString()?.toFloat()
+        val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
+        val profit = exit!! - entry!!
+        return profit/entry
+    }
+
+
+    private fun calculateSLPercentage(): Float {
+        val sl = binding.etSLPrice.text!!?.toString()!!?.toFloat()
+        val entry = binding.editTextEntryPrice.text!!?.toString()?.toFloat()
+        val loss = sl!! - entry!!
+        return loss/entry
+    }
+
+    var higherTimeFarameLocation: String? = null
+    private fun declareHigherTimeFarameLocationSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerHTFLocation)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                HTFLocationType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                higherTimeFarameLocation = enumValues?.get(position).toString()
+//                    institutionType = accountType as String
+                Log.d(TAG, "onItemSelected higherTimeFarameLocation " + higherTimeFarameLocation)
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                higherTimeFarameLocation = enumValues?.get(0).toString()
+                Log.d(
+                    TAG,
+                    "default onItemSelected higherTimeFarameLocation " + higherTimeFarameLocation
+                )
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+
+    var higherTimeFarameTrend: String? = null
+    private fun declareHigherTimeFarameTrendSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerHTFTrend)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                TrendType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                higherTimeFarameTrend = enumValues?.get(position).toString()
+//                    institutionType = accountType as String
+                Log.d(TAG, "onItemSelected higherTimeFarameTrend " + higherTimeFarameTrend)
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                higherTimeFarameTrend = enumValues?.get(0).toString()
+                Log.d(TAG, "default onItemSelected higherTimeFarameTrend " + higherTimeFarameTrend)
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+    var excutionTimeTimeFarameLocation: String? = null
+    private fun declareExecutionTimeFarameSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerExecutionZone)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                ExecutionZoneType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                excutionTimeTimeFarameLocation = enumValues?.get(position).toString()
+//                    institutionType = accountType as String
+                Log.d(
+                    TAG,
+                    "onItemSelected excutionTimeTimeFarameLocation " + excutionTimeTimeFarameLocation
+                )
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                higherTimeFarameLocation = enumValues?.get(0).toString()
+                Log.d(
+                    TAG,
+                    "default onItemSelected excutionTimeTimeFarameLocation " + excutionTimeTimeFarameLocation
+                )
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+    var entryEmotion: String? = null
+
+    private fun declareEntryEmotionTypeSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerEntryEmotion)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                EntryEmotionType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                entryEmotion = enumValues?.get(position).toString()
+//                    institutionType = accountType as String
+                Log.d(
+                    TAG,
+                    "onItemSelected entryEmotion " + entryEmotion
+                )
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                higherTimeFarameLocation = enumValues?.get(0).toString()
+                Log.d(
+                    TAG,
+                    "default onItemSelected entryEmotion " + entryEmotion
+                )
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+
+    var intermediateTimeFarameTrend: String? = null
+    private fun declareIntermediateTimeFarameTrendSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerITFTrend)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                TrendType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                intermediateTimeFarameTrend = enumValues?.get(position).toString()
+//                    institutionType = accountType as String
+                Log.d(
+                    TAG,
+                    "onItemSelected intermediateTimeFarameTrend " + intermediateTimeFarameTrend
+                )
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                higherTimeFarameTrend = enumValues?.get(0).toString()
+                Log.d(
+                    TAG,
+                    "default onItemSelected intermediateTimeFarameTrend " + intermediateTimeFarameTrend
+                )
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+
     var accountType: String? = null
-    private fun declareTypeSpinner() {
+    private fun declareIncomeTypeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerInstituteType)
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
-                AccountType::class.java
+                TradeIncomeType::class.java
             )
         )
 
@@ -155,48 +418,53 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     }
 
 
-    fun addAccountInfo(customerEntity: SaveAccountInfo?, toUpdate: Boolean) {
+    fun addAccountInfo(customerEntity: TradeAnalysis?, toUpdate: Boolean) {
+
         val customer = customerEntity?.let {
-            SaveAccountInfo(
+            TradeAnalysis(
                 it.id,
-                it.type,
-                it.bankName,
-
                 it.phoneUserName,
-                it.institutionCode,
-                it.address,
 
-                it.acNo,
-                it.netBankingUserName,
-                it.password,
-                it.atmNo,
-                it.atmPin
+                it.tradeIncomeType,
+                it.stockName,
+
+                it.EntryPrice,
+                it.SLPrice,
+                it.ExitPrice,
+
+                it.HTFLocation,
+                it.HTFTrend,
+                it.ITFTrend,
+                it.ExecutionZone,
+                it.entryEmotion,
+
+                System.currentTimeMillis().toString(),
+                it.note
             )
         }
         //            setEditTextValues(customer)
         //            toUpdate=false;
-        if (toUpdate)
-        {
+        if (toUpdate) {
             saveEntryViewModel.updateAccountDEtail(customer)
-        }
-        else {
+        } else {
             saveEntryViewModel.addAccountDEtail(customer)
         }
     }
 
     private fun clearEditTextValues() {
-        binding.editTextCustomerName.setText("")
+        binding.editTextStock.setText("")
         binding.todaysDate.setText("")
-        name = ""
+        stockName = ""
         institutionType = ""
         dateTime.timeInMillis = 0
         spinner?.setSelection(0)
     }
 
 
+/*
     private fun setEditTextValues(balanceTx: BalanceTx) {
 //        institutionType = binding.editTextInstituteType.text.toString()
-        binding.editTextCustomerName.setText(balanceTx.bankName)
+        binding.editTextStock.setText(balanceTx.bankName)
 
 //        binding.editTextPhoneUserName.setText(FirebaseUtil.getCurrentPhoneUser().toString() + "")
 
@@ -211,52 +479,54 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
 
     }
+*/
 
-    private fun getEditTextValues(): SaveAccountInfo {
-//        institutionType = binding.editTextInstituteType.text.toString()
-        name = binding.editTextCustomerName.text.toString()
+    private fun getEditTextValues(): TradeAnalysis {
+        stockName = binding.editTextStock.text.toString()
 
-        binding.editTextPhoneUserName.setText(FirebaseUtil.getCurrentPhoneUser().toString() + "")
+        entryPrice = binding.editTextEntryPrice.text.toString()
+        slPrice = binding.etSLPrice.text.toString()
 
-        institutionCode = binding.editTextInstituteCode.text.toString()
-        address = binding.editTextInstituteAddr.text.toString()
+        exitPrice = binding.etExitPrice.text.toString()
+        note = binding.etNote.text.toString()
 
-        acNo = binding.editTextAcNo.text.toString()
-        netBankingUserName = binding.editTextNetBAnkingUserNAme.text.toString()
-        password = binding.editTextNetBAnkingPwrd.text.toString()
-        atmNo = binding.editTextAtmNo.text.toString()
-        atmPin = binding.editTextAtmPin.text.toString()
+        /*  TradeAnalysis(
+                it.id,
+                it.phoneUserName,
 
+                it.tradeIncomeType,
+                it.stockName,
 
-        /*  SaveAccountInfo(
-                    it.type,
-                    it.name,
+                it.EntryPrice,
+                it.SLPrice,
+                it.ExitPrice,
 
-                    it.phoneUserName,
-                    it.institutionCode,
-                    it.address,
-
-                     it.acNo
-                    it.netBankingUserName,
-                    it.password,
-                    it.atmNo,
-                    it.atmPin
-                )
-            }*/
-        return SaveAccountInfo(
+                it.HTFLocation,
+                it.HTFTrend,
+                it.ITFTrend,
+                it.ExecutionZone,
+                it.entryEmotion
+                System.currentTimeMillis().toString(),
+                it.note
+            ) */
+        return TradeAnalysis(
             "",
-            institutionType,
-            name,
-
             FirebaseUtil.phoneUser.name,
-            institutionCode,
-            address,
+            accountType!!,
+            stockName,
 
-            acNo,
-            netBankingUserName,
-            password,
-            atmNo,
-            atmPin
+            entryPrice,
+            slPrice,
+            exitPrice,
+
+            higherTimeFarameLocation,
+            higherTimeFarameTrend,
+            intermediateTimeFarameTrend,
+            excutionTimeTimeFarameLocation,
+            entryEmotion,
+            System.currentTimeMillis().toString(),
+            note
+
         )
     }
 

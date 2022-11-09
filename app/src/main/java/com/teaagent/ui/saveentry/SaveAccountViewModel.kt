@@ -8,17 +8,16 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.domain.firemasedbEntities.BalanceTx
-import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
+import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.repo.FirebaseEntryAddedCallback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import util.StringEncryption
 
 // 1
 class SaveAccountViewModel() : ViewModel(),
     FirebaseEntryAddedCallback {
     val TAG: String = "MapsActivityViewModel"
-    val accountsLiveData = MutableLiveData<List<SaveAccountInfo>>()
+    val accountsLiveData = MutableLiveData<List<TradeAnalysis>>()
 
 
     // 2
@@ -27,73 +26,49 @@ class SaveAccountViewModel() : ViewModel(),
     val currentNumberOfStepCount = MutableLiveData(0)
     var initialStepCount = 0
 
-    fun addAccountDEtail(customer: SaveAccountInfo?) {
+    fun addAccountDEtail(customer: TradeAnalysis?) {
         FirebaseUtil.setFirebaseEntryAddedCallback(this)
-
-        val accountInfo: SaveAccountInfo = convertCustomerToEncrypted(customer)
-        FirebaseUtil.addAccountDEtail(accountInfo)
+//        val accountInfo: TradeAnalysis = convertCustomerToEncrypted(customer)
+        FirebaseUtil.addAccountDEtail(customer)
     }
 
-    fun updateAccountDEtail(customer: SaveAccountInfo?) {
+    fun updateAccountDEtail(customer: TradeAnalysis?) {
         FirebaseUtil.setFirebaseEntryAddedCallback(this)
-
-        val accountInfo: SaveAccountInfo = convertCustomerToEncrypted(customer)
-        FirebaseUtil.updateAccountDEtail(accountInfo)
+//        val accountInfo: TradeAnalysis = convertCustomerToEncrypted(customer)
+        FirebaseUtil.updateAccountDEtail(customer)
     }
 
-    private fun convertCustomerToEncrypted(accountInfo: SaveAccountInfo?): SaveAccountInfo {
+/*
+    private fun convertCustomerToEncrypted(accountInfo: TradeAnalysis?): TradeAnalysis {
         val type =
-            accountInfo?.type.toString()
-//        val type =
-//            StringEncryption.encryptMsg(accountInfo?.type.toString()).toString()
-       /* val bankName =
-            StringEncryption.encryptMsg(accountInfo?.bankName.toString()).toString()
-//        val phoneUserName =
-//            StringEncryption.encryptMsg(accountInfo?.phoneUserName.toString()).toString()
-        val phoneUserName =
-            accountInfo?.phoneUserName.toString()
-        val institutionCode =
-            StringEncryption.encryptMsg(accountInfo?.institutionCode.toString()).toString()
-        val address =
-            StringEncryption.encryptMsg(accountInfo?.address.toString()).toString()
-
-        val accountNo =
-            StringEncryption.encryptMsg(accountInfo?.acNo.toString()).toString()
-        val netBankingUserName =
-            StringEncryption.encryptMsg(accountInfo?.netBankingUserName.toString()).toString()
-        val password =
-            StringEncryption.encryptMsg(accountInfo?.password.toString()).toString()
-        val atmNo =
-            StringEncryption.encryptMsg(accountInfo?.atmNo.toString()).toString()
-        val atmPin =
-            StringEncryption.encryptMsg(accountInfo?.atmPin.toString()).toString()*/
+            accountInfo?.tradeIncomeType.toString()
 
         val id =
             accountInfo?.id.toString()
         val bankName =
-            accountInfo?.bankName.toString()
+            accountInfo?.stockName.toString()
 //        val phoneUserName =
 //            StringEncryption.encryptMsg(accountInfo?.phoneUserName.toString()).toString()
         val phoneUserName =
             accountInfo?.phoneUserName.toString()
         val institutionCode =
-            accountInfo?.institutionCode.toString()
+            accountInfo?.EntryPrice.toString()
         val address =
-            accountInfo?.address.toString()
+            accountInfo?.SLPrice.toString()
 
         val accountNo =
-            accountInfo?.acNo.toString()
+            accountInfo?.ExitPrice.toString()
         val netBankingUserName =
-           accountInfo?.netBankingUserName.toString()
+           accountInfo?.HTFLocation.toString()
         val password =
-           accountInfo?.password.toString()
+           accountInfo?.HTFTrend.toString()
         val atmNo =
-           accountInfo?.atmNo.toString()
+           accountInfo?.timestampTradePlanned.toString()
         val atmPin =
-           accountInfo?.atmPin.toString()
+           accountInfo?.note.toString()
 
 
-        return SaveAccountInfo(
+        return TradeAnalysis(
             id,
             type,
             bankName,
@@ -106,15 +81,18 @@ class SaveAccountViewModel() : ViewModel(),
             netBankingUserName,
             password,
             atmNo,
-            atmPin
+            atmPin,
+            "",""//TODO with actual value
         )
 
 
     }
+*/
 
     fun addTeaTransactionRecord(collectionEntry: BalanceTx?) {
 
-//        val at = StringEncryption.encryptMsg(collectionEntry?.accountType.toString()).toString()
+// only for encryption/decryption
+//val at = StringEncryption.encryptMsg(collectionEntry?.accountType.toString()).toString()
         /*val at = collectionEntry?.accountType.toString()
         val accountNo =
             StringEncryption.encryptMsg(collectionEntry?.accountNo.toString()).toString()
@@ -135,9 +113,9 @@ class SaveAccountViewModel() : ViewModel(),
         val accountNo =
             collectionEntry?.accountNo.toString()
         val balanceAmount =
-           collectionEntry?.balanceAmount.toString()
+            collectionEntry?.balanceAmount.toString()
         val timestamp =
-           collectionEntry?.timestamp.toString()
+            collectionEntry?.timestamp.toString()
 //        val phoneUserName =
 //            StringEncryption.encryptMsg(collectionEntry?.phoneUserName.toString()).toString()
         val phoneUserName =
@@ -162,14 +140,14 @@ class SaveAccountViewModel() : ViewModel(),
     }
 
     suspend fun getAllAccountDetailsFirebaseDb()/*: ArrayList<Customer>*/ {
-        var customers: ArrayList<SaveAccountInfo> = ArrayList()
+        var customers: ArrayList<TradeAnalysis> = ArrayList()
         var task: Task<QuerySnapshot>? = FirebaseUtil.getAllAccountDEtail()
 
         val job = GlobalScope.async {
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        var c: SaveAccountInfo = document.toObject(SaveAccountInfo::class.java)
+                        var c: TradeAnalysis = document.toObject(TradeAnalysis::class.java)
                         customers.add(c)
                         Log.d(FirebaseUtil.TAG, document.id + " => " + document.data)
                         Log.d(FirebaseUtil.TAG, "=======================")

@@ -12,7 +12,7 @@ import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil.addToPreferenceTabId
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.PhoneUser
-import com.teaagent.domain.firemasedbEntities.uimappingentities.SaveAccountInfo
+import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.repo.FirebaseEntryAddedCallback
 
 
@@ -49,7 +49,7 @@ object FirebaseUtil {
     }
 
 
-    fun updateAccountDEtail(customer: SaveAccountInfo?) {
+    fun updateAccountDEtail(customer: TradeAnalysis?) {
         if (customer != null) {
             val id = customer?.id.toString()//.replace("/", "_")
 
@@ -69,7 +69,7 @@ object FirebaseUtil {
         }
     }
 
-    fun addAccountDEtail(customer: SaveAccountInfo?) {
+    fun addAccountDEtail(customer: TradeAnalysis?) {
         var doc = tableAccountInfo?.document()?.id// this is the id
         if (doc != null) {
             customer?.id = doc
