@@ -20,9 +20,11 @@ import com.teaagent.databinding.ActivitySaveCustomerBinding
 import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.*
+import com.teaagent.domain.firemasedbEntities.enums.exit.*
 import com.teaagent.ui.listEntries.TradeListActivity
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -66,9 +68,12 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         setContentView(view)
 
         balanceTx = intent.getSerializableExtra("balanceTx") as TradeAnalysis?
+
         if (balanceTx != null) {
             toUpdate = true
+            setIntentExtraTradeDetailsData(balanceTx)
         }
+
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
         binding.todaysDate.setText("currentDate : " + currentDate)
@@ -80,31 +85,28 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         declareHigherTimeFarameTrendSpinner()
         declareIntermediateTimeFarameTrendSpinner()
         declareExecutionTimeFarameSpinner()
+        declareEntryEmotionTypeSpinner()
+        declareSpinnerSLLevel()
+        declareSpinnerTargetLevel()
+
+
+        declareConfidenceLevelSpinner()
+        declareMentalStateSpinner()
+        declareMissedTradeSpinner()
+        declareTradeExitPostAnalysisTypeSpinner()
+        declareTradeManagementTypeSpinner()
 
         registerEditTextChangeListenerrs()
 
+        if(toUpdate){
+            setProfitPercentage()
+            setSLPercentage()
 
-        declareEntryEmotionTypeSpinner()
+        }
         // Set up button click events
         binding.saveCustomerButton.setOnClickListener {
             if (binding.editTextStock.text.toString().length > 0) {
                 val cuustomerEntry = getEditTextValues()
-                /*  SaveAccountInfo(
-                      it.type,
-                      it.name,
-
-                      it.phoneUserName,
-                      it.institutionCode,
-                      it.address,
-
-                       it.acNo,
-                      it.netBankingUserName,
-                      it.password,
-                      it.atmNo,
-                      it.atmPin
-                  )
-              }*/
-
                 if (toUpdate) {
                     cuustomerEntry.id = balanceTx!!?.id
                 }
@@ -124,11 +126,23 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
     }
 
+    private fun setIntentExtraTradeDetailsData(balanceTx: TradeAnalysis?) {
+
+        binding.editTextStock.setText(balanceTx?.stockName)
+
+        binding.editTextEntryPrice.setText(balanceTx?.EntryPrice)
+        binding.etSLPrice.setText(balanceTx?.SLPrice)
+        binding.etExitPrice.setText(balanceTx?.ExitPrice)
+
+        binding.etNote.setText(balanceTx?.note)
+
+
+    }
+
     private fun registerEditTextChangeListenerrs() {
         binding.etSLPrice.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                val loss = calculateSLPercentage()
-                binding.tvSLPercent.setText(loss.toString())
+            setSLPercentage()
             }
 
             override fun beforeTextChanged(
@@ -141,8 +155,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val loss = calculateSLPercentage()
-                binding.tvSLPercent.setText(loss.toString())
+                setSLPercentage()
+
             }
         })
 
@@ -150,10 +164,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.etExitPrice.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                val profit = calculateProfitPercentage()
-                binding.tvProfitPercent.setText(profit.toString() + " %")
+                setProfitPercentage()
             }
-
 
             override fun beforeTextChanged(
                 s: CharSequence, start: Int,
@@ -165,11 +177,20 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val profit = calculateProfitPercentage()
-                binding.tvProfitPercent.setText(profit.toString() + " %")
+                setProfitPercentage()
             }
         })
 
+
+    }
+
+    private fun setSLPercentage() {
+        val loss = calculateSLPercentage()
+        binding.tvSLPercent.setText(loss.toString())    }
+
+    private fun setProfitPercentage() {
+        val profit = calculateProfitPercentage()
+        binding.tvProfitPercent.setText(profit.toString() + " %")
 
     }
 
@@ -198,6 +219,91 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
         return 0F
     }
+
+
+    var targetLevel: String? = null
+    private fun declareSpinnerTargetLevel() {
+        val spinner: Spinner = findViewById(R.id.spinnerExitLevel)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                TargetLevel::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                targetLevel = enumValues?.get(position).toString()
+                Log.d(TAG, "onItemSelected targetLevel " + targetLevel)
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                targetLevel = enumValues?.get(0).toString()
+                Log.d(
+                    TAG,
+                    "default onItemSelected targetLevel " + targetLevel
+                )
+            }
+        })
+        spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = TargetLevel.valueOf(balanceTx?.targetLevel!!).ordinal
+            spinner.setSelection(index)
+        }
+    }
+
+
+    var sLLevel: String? = null
+    private fun declareSpinnerSLLevel() {
+        val spinner: Spinner = findViewById(R.id.spinnerSLLevel)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                SLLevel::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                sLLevel = enumValues?.get(position).toString()
+                Log.d(TAG, "onItemSelected higherTimeFarameLocation " + sLLevel)
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                sLLevel = enumValues?.get(0).toString()
+                Log.d(
+                    TAG,
+                    "default onItemSelected higherTimeFarameLocation " + sLLevel
+                )
+            }
+        })
+        spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = SLLevel.valueOf(balanceTx?.sLLevel!!).ordinal
+            spinner.setSelection(index)
+        }
+    }
+
 
     var higherTimeFarameLocation: String? = null
     private fun declareHigherTimeFarameLocationSpinner() {
@@ -234,6 +340,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = HTFLocationType.valueOf(balanceTx?.HTFLocation!!).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
@@ -269,6 +380,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = TrendType.valueOf(balanceTx?.HTFTrend!!).ordinal
+            spinner.setSelection(index)
+        }
     }
 
     var excutionTimeTimeFarameLocation: String? = null
@@ -301,7 +417,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
-                higherTimeFarameLocation = enumValues?.get(0).toString()
+                excutionTimeTimeFarameLocation = enumValues?.get(0).toString()
                 Log.d(
                     TAG,
                     "default onItemSelected excutionTimeTimeFarameLocation " + excutionTimeTimeFarameLocation
@@ -309,10 +425,15 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = ExecutionZoneType.valueOf(balanceTx?.ExecutionZone!!).ordinal
+            spinner.setSelection(index)
+        }
     }
 
-    var entryEmotion: String? = null
 
+    var entryEmotion: String? = null
     private fun declareEntryEmotionTypeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerEntryEmotion)
         val enumValues: List<Enum<*>> = ArrayList(
@@ -342,7 +463,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
-                higherTimeFarameLocation = enumValues?.get(0).toString()
+                entryEmotion = enumValues?.get(0).toString()
                 Log.d(
                     TAG,
                     "default onItemSelected entryEmotion " + entryEmotion
@@ -350,6 +471,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = EntryEmotionType.valueOf(balanceTx?.entryEmotion!!).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
@@ -383,7 +509,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
-                higherTimeFarameTrend = enumValues?.get(0).toString()
+                intermediateTimeFarameTrend = enumValues?.get(0).toString()
                 Log.d(
                     TAG,
                     "default onItemSelected intermediateTimeFarameTrend " + intermediateTimeFarameTrend
@@ -391,6 +517,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = TrendType.valueOf(balanceTx?.ITFTrend!!).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
@@ -408,6 +539,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 this, android.R.layout.simple_spinner_dropdown_item,
                 enumValues!! as List<Any?>
             )
+
         spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
@@ -426,8 +558,179 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
             }
         })
+
+        spinner.adapter = adapter
+
+        if (toUpdate) {
+            val index: Int = TradeIncomeType.valueOf(balanceTx?.tradeIncomeType!!).ordinal
+            spinner.setSelection(index)
+        }
+    }
+
+/////spinner for exit
+
+
+    var tradeManagementType: String? = null
+    private fun declareTradeManagementTypeSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerTradeManagement)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                TradeManagementType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                tradeManagementType = enumValues?.get(position).toString()
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                tradeManagementType = enumValues?.get(0).toString()
+            }
+        })
         spinner.adapter = adapter
     }
+
+
+    var tradeExitPostAnalysisTypeType: String? = null
+    private fun declareTradeExitPostAnalysisTypeSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerTradeExitPostAnalysisType)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                TradeExitPostAnalysisType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                tradeExitPostAnalysisTypeType = enumValues?.get(position).toString()
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                tradeExitPostAnalysisTypeType = enumValues?.get(0).toString()
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+
+    var missedTradeType: String? = null
+    private fun declareMissedTradeSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerMissedTradeType)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                MissedTrade::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                missedTradeType = enumValues?.get(position).toString()
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                missedTradeType = enumValues?.get(0).toString()
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+
+    var mentalState: String? = null
+    private fun declareMentalStateSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerMentalState)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                MentalState::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                mentalState = enumValues?.get(position).toString()
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                mentalState = enumValues?.get(0).toString()
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+
+    var confidenceLevel: String? = null
+    private fun declareConfidenceLevelSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerConfidenceLevel)
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                ConfidenceLevel::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                confidenceLevel = enumValues?.get(position).toString()
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                confidenceLevel = enumValues?.get(0).toString()
+            }
+        })
+        spinner.adapter = adapter
+    }
+
+
+    //spinnser for exit -end
 
 
     fun addAccountInfo(customerEntity: TradeAnalysis?, toUpdate: Boolean) {
@@ -443,6 +746,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 it.EntryPrice,
                 it.SLPrice,
                 it.ExitPrice,
+
+                it.sLLevel,
+                it.targetLevel,
 
                 it.HTFLocation,
                 it.HTFTrend,
@@ -535,6 +841,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             slPrice,
             exitPrice,
 
+            sLLevel,
+            targetLevel,
+
             higherTimeFarameLocation!!,
             higherTimeFarameTrend!!,
             intermediateTimeFarameTrend!!,
@@ -575,6 +884,14 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 val timediff = System.currentTimeMillis() - startStoredTime!!
                 val timerlog = TimerLog("", startStoredTime, System.currentTimeMillis(), timediff)
 
+
+                val timediffVal = String.format(
+                    "%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes(timediff),
+                    TimeUnit.MILLISECONDS.toSeconds(timediff) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timediff))
+                )
+                Toast.makeText(this, "TIME SPENT " + timediffVal, Toast.LENGTH_LONG).show()
                 FirebaseUtil.addTimerLog(timerlog)
                 finish()
             }

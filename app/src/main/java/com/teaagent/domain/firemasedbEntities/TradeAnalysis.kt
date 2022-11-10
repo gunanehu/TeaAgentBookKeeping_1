@@ -16,6 +16,10 @@ open class TradeAnalysis(
     var SLPrice: String?,
     var ExitPrice: String?,
 
+//sl/target levels
+    var sLLevel: String?,
+    var targetLevel: String?,
+
     //Trade analysis
 //    Higher time frame
     var HTFLocation: String?,
@@ -35,7 +39,7 @@ open class TradeAnalysis(
 
 ) :
     Serializable {
-    constructor() : this("", "", "", "", "", "", "", "", "", "", "", "", "", "")
+    constructor() : this("", "", "", "","","", "", "", "", "", "", "", "", "", "", "")
 
     override fun toString(): String {
         val str=                  GeneralUtils.convertDisplayDate(timestampTradePlanned?.toLong()!!)+"\n" +

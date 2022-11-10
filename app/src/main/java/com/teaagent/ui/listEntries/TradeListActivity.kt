@@ -126,6 +126,13 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             tradeAnalysis?.ExitPrice
         val SLPrice =
             tradeAnalysis?.SLPrice
+
+        val sLLevel =
+            tradeAnalysis?.sLLevel
+        val targetLevel =
+            tradeAnalysis?.targetLevel
+
+
         val timestampTradePlanned =
             tradeAnalysis?.timestampTradePlanned
         val phoneUserName =
@@ -153,6 +160,9 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 EntryPrice,
                 SLPrice,
                 ExitPrice,
+
+                sLLevel,
+                targetLevel,
 
                 HTFLocation,
                 HTFTrend,
@@ -355,6 +365,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
 
             val i = Intent(this, SaveAccountDetailActivity::class.java)
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             i.putExtra("balanceTx", balanceTx)
             this.startActivity(i)
 

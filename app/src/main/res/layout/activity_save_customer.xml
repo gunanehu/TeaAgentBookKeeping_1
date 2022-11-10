@@ -64,7 +64,6 @@
 
                         <TextView
                             android:layout_width="match_parent"
-
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:layout_weight="1"
@@ -81,93 +80,108 @@
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
 
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#355478"
-
-                    android:orientation="vertical">
-                <EditText
-                    android:id="@+id/editTextStock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:ems="10"
-                    android:hint="Stock Name"
-                    android:inputType="text" />
-
-                <EditText
-                    android:id="@+id/editTextEntryPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:ems="10"
-                    android:hint="Entry"
-                    android:inputType="numberDecimal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <EditText
-                        android:id="@+id/etSLPrice"
-
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1"
-                        android:ems="10"
+                        android:background="#355478"
 
-                        android:hint="SLPrice"
-                        android:inputType="numberDecimal" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvSLPercent"
-                        android:layout_width="0dp"
+                        <EditText
+                            android:id="@+id/editTextStock"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:ems="10"
+                            android:hint="Stock Name"
+                            android:inputType="text" />
 
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
+                        <EditText
+                            android:id="@+id/editTextEntryPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:ems="10"
+                            android:hint="Entry"
+                            android:inputType="numberDecimal" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="match_parent"
 
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="3">
 
-                    <EditText
-                        android:id="@+id/etExitPrice"
-                        android:layout_width="0dp"
+                            <EditText
+                                android:id="@+id/etSLPrice"
 
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:hint="ExitPrice"
-                        android:inputType="numberDecimal" />
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:ems="10"
+                                android:hint="SLPrice"
+                                android:inputType="numberDecimal" />
 
-                    <TextView
-                        android:id="@+id/tvProfitPercent"
-                        android:layout_width="0dp"
+                            <TextView
+                                android:id="@+id/tvSLPercent"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1" />
 
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
-                </LinearLayout></androidx.cardview.widget.CardView>
+                            <Spinner
+                                android:id="@+id/spinnerSLLevel"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="3">
+
+                            <EditText
+                                android:id="@+id/etExitPrice"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:ems="10"
+                                android:hint="ExitPrice"
+                                android:inputType="numberDecimal" />
+
+                            <TextView
+                                android:id="@+id/tvProfitPercent"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1" />
+
+                            <Spinner
+                                android:id="@+id/spinnerExitLevel"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
 
@@ -186,7 +200,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:gravity="center"
-                            android:text="Zone Analysis"
+                            android:text="Entry Zone Analysis"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -234,7 +248,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="NetBAnkingUserName"
-                                android:text="TFTrend" />
+                                android:text="HigherTFTrend" />
 
                             <Spinner
                                 android:id="@+id/spinnerHTFTrend"
@@ -339,8 +353,176 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:ems="10"
-                    android:hint="additional note" />
+                    android:hint="Entry note" />
             </LinearLayout>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#355478"
+
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:text="Exit Analysis"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:text="Trade management status" />
+
+                        <Spinner
+                            android:id="@+id/spinnerTradeManagement"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="NetBAnkingUserName"
+                            android:text="TradeExitPostAnalysisType" />
+
+                        <Spinner
+                            android:id="@+id/spinnerTradeExitPostAnalysisType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:text="ITFTrend" />
+
+                        <Spinner
+                            android:id="@+id/spinnerMissedTradeType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:text="Mental State" />
+
+
+                        <Spinner
+                            android:id="@+id/spinnerMentalState"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:text="Confidence Level" />
+
+
+                        <Spinner
+                            android:id="@+id/spinnerConfidenceLevel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1" />
+
+
+                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/etExitNote"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:ems="10"
+                        android:hint="Exit note" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

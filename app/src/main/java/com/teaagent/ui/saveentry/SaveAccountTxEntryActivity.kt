@@ -160,6 +160,12 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
             val SLPrice =
                accountInfo?.SLPrice
 
+
+            val sLLevel =
+                accountInfo?.sLLevel
+            val targetLevel =
+                accountInfo?.targetLevel
+
             val ExitPrice =
                 accountInfo?.ExitPrice.toString()
             val ITFTrend =accountInfo?.ITFTrend
@@ -183,6 +189,10 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
                     EntryPrice,
                     SLPrice,
                     ExitPrice,
+
+
+                    sLLevel,
+                    targetLevel,
 
                     HTFLocation,
                     HTFTrend,
