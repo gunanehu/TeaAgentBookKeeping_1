@@ -58,7 +58,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#355478"
+                        android:background="#63ADD5"
                         android:orientation="horizontal"
                         android:weightSum="2">
 
@@ -90,18 +90,39 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#355478"
+                        android:background="#63ADD5"
 
                         android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/editTextStock"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:ems="10"
-                            android:hint="Stock Name"
-                            android:inputType="text" />
+                            android:background="#63ADD5"
+                            android:orientation="horizontal"
+                            android:weightSum="3">
+
+                            <EditText
+                                android:id="@+id/editTextStock"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="2"
+                                android:ems="10"
+                                android:hint="Stock Name"
+                                android:inputType="text" />
+
+                            <ToggleButton
+                                android:id="@+id/toggleBuySell"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:onClick="onToggleClick"
+                                android:textOff="SELL"
+                                android:textOn="BUY" />
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/editTextEntryPrice"
@@ -110,7 +131,8 @@
                             android:layout_margin="10dp"
                             android:ems="10"
                             android:hint="Entry"
-                            android:inputType="numberDecimal" />
+                            android:inputType="numberDecimal"
+                            android:textSize="20sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -133,10 +155,12 @@
 
                             <TextView
                                 android:id="@+id/tvSLPercent"
+
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
-                                android:layout_weight="1" />
+                                android:layout_weight="1"
+                                android:textSize="20sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerSLLevel"
@@ -181,17 +205,26 @@
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+                <Button
+                    android:id="@+id/btnEntryAnalysis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:onClick="onEntryAnalysisClicked"
+                    android:text="Entry Analysis" />
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
+                    android:id="@+id/layoutEntryAnalysis"
 
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#355478"
+                        android:background="#63ADD5"
 
                         android:orientation="vertical">
 
@@ -214,12 +247,14 @@
 
                             <TextView
                                 android:id="@+id/tvHTFLocation"
+
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
                                 android:layout_weight="1"
                                 android:ems="10"
-                                android:text="HTFLocation" />
+                                android:text="HTFLocation"
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerHTFLocation"
@@ -248,7 +283,9 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="NetBAnkingUserName"
-                                android:text="HigherTFTrend" />
+
+                                android:text="HigherTFTrend"
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerHTFTrend"
@@ -270,12 +307,14 @@
 
                             <TextView
                                 android:id="@+id/tvITFTrend"
+
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
                                 android:layout_weight="1"
                                 android:ems="10"
-                                android:text="ITFTrend" />
+                                android:text="ITFTrend"
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerITFTrend"
@@ -298,16 +337,47 @@
 
                             <TextView
                                 android:id="@+id/tvExecutionZone"
+
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
                                 android:layout_weight="1"
                                 android:ems="10"
-                                android:text="ExecutionZone" />
+                                android:text="ExecutionZone"
+                                android:textSize="15sp" />
 
 
                             <Spinner
                                 android:id="@+id/spinnerExecutionZone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:ems="10"
+
+                                android:text="Confidence Level"
+                                android:textSize="15sp" />
+
+
+                            <Spinner
+                                android:id="@+id/spinnerConfidenceLevel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
@@ -331,7 +401,9 @@
                                 android:layout_margin="10dp"
                                 android:layout_weight="1"
                                 android:ems="10"
-                                android:text="EntryEmotion" />
+                                android:text="EntryEmotion"
+
+                                android:textSize="15sp" />
 
 
                             <Spinner
@@ -343,21 +415,31 @@
 
 
                         </LinearLayout>
+                        <EditText
+                            android:id="@+id/etNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:ems="10"
+                            android:hint="Entry note" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
-                <EditText
-                    android:id="@+id/etNote"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:ems="10"
-                    android:hint="Entry note" />
+
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btnExitStock"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:onClick="onExitStockClick"
+                android:text="Exit Stock" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/layoutExitStock"
                 android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"
@@ -366,7 +448,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#355478"
+                    android:background="#63ADD5"
 
                     android:orientation="vertical">
 
@@ -376,7 +458,7 @@
                         android:layout_margin="10dp"
                         android:gravity="center"
                         android:text="Exit Analysis"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -393,7 +475,9 @@
                             android:layout_margin="10dp"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:text="Trade management status" />
+                            android:text="Trade management status"
+
+                            android:textSize="15sp" />
 
                         <Spinner
                             android:id="@+id/spinnerTradeManagement"
@@ -421,7 +505,8 @@
                             android:layout_weight="1"
                             android:ems="10"
                             android:hint="NetBAnkingUserName"
-                            android:text="TradeExitPostAnalysisType" />
+                            android:text="TradeExitPostAnalysisType"
+                            android:textSize="15sp" />
 
                         <Spinner
                             android:id="@+id/spinnerTradeExitPostAnalysisType"
@@ -447,7 +532,7 @@
                             android:layout_margin="10dp"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:text="ITFTrend" />
+                            android:text="Missed Trade Reason" />
 
                         <Spinner
                             android:id="@+id/spinnerMissedTradeType"
@@ -487,32 +572,7 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
 
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="1"
-                            android:ems="10"
-                            android:text="Confidence Level" />
-
-
-                        <Spinner
-                            android:id="@+id/spinnerConfidenceLevel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="1" />
-
-
-                    </LinearLayout>
                     <EditText
                         android:id="@+id/etExitNote"
                         android:layout_width="match_parent"
@@ -528,13 +588,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_marginTop="25dip"
+                android:background="#355478"
                 android:gravity="bottom">
 
                 <LinearLayout
-
                     android:layout_width="match_parent"
+
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dip">
+                    android:background="#355478">
 
                     <Button
                         android:id="@+id/saveCustomerButton"

@@ -7,7 +7,6 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.*
-import com.teaagent.AppHelper
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil.addToPreferenceTabId
 import com.teaagent.domain.firemasedbEntities.BalanceTx
@@ -25,7 +24,8 @@ object FirebaseUtil {
 
     var firestoreDb = FirebaseFirestore.getInstance()
     var TAG = "FirebaseUtil"
-//    val phoneUser: PhoneUser = getCurrentPhoneUser()
+
+    //    val phoneUser: PhoneUser = getCurrentPhoneUser()
     private var firebaseEntryAddedCallback: FirebaseEntryAddedCallback? = null
 
 
@@ -40,6 +40,12 @@ object FirebaseUtil {
         tablePhoneUser = firestoreDb.collection("PhoneUser")
         tableCollectionEntry = firestoreDb.collection("BalanceTx")
         tableTimerLogEntry = firestoreDb.collection("TimerLog")
+
+       /* tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-prod")
+        tablePhoneUser = firestoreDb.collection("PhoneUser-prod")
+        tableCollectionEntry = firestoreDb.collection("BalanceTx-prod")
+        tableTimerLogEntry = firestoreDb.collection("TimerLog-prod")*/
+
         //TODO use only one in lifetime for that user
 //        addPhoneUser(phoneUser)
     }
@@ -56,9 +62,7 @@ object FirebaseUtil {
         if (customer != null) {
             val id = customer?.id.toString()//.replace("/", "_")
 
-            tableTradeAnalysisEntry?.
-            document(id)?.
-            set(customer)?.addOnSuccessListener {
+            tableTradeAnalysisEntry?.document(id)?.set(customer)?.addOnSuccessListener {
                 Log.i(TAG, "SaveAccountInfo addOnSuccessListener documentReference ")
                 firebaseEntryAddedCallback?.onCustomerAddedSuccessfully(id)
             }
@@ -82,7 +86,8 @@ object FirebaseUtil {
             tableTimerLogEntry?.document(doc!!)?.set(timerLog)
                 ?.addOnSuccessListener {
                     Log.i(TAG, "tableTimerLogEntry addOnSuccessListener tableTimerLogEntry " + doc)
-TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeMillis())                }
+                    TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeMillis())
+                }
         }
     }
 
@@ -207,21 +212,32 @@ TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeM
 
 
     fun getAllAccountDEtail(): Task<QuerySnapshot>? {
-        val query = tableTradeAnalysisEntry?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+        val query = tableTradeAnalysisEntry?.whereEqualTo(
+            "phoneUserName",
+            getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
+        )
         return query?.get()
     }
 
 
     fun getAllTradeDetails(): Task<QuerySnapshot>? {
-        val query = tableTradeAnalysisEntry?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+        val query = tableTradeAnalysisEntry?.whereEqualTo(
+            "phoneUserName",
+            getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
+        )
+//            ?.orderBy("timestampTradePlanned", Query.Direction.DESCENDING)
         return query?.get()
     }
+
     fun getByNameAndDate(
         customerName: String,
         convertedTimestampDate: String
     ): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+            ?.whereEqualTo(
+                "phoneUserName",
+                getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
+            )
             ?.whereEqualTo("bankName", customerName)
 //            ?.whereEqualTo("convertedTimestampDate", convertedTimestampDate)
         return query?.get()
@@ -230,14 +246,20 @@ TeaAgentsharedPreferenceUtil.addToPreferenceCurrentStartTime(System.currentTimeM
 
     fun getNetAssetsByName(): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+            ?.whereEqualTo(
+                "phoneUserName",
+                getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
+            )
 //            ?.orderBy("timestamp", Query.Direction.ASCENDING)
         return query?.get()
     }
 
     fun getByAccountType(customerName: String): Task<QuerySnapshot>? {
         val query = tableCollectionEntry
-            ?.whereEqualTo("phoneUserName", getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name)
+            ?.whereEqualTo(
+                "phoneUserName",
+                getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
+            )
             ?.whereEqualTo("accountType", customerName)
         return query?.get()
     }

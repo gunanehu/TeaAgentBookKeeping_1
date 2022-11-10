@@ -126,121 +126,18 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         }
 
         mapsActivityViewModel.tradeDetailsLiveData.observe(this, Observer() { it ->
-            var tradeAnalyses: ArrayList<TradeAnalysis> =
-                decryptToAccountDetailsList(it as ArrayList<TradeAnalysis>)
+//            var tradeAnalyses: ArrayList<TradeAnalysis> =
+//                decryptToAccountDetailsList(it as ArrayList<TradeAnalysis>)
 
-            allTrades = tradeAnalyses
-            getALLCustomerNamesToSpinner(tradeAnalyses as ArrayList<TradeAnalysis>)
+            allTrades = it as ArrayList<TradeAnalysis>
+            getALLCustomerNamesToSpinner(allTrades as ArrayList<TradeAnalysis>)
             dismissProgressDialog()
 
         })
     }
 
 
-    private fun decryptToAccountDetailsList(arrayList: ArrayList<TradeAnalysis>): ArrayList<TradeAnalysis> {
-        var arrayList2: ArrayList<TradeAnalysis> = ArrayList()
 
-        for (accountInfo in arrayList) {
-//        val id = StringEncryption.decryptMsg(accountInfo?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
-            val accountType = accountInfo?.tradeIncomeType.toString()
-//            val bankName =
-//                StringEncryption.decryptMsg(accountInfo?.bankName).toString()
-            val id =
-                accountInfo?.id
-
-            val stockName =
-               accountInfo?.stockName
-            val phoneUserName =
-                accountInfo?.phoneUserName
-            val tradeIncomeType =
-                accountInfo?.tradeIncomeType
-
-            val EntryPrice =
-               accountInfo?.EntryPrice
-            val SLPrice =
-               accountInfo?.SLPrice
-
-
-            val sLLevel =
-                accountInfo?.sLLevel
-            val targetLevel =
-                accountInfo?.targetLevel
-
-            val ExitPrice =
-                accountInfo?.ExitPrice.toString()
-            val ITFTrend =accountInfo?.ITFTrend
-            val HTFTrend = accountInfo?.HTFTrend
-
-
-            val HTFLocation =accountInfo?.HTFLocation
-            val ExecutionZone = accountInfo?.ExecutionZone
-
-            val entryEmotion = accountInfo?.entryEmotion
-
-            val timestampTradePlanned =accountInfo?.timestampTradePlanned
-            val note = accountInfo?.note
-
-            val b =
-                TradeAnalysis(
-                    id,
-                    phoneUserName,
-                    tradeIncomeType,
-                    stockName,
-                    EntryPrice,
-                    SLPrice,
-                    ExitPrice,
-
-
-                    sLLevel,
-                    targetLevel,
-
-                    HTFLocation,
-                    HTFTrend,
-                    ITFTrend,
-                    ExecutionZone,
-
-                    entryEmotion,
-                    timestampTradePlanned,
-                    note
-
-                )
-
-          /*  class TradeAnalysis(
-                var id: String,
-                open var phoneUserName: String?,
-
-                var tradeIncomeType: String,
-                var stockName: String?,
-
-                //Trade entry/sl/exit planned prices
-                var EntryPrice: String?,
-                var SLPrice: String?,
-                var ExitPrice: String?,
-
-                //Trade analysis
-//    Higher time frame
-                var HTFLocation: String?,
-                var HTFTrend: String?,
-
-                //    Intermediate time frame
-                var ITFTrend: String?,
-
-                //Execution time frame-type2/3
-                var ExecutionZone: String?,
-
-                var entryEmotion: String?,
-
-//timestamp when trde is planned
-                var timestampTradePlanned: String?,
-                var note: String?
-
-            )*/
-
-
-            arrayList2.add(b)
-        }
-        return arrayList2
-    }
 
     // Repository
     private fun getTrackingApplicationInstance() = application as TeaAgentApplication
@@ -414,5 +311,125 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
         }
     }
 
+/*
+    private fun decryptToAccountDetailsList(arrayList: ArrayList<TradeAnalysis>): ArrayList<TradeAnalysis> {
+        var arrayList2: ArrayList<TradeAnalysis> = ArrayList()
 
+        for (accountInfo in arrayList) {
+//        val id = StringEncryption.decryptMsg(accountInfo?.id).toString() //throwing "Invalid encypted text format" Exception, so commented
+            val accountType = accountInfo?.tradeIncomeType.toString()
+//            val bankName =
+//                StringEncryption.decryptMsg(accountInfo?.bankName).toString()
+            val id =
+                accountInfo?.id
+
+            val stockName =
+               accountInfo?.stockName
+            val isbuy =
+                accountInfo?.isBuy
+
+            val phoneUserName =
+                accountInfo?.phoneUserName
+            val tradeIncomeType =
+                accountInfo?.tradeIncomeType
+
+            val EntryPrice =
+               accountInfo?.EntryPrice
+            val SLPrice =
+               accountInfo?.SLPrice
+
+
+            val sLLevel =
+                accountInfo?.sLLevel
+            val targetLevel =
+                accountInfo?.targetLevel
+
+            val ExitPrice =
+                accountInfo?.ExitPrice.toString()
+            val ITFTrend =accountInfo?.ITFTrend
+            val HTFTrend = accountInfo?.HTFTrend
+
+
+            val HTFLocation =accountInfo?.HTFLocation
+            val ExecutionZone = accountInfo?.ExecutionZone
+
+            val entryEmotion = accountInfo?.entryEmotion
+
+            val timestampTradePlanned =accountInfo?.timestampTradePlanned
+            val note = accountInfo?.note
+
+            val b =
+                TradeAnalysis(
+                    id,
+                    phoneUserName,
+                    tradeIncomeType,
+                    stockName,
+                    isbuy,
+
+                    EntryPrice,
+                    SLPrice,
+                    ExitPrice,
+
+
+                    sLLevel,
+                    targetLevel,
+
+                    HTFLocation,
+                    HTFTrend,
+                    ITFTrend,
+                    ExecutionZone,
+
+
+                    tradeManagementType,
+                    tradeExitPostAnalysisTypeType,
+                    missedTradeType,
+                    mentalState,
+                    confidenceLevel,
+                    exitNote,
+
+                    entryEmotion,
+                    timestampTradePlanned,
+                    note
+
+                )
+
+          */
+/*  class TradeAnalysis(
+                var id: String,
+                open var phoneUserName: String?,
+
+                var tradeIncomeType: String,
+                var stockName: String?,
+
+                //Trade entry/sl/exit planned prices
+                var EntryPrice: String?,
+                var SLPrice: String?,
+                var ExitPrice: String?,
+
+                //Trade analysis
+//    Higher time frame
+                var HTFLocation: String?,
+                var HTFTrend: String?,
+
+                //    Intermediate time frame
+                var ITFTrend: String?,
+
+                //Execution time frame-type2/3
+                var ExecutionZone: String?,
+
+                var entryEmotion: String?,
+
+//timestamp when trde is planned
+                var timestampTradePlanned: String?,
+                var note: String?
+
+            )*//*
+
+
+
+            arrayList2.add(b)
+        }
+        return arrayList2
+    }
+*/
 }

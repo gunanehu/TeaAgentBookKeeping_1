@@ -119,7 +119,12 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         val id = tradeAnalysis?.id
         val stockName =
             tradeAnalysis?.stockName
+
+
         val tradeIncomeType = tradeAnalysis?.tradeIncomeType.toString()
+        val isBuy =
+            tradeAnalysis?.isBuy
+
         val EntryPrice =
             tradeAnalysis?.EntryPrice
         val ExitPrice =
@@ -151,12 +156,30 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
         val entryEmotion = tradeAnalysis?.entryEmotion
 
+
+        val tradeManagementType =
+            tradeAnalysis?.tradeManagementType
+        val tradeExitPostAnalysisTypeType =
+            tradeAnalysis?.tradeExitPostAnalysisTypeType
+        val missedTradeType =
+            tradeAnalysis?.missedTradeType
+        val mentalState =
+            tradeAnalysis?.mentalState
+        val confidenceLevel =
+            tradeAnalysis?.confidenceLevel
+        val exitNote =
+            tradeAnalysis?.exitNote
+        val timestampTradeExited =
+            tradeAnalysis?.timestampTradeExited
+
         val b =
             TradeAnalysis(
                 id,
                 phoneUserName,
                 tradeIncomeType,
                 stockName,
+                isBuy,
+
                 EntryPrice,
                 SLPrice,
                 ExitPrice,
@@ -169,8 +192,17 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 ITFTrend,
                 ExecutionZone,
 
+                tradeManagementType,
+                tradeExitPostAnalysisTypeType,
+                missedTradeType,
+                mentalState,
+                confidenceLevel,
+                exitNote,
+
                 entryEmotion,
+
                 timestampTradePlanned,
+                timestampTradeExited,
                 note
 
             )
@@ -221,19 +253,21 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     private suspend fun allTradeDetailsMutableLiveDataCallback() {
         saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer { it ->
-            Log.d(FirebaseUtil.TAG, "***************** ********************* customers $it")
+            if (it != null) {
 
-            customerString = convertBalanceTxToStringList(it as ArrayList<TradeAnalysis>)
-            customers = it /*as ArrayList<BalanceTx>*/
+                Log.d(TAG, "***************** ********************* customers $it")
+
+                customerString = convertBalanceTxToStringList(it as ArrayList<TradeAnalysis>)
+                customers = it /*as ArrayList<BalanceTx>*/
 //            recycleViewAdapter = ItemAdapter(customerString!!)
-            recycleViewAdapter = CustomAdapter(customerString, this)
+                recycleViewAdapter = CustomAdapter(customerString, this)
 
-            recyclerview?.adapter = recycleViewAdapter
+                recyclerview?.adapter = recycleViewAdapter
 //            recycleViewAdapter!!.setClickListener(this);
 
-            binding.totalAmount.setText("Total amount : " + total)
-            dismissProgressDialog()
-
+                binding.totalAmount.setText("Total amount : " + total)
+                dismissProgressDialog()
+            }
         })
     }
 

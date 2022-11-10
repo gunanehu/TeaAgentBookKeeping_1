@@ -6,13 +6,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.teaagent.R
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
@@ -22,7 +20,7 @@ import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.*
 import com.teaagent.domain.firemasedbEntities.enums.exit.*
 import com.teaagent.ui.listEntries.TradeListActivity
-import java.text.SimpleDateFormat
+import util.GeneralUtils
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -44,7 +42,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
     private lateinit var exitPrice: String  //= binding.editTextAcNo.text.toString()
     private lateinit var note: String  //= binding.editTextNetBAnkingUserNAme.text.toString()
-    private lateinit var password: String  //= binding.editTextNetBAnkingPwrd.text.toString()
+    private lateinit var exitNote: String  //= binding.editTextNetBAnkingPwrd.text.toString()
     private lateinit var atmNo: String  //= binding.editTextAtmNo.text.toString()
     private lateinit var atmPin: String  //
     var balanceTx: TradeAnalysis? = null
@@ -58,6 +56,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         SaveEntryViewModelFactory()
     }
 
+    var togglebutton: ToggleButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -74,9 +73,10 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             setIntentExtraTradeDetailsData(balanceTx)
         }
 
-        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-        val currentDate = sdf.format(Date())
-        binding.todaysDate.setText("currentDate : " + currentDate)
+        binding.todaysDate.setText("currentDate : " + GeneralUtils.convertDisplayDate(System.currentTimeMillis()))
+
+        togglebutton = binding.toggleBuySell
+        handleEntryExitLayoutVisibility(toUpdate)
 
         val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
@@ -89,7 +89,6 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         declareSpinnerSLLevel()
         declareSpinnerTargetLevel()
 
-
         declareConfidenceLevelSpinner()
         declareMentalStateSpinner()
         declareMissedTradeSpinner()
@@ -98,7 +97,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         registerEditTextChangeListenerrs()
 
-        if(toUpdate){
+        if (toUpdate) {
             setProfitPercentage()
             setSLPercentage()
 
@@ -110,9 +109,10 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 if (toUpdate) {
                     cuustomerEntry.id = balanceTx!!?.id
                 }
-//                Log.d(TAG, "*****  cuustomerEntry.id " + cuustomerEntry.id)
-                addAccountInfo(cuustomerEntry, toUpdate)
+                currentEntryTime = System.currentTimeMillis().toString()
+                cuustomerEntry.timestampTradePlanned = currentEntryTime
 
+                addAccountInfo(cuustomerEntry, toUpdate)
             } else {
                 showErrorMesage()
             }
@@ -123,8 +123,50 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             val listActiviTyIntent = Intent(this, TradeListActivity::class.java)
             startActivity(listActiviTyIntent)
         }
-
     }
+
+    private fun handleEntryExitLayoutVisibility(toUpdate: Boolean) {
+        if (toUpdate) {
+            layoutExitStock = binding.layoutExitStock
+            layoutExitStock?.visibility = View.VISIBLE
+
+            layoutEntryAnalysis = binding.layoutEntryAnalysis
+            layoutEntryAnalysis?.visibility = View.VISIBLE
+        } else {
+            layoutExitStock = binding.layoutExitStock
+            layoutExitStock?.visibility = View.GONE
+
+            layoutEntryAnalysis = binding.layoutEntryAnalysis
+            layoutEntryAnalysis?.visibility = View.GONE
+        }
+    }
+
+    var currentEntryTime: String? = null;
+    var currentExitTime: String? = null;
+
+    var isBuy = false
+    fun onToggleClick(view: View?) {
+        if (togglebutton!!.isChecked) {
+            isBuy = true
+        } else {
+            isBuy = false
+        }
+    }
+
+    var layoutExitStock: CardView? = null
+    var layoutEntryAnalysis: CardView? = null
+
+    var isExit = false
+    fun onExitStockClick(view: View?) {
+        isExit = true
+        currentExitTime = System.currentTimeMillis().toString()
+        layoutExitStock?.visibility = View.VISIBLE
+    }
+
+    fun onEntryAnalysisClicked(view: View?) {
+        layoutEntryAnalysis?.visibility = View.VISIBLE
+    }
+
 
     private fun setIntentExtraTradeDetailsData(balanceTx: TradeAnalysis?) {
 
@@ -135,14 +177,16 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.etExitPrice.setText(balanceTx?.ExitPrice)
 
         binding.etNote.setText(balanceTx?.note)
+        binding.etExitNote.setText(balanceTx?.exitNote)
 
-
+        binding.toggleBuySell.isChecked = balanceTx?.isBuy!!
+        isBuy = balanceTx.isBuy
     }
 
     private fun registerEditTextChangeListenerrs() {
         binding.etSLPrice.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-            setSLPercentage()
+                setSLPercentage()
             }
 
             override fun beforeTextChanged(
@@ -186,7 +230,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
     private fun setSLPercentage() {
         val loss = calculateSLPercentage()
-        binding.tvSLPercent.setText(loss.toString())    }
+        binding.tvSLPercent.setText(loss.toString())
+    }
 
     private fun setProfitPercentage() {
         val profit = calculateProfitPercentage()
@@ -256,8 +301,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = TargetLevel.valueOf(balanceTx?.targetLevel!!).ordinal
+        if (toUpdate && !balanceTx?.targetLevel .isNullOrEmpty()) {
+            val index: Int = TargetLevel.valueOf(balanceTx?.targetLevel.toString()).ordinal
             spinner.setSelection(index)
         }
     }
@@ -298,8 +343,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = SLLevel.valueOf(balanceTx?.sLLevel!!).ordinal
+        if (toUpdate && !balanceTx?.sLLevel .isNullOrEmpty()) {
+            val index: Int = SLLevel.valueOf(balanceTx?.sLLevel.toString()).ordinal
             spinner.setSelection(index)
         }
     }
@@ -341,8 +386,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = HTFLocationType.valueOf(balanceTx?.HTFLocation!!).ordinal
+        if (toUpdate && !balanceTx?.HTFLocation .isNullOrEmpty()) {
+            val index: Int = HTFLocationType.valueOf(balanceTx?.HTFLocation.toString()).ordinal
             spinner.setSelection(index)
         }
     }
@@ -381,8 +426,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = TrendType.valueOf(balanceTx?.HTFTrend!!).ordinal
+        if (toUpdate && ! balanceTx?.HTFTrend .isNullOrEmpty()) {
+            val index: Int = TrendType.valueOf(balanceTx?.HTFTrend.toString()).ordinal
             spinner.setSelection(index)
         }
     }
@@ -426,8 +471,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = ExecutionZoneType.valueOf(balanceTx?.ExecutionZone!!).ordinal
+        if (toUpdate && !balanceTx?.ExecutionZone .isNullOrEmpty()) {
+            val index: Int = ExecutionZoneType.valueOf(balanceTx?.ExecutionZone.toString()).ordinal
             spinner.setSelection(index)
         }
     }
@@ -472,8 +517,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = EntryEmotionType.valueOf(balanceTx?.entryEmotion!!).ordinal
+        if (toUpdate && !balanceTx?.entryEmotion .isNullOrEmpty()) {
+            val index: Int = EntryEmotionType.valueOf(balanceTx?.entryEmotion.toString()).ordinal
             spinner.setSelection(index)
         }
     }
@@ -518,12 +563,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = TrendType.valueOf(balanceTx?.ITFTrend!!).ordinal
+        if (toUpdate && !balanceTx?.ITFTrend .isNullOrEmpty()) {
+            val index: Int = TrendType.valueOf(balanceTx?.ITFTrend.toString()).ordinal
             spinner.setSelection(index)
         }
     }
-
 
     var accountType: String? = null
     private fun declareIncomeTypeSpinner() {
@@ -561,8 +605,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         spinner.adapter = adapter
 
-        if (toUpdate) {
-            val index: Int = TradeIncomeType.valueOf(balanceTx?.tradeIncomeType!!).ordinal
+        if (toUpdate && !balanceTx?.tradeIncomeType .isNullOrEmpty()) {
+            val index: Int = TradeIncomeType.valueOf(balanceTx?.tradeIncomeType.toString()).ordinal
             spinner.setSelection(index)
         }
     }
@@ -599,6 +643,12 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate && ! balanceTx?.tradeManagementType .isNullOrEmpty()) {
+            val index: Int =
+                TradeManagementType.valueOf(balanceTx?.tradeManagementType.toString()).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
@@ -631,6 +681,12 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate && !balanceTx?.tradeExitPostAnalysisTypeType .isNullOrEmpty()) {
+            val index: Int =
+                TradeExitPostAnalysisType.valueOf(balanceTx?.tradeExitPostAnalysisTypeType.toString()).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
@@ -663,6 +719,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate && !balanceTx?.missedTradeType.isNullOrEmpty()) {
+            val index: Int = MissedTrade.valueOf(balanceTx?.missedTradeType.toString()).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
@@ -695,6 +756,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate && !balanceTx?.mentalState.isNullOrEmpty()) {
+            val index: Int = MentalState.valueOf(balanceTx?.mentalState.toString()).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
@@ -727,12 +793,17 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             }
         })
         spinner.adapter = adapter
+
+        if (toUpdate && !balanceTx?.confidenceLevel.isNullOrEmpty() ) {
+            val index: Int = ConfidenceLevel.valueOf(balanceTx?.confidenceLevel.toString()).ordinal
+            spinner.setSelection(index)
+        }
     }
 
 
-    //spinnser for exit -end
+    /*//spinnser for exit -end
 
-
+*/
     fun addAccountInfo(customerEntity: TradeAnalysis?, toUpdate: Boolean) {
 
         val customer = customerEntity?.let {
@@ -742,7 +813,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
                 it.tradeIncomeType,
                 it.stockName,
-
+                it.isBuy,
                 it.EntryPrice,
                 it.SLPrice,
                 it.ExitPrice,
@@ -756,7 +827,15 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 it.ExecutionZone,
                 it.entryEmotion,
 
-                System.currentTimeMillis().toString(),
+                it.tradeManagementType,
+                it.tradeExitPostAnalysisTypeType,
+                it.missedTradeType,
+                it.mentalState,
+                it.confidenceLevel,
+                it.exitNote,
+
+                it.timestampTradePlanned,
+                it.timestampTradeExited,
                 it.note
             )
         }
@@ -809,26 +888,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         exitPrice = binding.etExitPrice.text.toString()
 
         note = binding.etNote.text.toString()
+        exitNote = binding.etExitNote.text.toString()
+//spinnser for exit -end
 
-        /*  TradeAnalysis(
-                it.id,
-                it.phoneUserName,
-
-                it.tradeIncomeType,
-                it.stockName,
-
-                it.EntryPrice,
-                it.SLPrice,
-                it.ExitPrice,
-
-                it.HTFLocation,
-                it.HTFTrend,
-                it.ITFTrend,
-                it.ExecutionZone,
-                it.entryEmotion
-                System.currentTimeMillis().toString(),
-                it.note
-            ) */
         return TradeAnalysis(
             "",
             FirebaseUtil.getCurrentPhoneUser(
@@ -836,6 +898,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             ).name,
             accountType!!,
             stockName,
+            isBuy,
 
             entryPrice,
             slPrice,
@@ -844,12 +907,21 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             sLLevel,
             targetLevel,
 
-            higherTimeFarameLocation!!,
-            higherTimeFarameTrend!!,
-            intermediateTimeFarameTrend!!,
-            excutionTimeTimeFarameLocation!!,
-            entryEmotion!!,
-            System.currentTimeMillis().toString(),
+            higherTimeFarameLocation,
+            higherTimeFarameTrend,
+            intermediateTimeFarameTrend,
+            excutionTimeTimeFarameLocation,
+            entryEmotion,
+
+            tradeManagementType,
+            tradeExitPostAnalysisTypeType,
+            missedTradeType,
+            mentalState,
+            confidenceLevel,
+            exitNote,
+
+            currentEntryTime,
+            currentExitTime,
             note
 
         )

@@ -1,6 +1,5 @@
 package com.teaagent.domain.firemasedbEntities
 
-import android.graphics.fonts.Font
 import util.GeneralUtils
 import java.io.Serializable
 
@@ -10,6 +9,7 @@ open class TradeAnalysis(
 
     var tradeIncomeType: String,
     var stockName: String?,
+    var isBuy: Boolean,
 
     //Trade entry/sl/exit planned prices
     var EntryPrice: String?,
@@ -30,21 +30,55 @@ open class TradeAnalysis(
 
     //Execution time frame-type2/3
     var ExecutionZone: String?,
-
     var entryEmotion: String?,
+
+    var tradeManagementType: String?,
+    var tradeExitPostAnalysisTypeType: String?,
+    var missedTradeType: String?,
+    var mentalState: String?,
+    var confidenceLevel: String?,
+    var exitNote: String?,
 
 //timestamp when trde is planned
     var timestampTradePlanned: String?,
+    var timestampTradeExited: String?,
+
     var note: String?
 
 ) :
     Serializable {
-    constructor() : this("", "", "", "","","", "", "", "", "", "", "", "", "", "", "")
+    constructor() : this(
+        "",
+        "",
+        "",
+        "",
+        false,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",""
+    )
 
     override fun toString(): String {
-        val str=                  GeneralUtils.convertDisplayDate(timestampTradePlanned?.toLong()!!)+"\n" +
+        val str = GeneralUtils.convertDisplayDate(timestampTradePlanned?.toLong()!!) + "\n" +
                 " " + " $stockName  \n" +
                 " Type='     $tradeIncomeType    \n" +
+
+                " isBuy='     $isBuy    \n" +
                 " EntryPrice  = $EntryPrice   " +
                 " SLPrice = $SLPrice    " +
                 " ExitPrice = $ExitPrice  \n" +
@@ -52,25 +86,21 @@ open class TradeAnalysis(
                   "HTFTrend=$HTFTrend   ," +
                   " ITFTrend=$ITFTrend   , " +*/
 
-
                 "ExecutionZone=$ExecutionZone    \n " +
                 "entryEmotion=$entryEmotion   \n" +
                 "note=$note                                                               " +
+
+                " tradeManagementType=$tradeManagementType," +
+                " tradeExitPostAnalysisTypeType=$tradeExitPostAnalysisTypeType," +
+                " missedTradeType=$missedTradeType, " +
+                "mentalState=$mentalState," +
+                " confidenceLevel=$confidenceLevel," +
+                "exitNote=$exitNote                                                               " +
+//                GeneralUtils.convertDisplayDate(timestampTradeExited?.toLong()!!) + "\n" +
+
                 "" +
                 ""
-
         return str
-
     }
 
-    /* override fun toString(): String {*/
-    /*     return "  type='$tradeIncomeType  | bankName=$stockName | " +*/
-    /*             "institutionCode=$EntryPrice | " +*/
-    /*             "address=$SLPrice | acNo=$ExitPrice |" +*/
-    /*             " netBankingUserName=$HTFLocation |" +*/
-    /*             " password=$HTFTrend | " +*/
-    /*             "atmNo=$timestampTradePlanned | " +*/
-    /*             "atmPin=$note " +*/
-    /*             "id=$id "*/
-    /* }*/
 }
