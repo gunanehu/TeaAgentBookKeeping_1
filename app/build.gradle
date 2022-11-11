@@ -21,8 +21,8 @@ android {
     applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 06
-    versionName "tradingjournal-0005 (entry/exit text update)"
+    versionCode 07
+    versionName "tradingjournal-0007 (tradelist save it in xsl)"
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
