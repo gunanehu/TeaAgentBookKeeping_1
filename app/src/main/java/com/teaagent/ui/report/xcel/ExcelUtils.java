@@ -3,6 +3,8 @@ package com.teaagent.ui.report.xcel;
 import static com.teaagent.ui.report.xcel.Constants.EXCEL_SHEET_NAME;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
@@ -364,7 +366,7 @@ public class ExcelUtils {
         try {
             fileOutputStream = new FileOutputStream(file);
             workbook.write(fileOutputStream);
-            Log.e(TAG, "Writing file" + file);
+            Log.i(TAG, "Writing file" + file);
             isSuccess = true;
         } catch (IOException e) {
             Log.e(TAG, "Error writing Exception: ", e);
@@ -382,9 +384,27 @@ public class ExcelUtils {
             }
         }
 
+
+        ShareViaEmail(context,file);
+
         return isSuccess;
     }
+    private static void ShareViaEmail(Context context, File file) {
+        try {
 
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+//            intent.setType("text/csv");
+            String message="File to be shared is " + "dede" + ".";
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse( "file://"+file));
+            intent.putExtra(Intent.EXTRA_TEXT, message);
+            intent.setData(Uri.parse("mailto:gunanehu@gmail.com"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch(Exception e)  {
+            Log.e(TAG,"is exception raises during sending mail"+e);
+        }
+    }
     /*  *//**
      * Retrieve excel from External Storage
      *
