@@ -4,6 +4,7 @@ import java.io.Serializable
 
 data class TimerLog(
     var id: String,
+    var phoneUserName: String?,
     var startInMilli: Long?,
     var stopInMilli: Long?,
     val timediff: Long?

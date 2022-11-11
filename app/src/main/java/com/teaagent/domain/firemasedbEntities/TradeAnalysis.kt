@@ -86,7 +86,7 @@ open class TradeAnalysis(
                   "HTFTrend=$HTFTrend   ," +
                   " ITFTrend=$ITFTrend   , " +*/
 
-                "ExecutionZone=$ExecutionZone    \n " +
+               /* "ExecutionZone=$ExecutionZone    \n " +
                 "entryEmotion=$entryEmotion   \n" +
                 "note=$note                                                               " +
 
@@ -95,7 +95,7 @@ open class TradeAnalysis(
                 " missedTradeType=$missedTradeType, " +
                 "mentalState=$mentalState," +
                 " confidenceLevel=$confidenceLevel," +
-                "exitNote=$exitNote                                                               " +
+                "exitNote=$exitNote                                                               " +*/
 //                GeneralUtils.convertDisplayDate(timestampTradeExited?.toLong()!!) + "\n" +
 
                 "" +

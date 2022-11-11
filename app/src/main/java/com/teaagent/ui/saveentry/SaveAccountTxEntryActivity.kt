@@ -23,6 +23,7 @@ import com.teaagent.databinding.ActivitySaveCollectionBinding.inflate
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.ui.listEntries.ListTransactionsActivity
+import com.teaagent.ui.report.xcel.ExcelUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -122,6 +123,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
     private fun getAllAccountDetailsFirebaseDb() {
         GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            showProgressDialog()
             mapsActivityViewModel.getAllAccountDetailsFirebaseDb()
         }
 
@@ -131,6 +133,11 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
             allTrades = it as ArrayList<TradeAnalysis>
             getALLCustomerNamesToSpinner(allTrades as ArrayList<TradeAnalysis>)
+
+
+            val dataList=  it as ArrayList<TradeAnalysis>
+            ExcelUtils.exportDataIntoWorkbook(this,"tradeAlalysisReport",dataList)
+
             dismissProgressDialog()
 
         })

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="Show Transactions"
+        android:text="Show Trade list"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -108,7 +108,8 @@
         android:padding="15dp"
         android:text="Search Customer Transactions "
         android:textAllCaps="false"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/buttonGetNetAssetsByName"
@@ -126,6 +127,7 @@
 
     <TextView
         android:id="@+id/total_amount"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
@@ -133,16 +135,18 @@
         android:hint="Total amount : "
         android:inputType="number"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/buttonShareScreen"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="go to Share Screen"
         android:textAllCaps="false"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"

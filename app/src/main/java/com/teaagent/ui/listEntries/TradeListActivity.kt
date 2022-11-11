@@ -26,12 +26,14 @@ import com.teaagent.databinding.ActivityShowTradeListBinding
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.TradeIncomeType
 import com.teaagent.ui.report.ReportActivity
+import com.teaagent.ui.report.xcel.ExcelUtils
 import com.teaagent.ui.saveentry.SaveAccountDetailActivity
 import com.teaagent.ui.saveentry.SaveAccountViewModel
 import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import util.GeneralUtils
 import java.util.*
 
 
@@ -86,7 +88,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     }
 
-    private fun getAccountDetails() {
+  /*  private fun getAccountDetails() {
         lifecycleScope.launch {
             showProgressDialog()
             saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
@@ -94,9 +96,12 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
         saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer() { it ->
             getAccountInfos(it as ArrayList<TradeAnalysis>)
+
+          val dataList=  it as ArrayList<TradeAnalysis>
+            ExcelUtils.exportDataIntoWorkbook(this,"tradeAlalysisReport",dataList)
             dismissProgressDialog()
         })
-    }
+    }*/
 
     var total: Long = 0
     private fun convertBalanceTxToStringList(customers: ArrayList<TradeAnalysis>): ArrayList<String> {
@@ -266,6 +271,12 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 //            recycleViewAdapter!!.setClickListener(this);
 
                 binding.totalAmount.setText("Total amount : " + total)
+
+
+                val dataList=  it as ArrayList<TradeAnalysis>
+                ExcelUtils.exportDataIntoWorkbook(this,"Trading_Journal"+GeneralUtils.convertDisplayDate(System.currentTimeMillis()),dataList)
+
+
                 dismissProgressDialog()
             }
         })
@@ -301,17 +312,19 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     private fun sendClick() {
         binding.buttonShareScreen.setOnClickListener {
-            if (instituteName.length > 0) {
-                val listActiviTyIntent = Intent(this, ReportActivity::class.java)
-                listActiviTyIntent.putExtra(ReportActivityBundleTag, instituteName)
-                startActivity(listActiviTyIntent)
-            } else {
-                Toast.makeText(
-                    this, "Please select customer ",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
         }
+//        {
+//            if (instituteName.length > 0) {
+//                val listActiviTyIntent = Intent(this, ReportActivity::class.java)
+//                listActiviTyIntent.putExtra(ReportActivityBundleTag, instituteName)
+//                startActivity(listActiviTyIntent)
+//            } else {
+//                Toast.makeText(
+//                    this, "Please select customer ",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            }
+//        }
     }
 
     private fun getAccountInfos(list: ArrayList<TradeAnalysis>) {

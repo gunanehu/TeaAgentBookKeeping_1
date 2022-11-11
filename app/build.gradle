@@ -21,7 +21,7 @@ android {
     applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 05
+    versionCode 06
     versionName "tradingjournal-0005 (entry/exit text update)"
     multiDexEnabled true
 
@@ -54,6 +54,7 @@ kapt {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
+//  implementation 'com.github.abdymm:androidcsv:0.1.5'
 
   // Kotlin
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -119,7 +120,11 @@ dependencies {
   implementation 'com.google.firebase:firebase-auth'
   implementation 'com.google.firebase:firebase-firestore'
   implementation 'com.google.firebase:firebase-firestore:24.3.1'
+  // POI.jar auto dependency
+  implementation files('libs/poi-3.7.jar')
 
+  // Lottie
+  implementation 'com.airbnb.android:lottie:3.4.1'
 }
 
   apply plugin: 'com.google.gms.google-services'

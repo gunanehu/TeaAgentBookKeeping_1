@@ -301,7 +301,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.targetLevel .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.targetLevel.isNullOrEmpty()) {
             val index: Int = TargetLevel.valueOf(balanceTx?.targetLevel.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -343,7 +343,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.sLLevel .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.sLLevel.isNullOrEmpty()) {
             val index: Int = SLLevel.valueOf(balanceTx?.sLLevel.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -386,7 +386,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.HTFLocation .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.HTFLocation.isNullOrEmpty()) {
             val index: Int = HTFLocationType.valueOf(balanceTx?.HTFLocation.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -426,7 +426,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && ! balanceTx?.HTFTrend .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.HTFTrend.isNullOrEmpty()) {
             val index: Int = TrendType.valueOf(balanceTx?.HTFTrend.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -471,7 +471,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.ExecutionZone .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.ExecutionZone.isNullOrEmpty()) {
             val index: Int = ExecutionZoneType.valueOf(balanceTx?.ExecutionZone.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -517,7 +517,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.entryEmotion .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.entryEmotion.isNullOrEmpty()) {
             val index: Int = EntryEmotionType.valueOf(balanceTx?.entryEmotion.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -563,7 +563,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.ITFTrend .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.ITFTrend.isNullOrEmpty()) {
             val index: Int = TrendType.valueOf(balanceTx?.ITFTrend.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -605,7 +605,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.tradeIncomeType .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.tradeIncomeType.isNullOrEmpty()) {
             val index: Int = TradeIncomeType.valueOf(balanceTx?.tradeIncomeType.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -644,7 +644,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && ! balanceTx?.tradeManagementType .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.tradeManagementType.isNullOrEmpty()) {
             val index: Int =
                 TradeManagementType.valueOf(balanceTx?.tradeManagementType.toString()).ordinal
             spinner.setSelection(index)
@@ -682,7 +682,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.tradeExitPostAnalysisTypeType .isNullOrEmpty()) {
+        if (toUpdate && !balanceTx?.tradeExitPostAnalysisTypeType.isNullOrEmpty()) {
             val index: Int =
                 TradeExitPostAnalysisType.valueOf(balanceTx?.tradeExitPostAnalysisTypeType.toString()).ordinal
             spinner.setSelection(index)
@@ -794,7 +794,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
         spinner.adapter = adapter
 
-        if (toUpdate && !balanceTx?.confidenceLevel.isNullOrEmpty() ) {
+        if (toUpdate && !balanceTx?.confidenceLevel.isNullOrEmpty()) {
             val index: Int = ConfidenceLevel.valueOf(balanceTx?.confidenceLevel.toString()).ordinal
             spinner.setSelection(index)
         }
@@ -954,7 +954,16 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
                 val startStoredTime = TeaAgentsharedPreferenceUtil.getToPreferenceCurrentStartTime()
                 val timediff = System.currentTimeMillis() - startStoredTime!!
-                val timerlog = TimerLog("", startStoredTime, System.currentTimeMillis(), timediff)
+                val getCurrentPhoneUser = FirebaseUtil.getCurrentPhoneUser(
+                    TeaAgentsharedPreferenceUtil.getAppId().toString()
+                ).name
+                val timerlog = TimerLog(
+                    "",
+                    getCurrentPhoneUser,
+                    startStoredTime,
+                    System.currentTimeMillis(),
+                    timediff
+                )
 
 
                 val timediffVal = String.format(

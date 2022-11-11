@@ -41,10 +41,10 @@ object FirebaseUtil {
         tableCollectionEntry = firestoreDb.collection("BalanceTx")
         tableTimerLogEntry = firestoreDb.collection("TimerLog")
 
-       /* tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-prod")
-        tablePhoneUser = firestoreDb.collection("PhoneUser-prod")
-        tableCollectionEntry = firestoreDb.collection("BalanceTx-prod")
-        tableTimerLogEntry = firestoreDb.collection("TimerLog-prod")*/
+        /* tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-prod")
+         tablePhoneUser = firestoreDb.collection("PhoneUser-prod")
+         tableCollectionEntry = firestoreDb.collection("BalanceTx-prod")
+         tableTimerLogEntry = firestoreDb.collection("TimerLog-prod")*/
 
         //TODO use only one in lifetime for that user
 //        addPhoneUser(phoneUser)
@@ -225,7 +225,7 @@ object FirebaseUtil {
             "phoneUserName",
             getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
         )
-//            ?.orderBy("timestampTradePlanned", Query.Direction.DESCENDING)
+            ?.orderBy("timestampTradePlanned", Query.Direction.DESCENDING)
         return query?.get()
     }
 
