@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
-import com.teaagent.domain.firemasedbEntities.BalanceTx
+import com.teaagent.ui.report.xcel.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -18,76 +18,82 @@ import java.util.*
 class PaymentsHTMLReportCreator internal constructor(
     var context: Context,
     private val customerName: String?
-)
-//{
-//    private lateinit var text: String
+) {
+    //    private lateinit var text: String
 //    var PAYMENT_SUMMARY_HEADER = "Payment Summary:"
 //    var KEY_FLIGHT_DATE: String = " Date:"
 //    var KEY_FLIGHT_NUMBER = "Customer Name:"
 //    private val sectors: HashMap<String, String>? = null
-//    private val TAG = "PaymentsReportPresenterImpl"
-//
-//    fun prepareDataForEmail(textFile: String) {
-//        var reportFile = context.getExternalFilesDir("/")!!.absolutePath + "/temp"
-//        val file = File(reportFile)
-//        if (!file.exists()) {
-//            file.mkdirs()
-//            try {
-//                file.createNewFile()
-//            } catch (e: IOException) {
-//                Log.e(TAG, " prepareDataForEmail IOException $e")
-//            }
-//        }
-//        val fileName = "Report" + Date().time + ".html"
-//        reportFile = "$reportFile/$fileName"
-//        val subject = "Tea collection Transactions Report"
-//        createFile(reportFile, textFile)
-//        sendReport(subject, reportFile)
-//    }
-//
-//    fun sendReport(subject: String?, reportFile: String) {
-//        val fileUri = Uri.parse("file://$reportFile")
-//        val file = File(fileUri.path)
-//        val isEmailSent = FileUtil.sendMail(
-//            context,
-//            file,
-//            subject,
-//            "Please find the attached transactions report file for the CUSTOMER :" + customerName
-//        )
-//        if (!isEmailSent) {
-//            Toast.makeText(context, "no_email_client", Toast.LENGTH_LONG)
-//                .show()
-//            Log.e(TAG, " no_email_client")
-//        }
-//    }
-//
+    private val TAG = "PmntRprtPresenterImpl"
+
+    //
+    fun prepareDataForEmail(textFile: String) {
+
+//    val reportFile = File(context.getExternalFilesDir(null).absoluteFile, Constants.EXCEL_FILE_NAME)
+
+        var reportFile =
+            context.getExternalFilesDir(null)!!.absolutePath + Constants.EXCEL_FILE_NAME
+        val file = File(reportFile)
+        if (!file.exists()) {
+            file.mkdirs()
+            try {
+                file.createNewFile()
+            } catch (e: IOException) {
+                Log.e(TAG, " prepareDataForEmail IOException $e")
+            }
+        }
+        val fileName = "Report" + Date().time + ".html"
+        reportFile = "$reportFile/$fileName"
+        val subject = "Tea collection Transactions Report"
+        createFile(reportFile, textFile)
+        sendReport(subject, reportFile)
+    }
+
+    //
+    fun sendReport(subject: String?, reportFile: String) {
+        val fileUri = Uri.parse("file://$reportFile")
+        val file = File(fileUri.path)
+        val isEmailSent = FileUtil.sendMail(
+            context,
+            file,
+            subject,
+            "Please find the attached transactions report file for the CUSTOMER :" + customerName
+        )
+        if (!isEmailSent) {
+            Toast.makeText(context, "no_email_client", Toast.LENGTH_LONG)
+                .show()
+            Log.e(TAG, " no_email_client")
+        }
+    }
+
+    //
 //    /**
 //     * Create a file with email data to strFile path.
 //     *
 //     * @param strFile
 //     */
-//    private fun createFile(strFile: String, textFile: String) {
-//        try {
-//
-//            /* val paymentReportData: String?
-//              get() {
-//                 return *//*commonCustomerDetails + *//*textFile
-//            }*/
-//
-//            CoroutineScope(IO).launch {
-////                getALLByCustomers()
-//
-//                OutputStreamWriter(FileOutputStream(strFile), StandardCharsets.UTF_8).use { out ->
-//                    val data = textFile
-//                    out.write(data)
-//                }
-//            }
-//        } catch (e: Exception) {
-//            Toast.makeText(context, "show File Creation Error " + e.message, Toast.LENGTH_LONG)
-//                .show()
-//            Log.e(TAG, "show File Creation Error " + e.message)
-//        }
-//    }
+    fun createFile(strFile: String, textFile: String) {
+        try {
+
+            /* val paymentReportData: String?
+              get() {
+                 return *//*commonCustomerDetails + *//*textFile
+            }*/
+
+            CoroutineScope(IO).launch {
+//                getALLByCustomers()
+
+                OutputStreamWriter(FileOutputStream(strFile), StandardCharsets.UTF_8).use { out ->
+                    val data = textFile
+                    out.write(data)
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(context, "show File Creation Error " + e.message, Toast.LENGTH_LONG)
+                .show()
+            Log.e(TAG, "show File Creation Error " + e.message)
+        }
+    }
 //
 ////     val paymentReportData: String?
 ////        public get() {
@@ -201,4 +207,4 @@ class PaymentsHTMLReportCreator internal constructor(
 //    }
 //
 //
-//}
+}

@@ -24,30 +24,12 @@ import java.util.List;
 
 import util.GeneralUtils;
 
-/**
- * Excel Worksheet Utility Methods
- * <p>
- * Created by: Ranit Raj Ganguly on 16/04/21.
- */
 public class ExcelUtils {
     public static final String TAG = "ExcelUtil";
     private static Cell cell;
     private static Sheet sheet;
     private static Workbook workbook;
     private static CellStyle headerCellStyle;
-
-//    private static List<ContactResponse> importedExcelData;
-
-//    /**
-//     * Import data from Excel Workbook
-//     *
-//     * @param context - Application Context
-//     * @param fileName - Name of the excel file
-//     * @return importedExcelData
-//     */
-//    public static List<ContactResponse> readFromExcelWorkbook(Context context, String fileName) {
-//        return retrieveExcelFromStorage(context, fileName);
-//    }
 
 
     /**
@@ -73,6 +55,16 @@ public class ExcelUtils {
         setHeaderCellStyle();
 
         // Creating a New Sheet and Setting width for each column
+        createRowHeader();
+
+        setHeaderRow();
+        fillDataIntoExcel(dataList);
+        isWorkbookWrittenIntoStorage = storeExcelInStorage(context, fileName);
+
+        return isWorkbookWrittenIntoStorage;
+    }
+
+    private static void createRowHeader() {
         sheet = workbook.createSheet(EXCEL_SHEET_NAME);
         sheet.setColumnWidth(0, (15 * 150));
         sheet.setColumnWidth(1, (15 * 150));
@@ -97,12 +89,6 @@ public class ExcelUtils {
         sheet.setColumnWidth(18, (15 * 150));
         sheet.setColumnWidth(19, (15 * 150));
         sheet.setColumnWidth(20, (15 * 150));
-
-        setHeaderRow();
-        fillDataIntoExcel(dataList);
-        isWorkbookWrittenIntoStorage = storeExcelInStorage(context, fileName);
-
-        return isWorkbookWrittenIntoStorage;
     }
 
     /**
@@ -360,49 +346,7 @@ public class ExcelUtils {
 
         }
     }
-//    TradeAnalysis(
-//            var id: String,
-//            open var phoneUserName: String?,
-//
-//            var tradeIncomeType: String,
-//            var stockName: String?,
-//            var isBuy: Boolean,
-//
-//            //Trade entry/sl/exit planned prices
-//            var EntryPrice: String?,
-//            var SLPrice: String?,
-//            var ExitPrice: String?,
-//
-////sl/target levels
-//            var sLLevel: String?,
-//            var targetLevel: String?,
-//
-//            //Trade analysis
-////    Higher time frame
-//            var HTFLocation: String?,
-//            var HTFTrend: String?,
-//
-//            //    Intermediate time frame
-//            var ITFTrend: String?,
-//
-//            //Execution time frame-type2/3
-//            var ExecutionZone: String?,
-//            var entryEmotion: String?,
-//
-//            var tradeManagementType: String?,
-//            var tradeExitPostAnalysisTypeType: String?,
-//            var missedTradeType: String?,
-//            var mentalState: String?,
-//            var confidenceLevel: String?,
-//            var exitNote: String?,
-//
-//
-//            var timestampTradePlanned: String?,
-//            var timestampTradeExited: String?,
-//
-//            var note: String?
-//
-//    ) :
+
 
     /**
      * Store Excel Workbook in external storage
@@ -414,7 +358,7 @@ public class ExcelUtils {
     private static boolean storeExcelInStorage(Context context, String fileName) {
         boolean isSuccess;
 
-        File file = new File(context.getExternalFilesDir(null), fileName + ".xls");
+        File file = new File(context.getExternalFilesDir(null), fileName);
         FileOutputStream fileOutputStream = null;
 
         try {

@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnCompleteListener
@@ -25,7 +24,7 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTradeListBinding
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.TradeIncomeType
-import com.teaagent.ui.report.ReportActivity
+import com.teaagent.ui.report.xcel.Constants
 import com.teaagent.ui.report.xcel.ExcelUtils
 import com.teaagent.ui.saveentry.SaveAccountDetailActivity
 import com.teaagent.ui.saveentry.SaveAccountViewModel
@@ -33,7 +32,6 @@ import com.teaagent.ui.saveentry.SaveEntryViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import util.GeneralUtils
 import java.util.*
 
 
@@ -272,11 +270,8 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
                 binding.totalAmount.setText("Total amount : " + total)
 
-
                 val dataList=  it as ArrayList<TradeAnalysis>
-                ExcelUtils.exportDataIntoWorkbook(this,"Trading_Journal"+GeneralUtils.convertDisplayDate(System.currentTimeMillis()),dataList)
-
-
+                ExcelUtils.exportDataIntoWorkbook(this, Constants.EXCEL_FILE_NAME,dataList)
                 dismissProgressDialog()
             }
         })
