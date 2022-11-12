@@ -119,7 +119,7 @@ public class ExcelUtils {
     private static void setHeaderCellStyle() {
         headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFillForegroundColor(HSSFColor.AQUA.index);
-        headerCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        headerCellStyle.setFillPattern(HSSFCellStyle.ALIGN_FILL);
         headerCellStyle.setAlignment(CellStyle.ALIGN_CENTER);
     }
 

@@ -22,6 +22,9 @@
         android:theme="@style/Theme.AppCompat.Light"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name="com.teaagent.ui.PopUpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.signin.ProfileActivity"
             android:exported="false" />
         <activity

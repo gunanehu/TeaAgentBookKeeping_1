@@ -3,6 +3,9 @@
 2.Populate (ENtry) on clicked trade on the saveAnalysis screen  -done
 6.insert exit details in firebase db also -done
 8.add phoneusername in TimerLog table to search by  phoneusername-done
+9.save as csv-done
+10.send e mail(email hardcoded for now)-done
+11.show trading view chart in a different activity -done
 
 3.Show percentage in trade details rows in the trade list as well.
 4.calculate total logged time for the day

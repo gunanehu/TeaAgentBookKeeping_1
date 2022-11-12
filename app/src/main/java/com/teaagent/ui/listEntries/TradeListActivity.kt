@@ -86,20 +86,20 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     }
 
-  /*  private fun getAccountDetails() {
-        lifecycleScope.launch {
-            showProgressDialog()
-            saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
-        }
+    /*  private fun getAccountDetails() {
+          lifecycleScope.launch {
+              showProgressDialog()
+              saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
+          }
 
-        saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer() { it ->
-            getAccountInfos(it as ArrayList<TradeAnalysis>)
+          saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer() { it ->
+              getAccountInfos(it as ArrayList<TradeAnalysis>)
 
-          val dataList=  it as ArrayList<TradeAnalysis>
-            ExcelUtils.exportDataIntoWorkbook(this,"tradeAlalysisReport",dataList)
-            dismissProgressDialog()
-        })
-    }*/
+            val dataList=  it as ArrayList<TradeAnalysis>
+              ExcelUtils.exportDataIntoWorkbook(this,"tradeAlalysisReport",dataList)
+              dismissProgressDialog()
+          })
+      }*/
 
     var total: Long = 0
     private fun convertBalanceTxToStringList(customers: ArrayList<TradeAnalysis>): ArrayList<String> {
@@ -257,7 +257,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     private suspend fun allTradeDetailsMutableLiveDataCallback() {
         saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer { it ->
             if (it != null) {
-
+                binding.buttonShareScreen.visibility=View.VISIBLE
                 Log.d(TAG, "***************** ********************* customers $it")
 
                 customerString = convertBalanceTxToStringList(it as ArrayList<TradeAnalysis>)
@@ -270,9 +270,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
                 binding.totalAmount.setText("Total amount : " + total)
 
-                val dataList=  it as ArrayList<TradeAnalysis>
-                ExcelUtils.exportDataIntoWorkbook(this, Constants.EXCEL_FILE_NAME,dataList)
-                dismissProgressDialog()
+
             }
         })
     }
@@ -307,6 +305,9 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     private fun sendClick() {
         binding.buttonShareScreen.setOnClickListener {
+            val dataList = customers as ArrayList<TradeAnalysis>
+            ExcelUtils.exportDataIntoWorkbook(this, Constants.EXCEL_FILE_NAME, dataList)
+            dismissProgressDialog()
         }
 //        {
 //            if (instituteName.length > 0) {

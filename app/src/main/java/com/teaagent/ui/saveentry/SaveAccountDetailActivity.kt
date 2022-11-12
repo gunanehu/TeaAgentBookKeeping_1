@@ -6,6 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -19,6 +21,7 @@ import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
 import com.teaagent.domain.firemasedbEntities.enums.*
 import com.teaagent.domain.firemasedbEntities.enums.exit.*
+import com.teaagent.ui.PopUpActivity
 import com.teaagent.ui.listEntries.TradeListActivity
 import util.GeneralUtils
 import java.util.*
@@ -80,6 +83,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
+//        loadWebviewTradingViewchart("AMD", "D")
+
         declareIncomeTypeSpinner()
         declareHigherTimeFarameLocationSpinner()
         declareHigherTimeFarameTrendSpinner()
@@ -125,6 +130,49 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
+    var url: String? = null
+    private fun loadWebviewTradingViewchart(symbol: String, interval: String) {
+        val webView = findViewById<WebView>(R.id.webviewer)
+        url = "https://www.tradingview.com/chart/?symbol=$symbol&interval=$interval"
+        Log.i(TAG, "stock url " + url)
+
+        webView.loadUrl(url!!)
+        webView.settings.javaScriptEnabled = true
+        webView.webViewClient = WebViewClient()
+
+
+//        val symbol = intent.getStringExtra("symbol")
+//        val interval = intent.getStringExtra("interval")
+
+        /* val data = "<!-- TradingView Widget BEGIN -->\n" +
+                 "<div class=\"tradingview-widget-container\">\n" +
+                 "  <div id=\"tradingview_0dac4\"></div>\n" +
+                 "  <div class=\"tradingview-widget-copyright\"><a href=\"https://www.tradingview.com/symbols/NASDAQ-AAPL/\" rel=\"noopener\" target=\"_blank\"><span class=\"blue-text\">AAPL Chart</span></a> by TradingView</div>\n" +
+                 "  <script type=\"text/javascript\" src=\"https://s3.tradingview.com/tv.js\"></script>\n" +
+                 "  <script type=\"text/javascript\">\n" +
+                 "  new TradingView.widget(\n" +
+                 "  {\n" +
+                 "  \"autosize\": true,\n" +
+                 "  \"symbol\": \"NASDAQ:AAPL\",\n" +
+                 "  \"interval\": \"M\",\n" +
+                 "  \"timezone\": \"Etc/UTC\",\n" +
+                 "  \"theme\": \"light\",\n" +
+                 "  \"style\": \"1\",\n" +
+                 "  \"locale\": \"en\",\n" +
+                 "  \"toolbar_bg\": \"#f1f3f6\",\n" +
+                 "  \"enable_publishing\": false,\n" +
+                 "  \"allow_symbol_change\": true,\n" +
+                 "  \"container_id\": \"tradingview_0dac4\"\n" +
+                 "}\n" +
+                 "  );\n" +
+                 "  </script>\n" +
+                 "</div>\n" +
+                 "<!-- TradingView Widget END -->"
+
+         webView.settings.javaScriptEnabled = true
+         webView.loadData(data, "text/html", "utf-8")*/
+    }
+
     private fun handleEntryExitLayoutVisibility(toUpdate: Boolean) {
         if (toUpdate) {
             layoutExitStock = binding.layoutExitStock
@@ -165,9 +213,24 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
     fun onEntryAnalysisClicked(view: View?) {
         layoutEntryAnalysis?.visibility = View.VISIBLE
+
+        val stock = binding.editTextStock.text.toString()
+        val interval = "1D"
+        loadWebviewTradingViewchart(stock, interval)
+
     }
 
+    fun onChartClicked(view: View?){
 
+        val popUpActivity = Intent(this, PopUpActivity::class.java)
+
+        val stock = binding.editTextStock.text.toString()
+        val interval = "1D"
+        popUpActivity.putExtra("stock", stock)
+        popUpActivity.putExtra("interval", interval)
+
+        startActivity(popUpActivity)
+    }
     private fun setIntentExtraTradeDetailsData(balanceTx: TradeAnalysis?) {
 
         binding.editTextStock.setText(balanceTx?.stockName)

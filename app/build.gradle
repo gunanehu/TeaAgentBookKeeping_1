@@ -21,8 +21,8 @@ android {
     applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 07
-    versionName "tradingjournal-0007 (tradelist save it in xsl)"
+    versionCode 9
+    versionName "tradingjournal-0009 (show trading view chart )"
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
