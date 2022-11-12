@@ -947,6 +947,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.etSLPrice.setText("")
         binding.etExitPrice.setText("")
         binding.etNote.setText("")
+        binding.etExitNote.setText("")
+
         dateTime.timeInMillis = 0
         spinner?.setSelection(0)
     }

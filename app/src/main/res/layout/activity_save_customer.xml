@@ -214,6 +214,7 @@
                     android:layout_margin="5dp"
                     android:onClick="onEntryAnalysisClicked"
                     android:text="Entry Analysis" />
+
                 <Button
                     android:id="@+id/btnChart"
                     android:layout_width="wrap_content"
@@ -223,24 +224,18 @@
                     android:onClick="onChartClicked"
                     android:text="show Chart" />
 
-                <WebView
-                    android:id="@+id/webviewer"
 
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:onClick="onChartClicked"></WebView>
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/layoutEntryAnalysis"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp">
 
                     <LinearLayout
-                        android:layout_width="388dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#63ADD5"
-
                         android:orientation="vertical">
 
                         <TextView
@@ -251,7 +246,11 @@
                             android:text="Entry Zone Analysis"
                             android:textSize="20sp"
                             android:textStyle="bold" />
-
+                        <WebView
+                            android:id="@+id/webviewer"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:onClick="onChartClicked"></WebView>
                         <LinearLayout
                             android:layout_width="match_parent"
 
