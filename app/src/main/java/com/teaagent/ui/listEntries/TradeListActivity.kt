@@ -23,7 +23,7 @@ import com.teaagent.R
 import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTradeListBinding
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
-import com.teaagent.domain.firemasedbEntities.enums.TradeIncomeType
+import com.teaagent.domain.firemasedbEntities.enums.stockEntry.TradeIncomeType
 import com.teaagent.ui.report.xcel.Constants
 import com.teaagent.ui.report.xcel.ExcelUtils
 import com.teaagent.ui.saveentry.SaveAccountDetailActivity

@@ -26,7 +26,7 @@ import com.teaagent.data.FirebaseUtil
 import com.teaagent.databinding.ActivityShowTxListBinding
 import com.teaagent.domain.firemasedbEntities.BalanceTx
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
-import com.teaagent.domain.firemasedbEntities.enums.TradeIncomeType
+import com.teaagent.domain.firemasedbEntities.enums.stockEntry.TradeIncomeType
 import com.teaagent.ui.report.ReportActivity
 import com.teaagent.ui.saveentry.SaveAccountDetailActivity
 import com.teaagent.ui.saveentry.SaveAccountViewModel

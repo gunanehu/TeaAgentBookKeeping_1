@@ -19,8 +19,8 @@ import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySaveCustomerBinding
 import com.teaagent.domain.firemasedbEntities.TimerLog
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis
-import com.teaagent.domain.firemasedbEntities.enums.*
 import com.teaagent.domain.firemasedbEntities.enums.exit.*
+import com.teaagent.domain.firemasedbEntities.enums.stockEntry.*
 import com.teaagent.ui.PopUpActivity
 import com.teaagent.ui.listEntries.TradeListActivity
 import util.GeneralUtils
