@@ -22,7 +22,7 @@ android {
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode 9
-    versionName "tradingjournal-0009 (show trading view chart )"
+    versionName "tradingjournal-0009-backtesting (show trading view chart )"
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

@@ -627,7 +627,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text="Add Tea collection"
+                        android:text="Trade list entries"
                         android:textAllCaps="false" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

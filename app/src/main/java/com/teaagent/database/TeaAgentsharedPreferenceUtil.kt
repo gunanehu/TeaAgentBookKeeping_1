@@ -33,4 +33,13 @@ object TeaAgentsharedPreferenceUtil {
         return sharedPreferences?.getLong("TimeLog", 0)
     }
     val TAG: String = "Application"
+
+    fun addToPreferencePhoneUserEmail( id: String) {
+        Log.i(TAG, " added PhoneUser Email " + id)
+        myEdit?.putString("PhoneUserEmail", id);
+        myEdit?.commit();
+    }
+      fun getPhoneUserEmail(): String? {
+        return sharedPreferences?.getString("PhoneUserEmail", "")
+    }
 }

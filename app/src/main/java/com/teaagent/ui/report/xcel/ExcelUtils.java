@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.teaagent.database.TeaAgentsharedPreferenceUtil;
 import com.teaagent.domain.firemasedbEntities.TradeAnalysis;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -119,7 +120,7 @@ public class ExcelUtils {
     private static void setHeaderCellStyle() {
         headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFillForegroundColor(HSSFColor.AQUA.index);
-        headerCellStyle.setFillPattern(HSSFCellStyle.ALIGN_FILL);
+        headerCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         headerCellStyle.setAlignment(CellStyle.ALIGN_CENTER);
     }
 
@@ -143,7 +144,7 @@ public class ExcelUtils {
         cell.setCellStyle(headerCellStyle);
 
         cell = headerRow.createCell(3);
-        cell.setCellValue("EntryPrice");
+        cell.setCellValue("Entry Price");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(4);
@@ -152,45 +153,45 @@ public class ExcelUtils {
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(5);
-        cell.setCellValue("ExitPrice");
+        cell.setCellValue("Exit Price");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(6);
-        cell.setCellValue("Note");
+        cell.setCellValue("entry Note");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(7);
-        cell.setCellValue("ExitNote");
+        cell.setCellValue("Exit Note");
 
 
 //            var sLLevel: String?,
 //            var targetLevel: String?,
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(8);
-        cell.setCellValue("SLLevel");
+        cell.setCellValue("SL Level");
 
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(9);
-        cell.setCellValue("TargetLevel");
+        cell.setCellValue("Target Level");
 
 //            var HTFLocation: String?,
 //            var HTFTrend: String?,
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(10);
-        cell.setCellValue("HTFLocation");
+        cell.setCellValue("HTF Location");
 
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(11);
-        cell.setCellValue("HTFTrend");
+        cell.setCellValue("HTF Trend");
 
 
         //    Intermediate time frame
 //            var ITFTrend: String?,
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(12);
-        cell.setCellValue("ITFTrend");
+        cell.setCellValue("ITF Trend");
 
 
 //
@@ -199,12 +200,12 @@ public class ExcelUtils {
 //            var entryEmotion: String?,
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(12);
-        cell.setCellValue("ExecutionZone");
+        cell.setCellValue("Execution Zone");
 
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(13);
-        cell.setCellValue("EntryEmotion");
+        cell.setCellValue("Entry Emotion");
 
 //            var tradeManagementType: String?,
 //            var tradeExitPostAnalysisTypeType: String?,
@@ -214,34 +215,34 @@ public class ExcelUtils {
 //            var exitNote: String?,
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(14);
-        cell.setCellValue("TradeManagementType");
+        cell.setCellValue("TradeManagement Type");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(15);
-        cell.setCellValue("TradeExitPostAnalysisTypeType");
+        cell.setCellValue("ExitPostAnalysis Type");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(16);
-        cell.setCellValue("MissedTradeType");
+        cell.setCellValue("Missed Trade Type");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(17);
-        cell.setCellValue("ConfidenceLevel");
+        cell.setCellValue("Confidence Level");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(18);
-        cell.setCellValue("ExecutionZone");
+        cell.setCellValue("Execution Zone");
 
 
 //            var timestampTradePlanned: String?,
 //            var timestampTradeExited: String?,
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(19);
-        cell.setCellValue("TimestampTradePlanned");
+        cell.setCellValue("Timestamp TradePlanned");
 
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(20);
-        cell.setCellValue("TimestampTradeExited");
+        cell.setCellValue("Timestamp TradeExited");
         cell.setCellStyle(headerCellStyle);
 
 
@@ -398,7 +399,7 @@ public class ExcelUtils {
             intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
             intent.putExtra(Intent.EXTRA_STREAM, Uri.parse( "file://"+file));
             intent.putExtra(Intent.EXTRA_TEXT, message);
-            intent.setData(Uri.parse("mailto:gunanehu@gmail.com"));
+            intent.setData(Uri.parse("mailto:"+ TeaAgentsharedPreferenceUtil.INSTANCE.getPhoneUserEmail()));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } catch(Exception e)  {

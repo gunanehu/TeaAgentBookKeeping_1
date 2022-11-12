@@ -22,6 +22,7 @@ import android.widget.Toast
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
+import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySignInBinding
 import com.teaagent.databinding.ActivitySplashBinding
 import com.teaagent.ui.SplashActivity
@@ -96,6 +97,7 @@ class SignInActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLi
             idToken = account!!.idToken
             name = account.displayName
             email = account.email
+            TeaAgentsharedPreferenceUtil.addToPreferencePhoneUserEmail(email.toString())
             Log.i(TAG, "Login Unsuccessful. idToken $idToken")
 
             // you can store user data to SharedPreference
