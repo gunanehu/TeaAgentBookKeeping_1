@@ -43,6 +43,25 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private lateinit var note: String
     private lateinit var exitNote: String
 
+    //    spinners
+    var spinnerInstituteType: Spinner? = null
+    var spinnerTradeManagement: Spinner? = null
+    var spinnerTradeExitPostAnalysisType: Spinner? = null
+
+    var spinnerMissedTradeType: Spinner? = null
+    var spinnerMentalState: Spinner? = null
+    var spinnerConfidenceLevel: Spinner? = null
+
+    var spinnerExitLevel: Spinner? = null
+    var spinnerSLLevel: Spinner? = null
+    var spinnerHTFLocation: Spinner? = null
+
+    var spinnerHTFTrend: Spinner? = null
+    var spinnerExecutionZone: Spinner? = null
+    var spinnerEntryEmotion: Spinner? = null
+    var spinnerITFTrend: Spinner? = null
+
+
     var balanceTx: TradeAnalysis? = null
     var spinner: Spinner? = null
     var dateTime = Calendar.getInstance()
@@ -69,6 +88,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         if (balanceTx != null) {
             toUpdate = true
             setIntentExtraTradeDetailsData(balanceTx)
+            binding.clearButton.visibility=View.GONE//dont allow clear if its not a fresh entry (ie, comming from list )
+            binding.saveCustomerButton.setText("Update")
         }
 
         binding.todaysDate.setText("currentDate : " + GeneralUtils.convertDisplayDate(System.currentTimeMillis()))
@@ -196,6 +217,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             isBuy = false
         }
     }
+
+    fun onclearButtonClick(view: View?) {
+        clearEditTextValues()
+    }
+
 
     var layoutExitStock: CardView? = null
     var layoutEntryAnalysis: CardView? = null
@@ -325,10 +351,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         return 0F
     }
 
-
     var targetLevel: String? = null
     private fun declareSpinnerTargetLevel() {
         val spinner: Spinner = findViewById(R.id.spinnerExitLevel)
+        spinnerExitLevel = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 TargetLevel::class.java
@@ -367,10 +394,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var sLLevel: String? = null
     private fun declareSpinnerSLLevel() {
         val spinner: Spinner = findViewById(R.id.spinnerSLLevel)
+        spinnerSLLevel = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 SLLevel::class.java
@@ -409,10 +437,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var higherTimeFarameLocation: String? = null
     private fun declareHigherTimeFarameLocationSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerHTFLocation)
+        spinnerHTFLocation = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 HTFLocationType::class.java
@@ -452,10 +481,12 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var higherTimeFarameTrend: String? = null
     private fun declareHigherTimeFarameTrendSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerHTFTrend)
+        spinnerHTFTrend = spinner
+
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 TrendType::class.java
@@ -495,6 +526,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     var excutionTimeTimeFarameLocation: String? = null
     private fun declareExecutionTimeFarameSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerExecutionZone)
+        spinnerExecutionZone = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 ExecutionZoneType::class.java
@@ -537,10 +570,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var entryEmotion: String? = null
     private fun declareEntryEmotionTypeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerEntryEmotion)
+        spinnerEntryEmotion = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 EntryEmotionType::class.java
@@ -583,10 +617,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var intermediateTimeFarameTrend: String? = null
     private fun declareIntermediateTimeFarameTrendSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerITFTrend)
+        spinnerITFTrend = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 TrendType::class.java
@@ -632,6 +667,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     var accountType: String? = null
     private fun declareIncomeTypeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerInstituteType)
+        spinnerInstituteType = spinner
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 TradeIncomeType::class.java
@@ -677,6 +713,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     var tradeManagementType: String? = null
     private fun declareTradeManagementTypeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerTradeManagement)
+        spinnerTradeManagement = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 TradeManagementType::class.java
@@ -711,10 +749,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var tradeExitPostAnalysisTypeType: String? = null
     private fun declareTradeExitPostAnalysisTypeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerTradeExitPostAnalysisType)
+        spinnerTradeExitPostAnalysisType = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 TradeExitPostAnalysisType::class.java
@@ -749,10 +788,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var missedTradeType: String? = null
     private fun declareMissedTradeSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerMissedTradeType)
+        spinnerMissedTradeType = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 MissedTrade::class.java
@@ -786,10 +826,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-
     var mentalState: String? = null
     private fun declareMentalStateSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerMentalState)
+        spinnerMentalState = spinner
+
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 MentalState::class.java
@@ -827,6 +868,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     var confidenceLevel: String? = null
     private fun declareConfidenceLevelSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerConfidenceLevel)
+
+        spinnerConfidenceLevel = spinner
         val enumValues: List<Enum<*>> = ArrayList(
             EnumSet.allOf(
                 ConfidenceLevel::class.java
@@ -919,28 +962,28 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         exitNote = ""
 
 
-        sLLevel= ""
-        targetLevel= ""
+        sLLevel = ""
+        targetLevel = ""
 
-        sLLevel= ""
-        targetLevel= ""
+        sLLevel = ""
+        targetLevel = ""
 
-        higherTimeFarameLocation= ""
-        higherTimeFarameTrend= ""
-        intermediateTimeFarameTrend= ""
-        excutionTimeTimeFarameLocation= ""
-        entryEmotion= ""
+        higherTimeFarameLocation = ""
+        higherTimeFarameTrend = ""
+        intermediateTimeFarameTrend = ""
+        excutionTimeTimeFarameLocation = ""
+        entryEmotion = ""
 
-        tradeManagementType= ""
-        tradeExitPostAnalysisTypeType= ""
-        missedTradeType= ""
-        mentalState= ""
-        confidenceLevel= ""
-        exitNote= ""
+        tradeManagementType = ""
+        tradeExitPostAnalysisTypeType = ""
+        missedTradeType = ""
+        mentalState = ""
+        confidenceLevel = ""
+        exitNote = ""
 
-        currentEntryTime= ""
-        currentExitTime= ""
-        note= ""
+        currentEntryTime = ""
+        currentExitTime = ""
+        note = ""
 
         binding.editTextStock.setText("")
         binding.editTextEntryPrice.setText("")
@@ -950,7 +993,26 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.etExitNote.setText("")
 
         dateTime.timeInMillis = 0
-        spinner?.setSelection(0)
+
+        spinnerInstituteType?.setSelection(0)
+        spinnerHTFTrend?.setSelection(0)
+        spinnerExecutionZone?.setSelection(0)
+        spinnerEntryEmotion?.setSelection(0)
+        spinnerITFTrend?.setSelection(0)
+
+        spinnerInstituteType?.setSelection(0)
+        spinnerTradeManagement?.setSelection(0)
+        spinnerTradeExitPostAnalysisType?.setSelection(0)
+
+        spinnerMissedTradeType?.setSelection(0)
+        spinnerMentalState?.setSelection(0)
+        spinnerConfidenceLevel?.setSelection(0)
+
+        spinnerExitLevel?.setSelection(0)
+        spinnerSLLevel?.setSelection(0)
+        spinnerHTFLocation?.setSelection(0)
+
+
     }
 
 

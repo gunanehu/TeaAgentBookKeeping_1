@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -225,7 +226,6 @@
                     android:text="show Chart" />
 
 
-
                 <androidx.cardview.widget.CardView
                     android:id="@+id/layoutEntryAnalysis"
                     android:layout_width="match_parent"
@@ -246,11 +246,13 @@
                             android:text="Entry Zone Analysis"
                             android:textSize="20sp"
                             android:textStyle="bold" />
+
                         <WebView
                             android:id="@+id/webviewer"
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
                             android:onClick="onChartClicked"></WebView>
+
                         <LinearLayout
                             android:layout_width="match_parent"
 
@@ -619,6 +621,17 @@
                         android:layout_margin="10dp"
                         android:layout_weight="1"
                         android:text="Save"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/clearButton"
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:onClick="onclearButtonClick"
+                        android:text="Clear Entries"
                         android:textAllCaps="false" />
 
                     <Button
