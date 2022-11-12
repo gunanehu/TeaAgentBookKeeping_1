@@ -22,7 +22,7 @@ android {
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode 10
-    versionName "tradingjournal-00010-backtesting (reset spiner + texts )"
+    versionName "tradingjournal-00010 (reset spiner + texts )"
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
