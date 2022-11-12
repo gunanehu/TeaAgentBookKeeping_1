@@ -138,7 +138,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 cuustomerEntry.timestampTradePlanned = currentEntryTime
 
                 addAccountInfo(cuustomerEntry, toUpdate)
-                clearEditTextValues()
+                clearPreviousUserInputValusWithIntentExtras()
             } else {
                 showErrorMesage()
             }
@@ -223,7 +223,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     }
 
     fun onclearButtonClick(view: View?) {
-        clearEditTextValues()
+        clearPreviousUserInputValusWithIntentExtras()
     }
 
 
@@ -1007,7 +1007,12 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
     /* todo*/
 
-    private fun clearEditTextValues() {
+    private fun clearPreviousUserInputValusWithIntentExtras() {
+
+        toUpdate=false
+        balanceTx=null;
+        binding.saveCustomerButton.setText("Save")
+
         stockName = ""
         entryPrice = ""
         slPrice = ""
