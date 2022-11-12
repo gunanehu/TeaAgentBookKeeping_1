@@ -27,6 +27,7 @@ open class TradeAnalysis(
 
     //    Intermediate time frame
     var ITFTrend: String?,
+    var executionTrend: String?,
 
     //Execution time frame-type2/3
     var ExecutionZone: String?,
@@ -61,6 +62,8 @@ open class TradeAnalysis(
         "",
         "",
         "",
+        "", "",
+        
         "",
         "",
         "",
@@ -69,8 +72,7 @@ open class TradeAnalysis(
         "",
         "",
         "",
-        "",
-        "",""
+        "", ""
     )
 
     override fun toString(): String {
@@ -86,16 +88,16 @@ open class TradeAnalysis(
                   "HTFTrend=$HTFTrend   ," +
                   " ITFTrend=$ITFTrend   , " +*/
 
-               /* "ExecutionZone=$ExecutionZone    \n " +
-                "entryEmotion=$entryEmotion   \n" +
-                "note=$note                                                               " +
+                /* "ExecutionZone=$ExecutionZone    \n " +
+                 "entryEmotion=$entryEmotion   \n" +
+                 "note=$note                                                               " +
 
-                " tradeManagementType=$tradeManagementType," +
-                " tradeExitPostAnalysisTypeType=$tradeExitPostAnalysisTypeType," +
-                " missedTradeType=$missedTradeType, " +
-                "mentalState=$mentalState," +
-                " confidenceLevel=$confidenceLevel," +
-                "exitNote=$exitNote                                                               " +*/
+                 " tradeManagementType=$tradeManagementType," +
+                 " tradeExitPostAnalysisTypeType=$tradeExitPostAnalysisTypeType," +
+                 " missedTradeType=$missedTradeType, " +
+                 "mentalState=$mentalState," +
+                 " confidenceLevel=$confidenceLevel," +
+                 "exitNote=$exitNote                                                               " +*/
 //                GeneralUtils.convertDisplayDate(timestampTradeExited?.toLong()!!) + "\n" +
 
                 "" +

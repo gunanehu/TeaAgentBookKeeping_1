@@ -174,7 +174,8 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             tradeAnalysis?.exitNote
         val timestampTradeExited =
             tradeAnalysis?.timestampTradeExited
-
+        val executionTrend =
+            tradeAnalysis?.executionTrend
         val b =
             TradeAnalysis(
                 id,
@@ -193,6 +194,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 HTFLocation,
                 HTFTrend,
                 ITFTrend,
+                executionTrend,
                 ExecutionZone,
 
                 tradeManagementType,
@@ -216,7 +218,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         binding.buttonfromDate.setOnClickListener {
 
 
-            Toast.makeText(this,"in upcoming version",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "in upcoming version", Toast.LENGTH_SHORT).show()
 
             val c = Calendar.getInstance()
             val mYear = c[Calendar.YEAR]
@@ -261,7 +263,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     private suspend fun allTradeDetailsMutableLiveDataCallback() {
         saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer { it ->
             if (it != null) {
-                binding.buttonShareScreen.visibility=View.VISIBLE
+                binding.buttonShareScreen.visibility = View.VISIBLE
                 Log.d(TAG, "***************** ********************* customers $it")
 
                 customerString = convertBalanceTxToStringList(it as ArrayList<TradeAnalysis>)

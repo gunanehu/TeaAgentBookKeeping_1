@@ -60,9 +60,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     var spinnerExecutionZone: Spinner? = null
     var spinnerEntryEmotion: Spinner? = null
     var spinnerITFTrend: Spinner? = null
-
+    var spinnerExecutionTrend: Spinner? = null
 
     var balanceTx: TradeAnalysis? = null
+
+
     var spinner: Spinner? = null
     var dateTime = Calendar.getInstance()
 
@@ -88,7 +90,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         if (balanceTx != null) {
             toUpdate = true
             setIntentExtraTradeDetailsData(balanceTx)
-            binding.clearButton.visibility=View.GONE//dont allow clear if its not a fresh entry (ie, comming from list )
+            binding.clearButton.visibility =
+                View.GONE//dont allow clear if its not a fresh entry (ie, comming from list )
             binding.saveCustomerButton.setText("Update")
         }
 
@@ -105,6 +108,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         declareHigherTimeFarameLocationSpinner()
         declareHigherTimeFarameTrendSpinner()
         declareIntermediateTimeFarameTrendSpinner()
+        declareExecutionTimeFarameTrendSpinner()
         declareExecutionTimeFarameSpinner()
         declareEntryEmotionTypeSpinner()
         declareSpinnerSLLevel()
@@ -617,6 +621,54 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
+    var executionTrend: String? = null
+    private fun declareExecutionTimeFarameTrendSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinnerExecutionTrend)
+        spinnerExecutionTrend = spinner
+
+        val enumValues: List<Enum<*>> = ArrayList(
+            EnumSet.allOf(
+                TrendType::class.java
+            )
+        )
+
+        val adapter: ArrayAdapter<Any?> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                enumValues!! as List<Any?>
+            )
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                executionTrend = enumValues?.get(position).toString()
+//                    institutionType = accountType as String
+                Log.d(
+                    TAG,
+                    "onItemSelected executionTrend " + executionTrend
+                )
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                executionTrend = enumValues?.get(0).toString()
+                Log.d(
+                    TAG,
+                    "default onItemSelected executionTrend " + executionTrend
+                )
+            }
+        })
+        spinner.adapter = adapter
+
+        if (toUpdate && !balanceTx?.executionTrend.isNullOrEmpty()) {
+            val index: Int = TrendType.valueOf(balanceTx?.executionTrend.toString()).ordinal
+            spinner.setSelection(index)
+        }
+    }
+
+
     var intermediateTimeFarameTrend: String? = null
     private fun declareIntermediateTimeFarameTrendSpinner() {
         val spinner: Spinner = findViewById(R.id.spinnerITFTrend)
@@ -927,6 +979,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 it.HTFLocation,
                 it.HTFTrend,
                 it.ITFTrend,
+                it.executionTrend,
+
                 it.ExecutionZone,
                 it.entryEmotion,
 
@@ -970,6 +1024,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         higherTimeFarameLocation = ""
         higherTimeFarameTrend = ""
+        executionTrend = ""
         intermediateTimeFarameTrend = ""
         excutionTimeTimeFarameLocation = ""
         entryEmotion = ""
@@ -1011,7 +1066,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         spinnerExitLevel?.setSelection(0)
         spinnerSLLevel?.setSelection(0)
         spinnerHTFLocation?.setSelection(0)
-
+        spinnerExecutionTrend?.setSelection(0)
 
     }
 
@@ -1067,6 +1122,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             higherTimeFarameLocation,
             higherTimeFarameTrend,
             intermediateTimeFarameTrend,
+            executionTrend,
+
             excutionTimeTimeFarameLocation,
             entryEmotion,
 

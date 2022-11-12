@@ -69,29 +69,31 @@ public class ExcelUtils {
 
     private static void createRowHeader() {
         sheet = workbook.createSheet(EXCEL_SHEET_NAME);
-        sheet.setColumnWidth(0, (15 * 150));
-        sheet.setColumnWidth(1, (15 * 150));
-        sheet.setColumnWidth(2, (15 * 150));
-        sheet.setColumnWidth(3, (15 * 150));
-        sheet.setColumnWidth(4, (15 * 150));
-        sheet.setColumnWidth(5, (15 * 150));
+        sheet.setColumnWidth(0, (15 * 300));
+        sheet.setColumnWidth(1, (15 * 300));
+        sheet.setColumnWidth(2, (15 * 300));
+        sheet.setColumnWidth(3, (15 * 300));
+        sheet.setColumnWidth(4, (15 * 300));
+        sheet.setColumnWidth(5, (15 * 300));
         sheet.setColumnWidth(6, (15 * 800));
         sheet.setColumnWidth(7, (15 * 800));
-        sheet.setColumnWidth(8, (15 * 150));
-        sheet.setColumnWidth(9, (15 * 150));
+        sheet.setColumnWidth(8, (15 * 300));
+        sheet.setColumnWidth(9, (15 * 300));
 
 
-        sheet.setColumnWidth(10, (15 * 150));
-        sheet.setColumnWidth(11, (15 * 150));
-        sheet.setColumnWidth(12, (15 * 150));
-        sheet.setColumnWidth(13, (15 * 150));
-        sheet.setColumnWidth(14, (15 * 150));
-        sheet.setColumnWidth(15, (15 * 150));
-        sheet.setColumnWidth(16, (15 * 150));
-        sheet.setColumnWidth(17, (15 * 150));
-        sheet.setColumnWidth(18, (15 * 150));
+        sheet.setColumnWidth(10, (15 * 300));
+        sheet.setColumnWidth(11, (15 * 300));
+        sheet.setColumnWidth(12, (15 * 300));
+        sheet.setColumnWidth(13, (15 * 300));
+        sheet.setColumnWidth(14, (15 * 300));
+        sheet.setColumnWidth(15, (15 * 300));
+        sheet.setColumnWidth(16, (15 * 300));
+        sheet.setColumnWidth(17, (15 * 300));
+        sheet.setColumnWidth(18, (15 * 300));
         sheet.setColumnWidth(19, (15 * 400));
         sheet.setColumnWidth(20, (15 * 400));
+        sheet.setColumnWidth(21, (15 * 400));
+
     }
 
     /**
@@ -194,17 +196,20 @@ public class ExcelUtils {
         cell.setCellValue("ITF Trend");
 
 
+        cell.setCellStyle(headerCellStyle);
+        cell = headerRow.createCell(13);
+        cell.setCellValue("Execution Trend");
 //
 //            //Execution time frame-type2/3
 //            var ExecutionZone: String?,
 //            var entryEmotion: String?,
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(12);
+        cell = headerRow.createCell(14);
         cell.setCellValue("Execution Zone");
 
 
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(13);
+        cell = headerRow.createCell(15);
         cell.setCellValue("Entry Emotion");
 
 //            var tradeManagementType: String?,
@@ -214,34 +219,34 @@ public class ExcelUtils {
 //            var confidenceLevel: String?,
 //            var exitNote: String?,
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(14);
+        cell = headerRow.createCell(16);
         cell.setCellValue("TradeManagement Type");
 
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(15);
+        cell = headerRow.createCell(17);
         cell.setCellValue("ExitPostAnalysis Type");
 
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(16);
+        cell = headerRow.createCell(18);
         cell.setCellValue("Missed Trade Type");
 
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(17);
+        cell = headerRow.createCell(19);
         cell.setCellValue("Confidence Level");
 
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(18);
+        cell = headerRow.createCell(20);
         cell.setCellValue("Execution Zone");
 
 
 //            var timestampTradePlanned: String?,
 //            var timestampTradeExited: String?,
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(19);
+        cell = headerRow.createCell(21);
         cell.setCellValue("Timestamp TradePlanned");
 
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(20);
+        cell = headerRow.createCell(22);
         cell.setCellValue("Timestamp TradeExited");
         cell.setCellStyle(headerCellStyle);
 
@@ -267,10 +272,8 @@ public class ExcelUtils {
             cell = rowData.createCell(1);
             cell.setCellValue(dataList.get(i).isBuy());
 
-
             cell = rowData.createCell(2);
             cell.setCellValue(dataList.get(i).getTradeIncomeType());
-
 
             cell = rowData.createCell(3);
             cell.setCellValue(dataList.get(i).getEntryPrice());
@@ -314,34 +317,31 @@ public class ExcelUtils {
             cell = rowData.createCell(12);
             cell.setCellValue(dataList.get(i).getExecutionZone());
             cell = rowData.createCell(13);
-            cell.setCellValue(dataList.get(i).getEntryEmotion());
-//            var tradeManagementType: String?,
-//            var tradeExitPostAnalysisTypeType: String?,
-//            var missedTradeType: String?,
-//            var mentalState: String?,
-//            var confidenceLevel: String?,
-//            var exitNote: String?,
+            cell.setCellValue(dataList.get(i).getExecutionTrend());
             cell = rowData.createCell(14);
-            cell.setCellValue(dataList.get(i).getTradeManagementType());
+            cell.setCellValue(dataList.get(i).getEntryEmotion());
+
             cell = rowData.createCell(15);
-            cell.setCellValue(dataList.get(i).getTradeExitPostAnalysisTypeType());
+            cell.setCellValue(dataList.get(i).getTradeManagementType());
             cell = rowData.createCell(16);
-            cell.setCellValue(dataList.get(i).getMissedTradeType());
+            cell.setCellValue(dataList.get(i).getTradeExitPostAnalysisTypeType());
             cell = rowData.createCell(17);
-            cell.setCellValue(dataList.get(i).getConfidenceLevel());
+            cell.setCellValue(dataList.get(i).getMissedTradeType());
             cell = rowData.createCell(18);
+            cell.setCellValue(dataList.get(i).getConfidenceLevel());
+            cell = rowData.createCell(19);
             cell.setCellValue(dataList.get(i).getExecutionZone());
 
 
 //            var timestampTradePlanned: String?,
 //            var timestampTradeExited: String?,
-            cell = rowData.createCell(19);
+            cell = rowData.createCell(20);
             if (dataList.get(i).getTimestampTradePlanned() != null && !dataList.get(i).getTimestampTradePlanned().isEmpty()) {
                 String date1 = dataList.get(i).getTimestampTradePlanned();
                 cell.setCellValue(GeneralUtils.Companion.convertDisplayDate(Long.parseLong(date1)));
             }
 
-            cell = rowData.createCell(20);
+            cell = rowData.createCell(21);
             if (dataList.get(i).getTimestampTradeExited() != null && !dataList.get(i).getTimestampTradeExited().isEmpty()) {
                 String date2 = dataList.get(i).getTimestampTradeExited();
                 cell.setCellValue(GeneralUtils.Companion.convertDisplayDate(Long.parseLong(date2)));

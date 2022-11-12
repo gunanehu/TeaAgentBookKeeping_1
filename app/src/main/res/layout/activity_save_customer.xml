@@ -65,11 +65,13 @@
 
                         <TextView
                             android:layout_width="match_parent"
+
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="Trade Income Type " />
+                            android:text="Trade Income Type "
+                            android:textSize="20sp" />
 
                         <Spinner
                             android:id="@+id/spinnerInstituteType"
@@ -152,6 +154,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="SLPrice"
+
                                 android:inputType="numberDecimal" />
 
                             <TextView
@@ -191,10 +194,12 @@
 
                             <TextView
                                 android:id="@+id/tvProfitPercent"
+
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
-                                android:layout_weight="1" />
+                                android:layout_weight="1"
+                                android:textSize="20sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerExitLevel"
@@ -270,7 +275,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:text="HTFLocation"
-                                android:textSize="15sp" />
+                                android:textSize="20sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerHTFLocation"
@@ -301,7 +306,7 @@
                                 android:hint="NetBAnkingUserName"
 
                                 android:text="HigherTFTrend"
-                                android:textSize="15sp" />
+                                android:textSize="20sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerHTFTrend"
@@ -330,10 +335,37 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:text="ITFTrend"
-                                android:textSize="15sp" />
+                                android:textSize="20sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerITFTrend"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1" />
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:id="@+id/tvExecutionTrend"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:ems="10"
+                                android:text="Execution Trend"
+                                android:textSize="20sp" />
+
+                            <Spinner
+                                android:id="@+id/spinnerExecutionTrend"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
@@ -360,7 +392,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:text="ExecutionZone"
-                                android:textSize="15sp" />
+                                android:textSize="20sp" />
 
 
                             <Spinner
@@ -389,7 +421,7 @@
                                 android:ems="10"
 
                                 android:text="Confidence Level"
-                                android:textSize="15sp" />
+                                android:textSize="20sp" />
 
 
                             <Spinner
@@ -419,7 +451,7 @@
                                 android:ems="10"
                                 android:text="EntryEmotion"
 
-                                android:textSize="15sp" />
+                                android:textSize="20sp" />
 
 
                             <Spinner
@@ -474,7 +506,8 @@
                         android:layout_margin="10dp"
                         android:gravity="center"
                         android:text="Exit Analysis"
-                        android:textSize="15sp"
+                        android:textSize="20sp"
+
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -493,7 +526,7 @@
                             android:ems="10"
                             android:text="Trade management status"
 
-                            android:textSize="15sp" />
+                            android:textSize="20sp" />
 
                         <Spinner
                             android:id="@+id/spinnerTradeManagement"
@@ -522,7 +555,7 @@
                             android:ems="10"
                             android:hint="NetBAnkingUserName"
                             android:text="TradeExitPostAnalysisType"
-                            android:textSize="15sp" />
+                            android:textSize="20sp" />
 
                         <Spinner
                             android:id="@+id/spinnerTradeExitPostAnalysisType"
@@ -548,7 +581,8 @@
                             android:layout_margin="10dp"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:text="Missed Trade Reason" />
+                            android:text="Missed Trade Reason"
+                            android:textSize="20sp" />
 
                         <Spinner
                             android:id="@+id/spinnerMissedTradeType"
@@ -571,11 +605,13 @@
 
                         <TextView
                             android:layout_width="match_parent"
+
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:text="Mental State" />
+                            android:text="Mental State"
+                            android:textSize="20sp" />
 
 
                         <Spinner
