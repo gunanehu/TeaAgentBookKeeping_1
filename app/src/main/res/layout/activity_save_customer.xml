@@ -222,6 +222,13 @@
                     android:layout_margin="5dp"
                     android:onClick="onChartClicked"
                     android:text="show Chart" />
+
+                <WebView
+                    android:id="@+id/webviewer"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:onClick="onChartClicked"></WebView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/layoutEntryAnalysis"
 
@@ -433,12 +440,6 @@
                             android:hint="Entry note" />
                     </LinearLayout>
 
-                    <WebView
-                        android:id="@+id/webviewer"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:onClick="onChartClicked"></WebView>
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>

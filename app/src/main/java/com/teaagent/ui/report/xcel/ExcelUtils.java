@@ -90,8 +90,8 @@ public class ExcelUtils {
         sheet.setColumnWidth(16, (15 * 150));
         sheet.setColumnWidth(17, (15 * 150));
         sheet.setColumnWidth(18, (15 * 150));
-        sheet.setColumnWidth(19, (15 * 150));
-        sheet.setColumnWidth(20, (15 * 150));
+        sheet.setColumnWidth(19, (15 * 400));
+        sheet.setColumnWidth(20, (15 * 400));
     }
 
     /**

@@ -37,17 +37,12 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     val TAG: String = "SaveInstitutionActivity"
 
     private lateinit var stockName: String
-//    private lateinit var institutionType: String  //
+    private lateinit var entryPrice: String
+    private lateinit var slPrice: String
+    private lateinit var exitPrice: String
+    private lateinit var note: String
+    private lateinit var exitNote: String
 
-    private lateinit var phoneUserName: String  //= binding.editTextPhoneUserName.text.toString()
-    private lateinit var entryPrice: String  //= binding.editTextInstituteCode.text.toString()
-    private lateinit var slPrice: String  //= binding.editTextInstituteAddr.text.toString()
-
-    private lateinit var exitPrice: String  //= binding.editTextAcNo.text.toString()
-    private lateinit var note: String  //= binding.editTextNetBAnkingUserNAme.text.toString()
-    private lateinit var exitNote: String  //= binding.editTextNetBAnkingPwrd.text.toString()
-    private lateinit var atmNo: String  //= binding.editTextAtmNo.text.toString()
-    private lateinit var atmPin: String  //
     var balanceTx: TradeAnalysis? = null
     var spinner: Spinner? = null
     var dateTime = Calendar.getInstance()
@@ -118,6 +113,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 cuustomerEntry.timestampTradePlanned = currentEntryTime
 
                 addAccountInfo(cuustomerEntry, toUpdate)
+                clearEditTextValues()
             } else {
                 showErrorMesage()
             }
@@ -220,7 +216,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
     }
 
-    fun onChartClicked(view: View?){
+    fun onChartClicked(view: View?) {
 
         val popUpActivity = Intent(this, PopUpActivity::class.java)
 
@@ -231,6 +227,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         startActivity(popUpActivity)
     }
+
     private fun setIntentExtraTradeDetailsData(balanceTx: TradeAnalysis?) {
 
         binding.editTextStock.setText(balanceTx?.stockName)
@@ -911,15 +908,48 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
     }
 
-    /* todo
+    /* todo*/
+
     private fun clearEditTextValues() {
-         binding.editTextStock.setText("")
-         binding.todaysDate.setText("")
-         stockName = ""
-         institutionType = ""
-         dateTime.timeInMillis = 0
-         spinner?.setSelection(0)
-     }*/
+        stockName = ""
+        entryPrice = ""
+        slPrice = ""
+        exitPrice = ""
+        note = ""
+        exitNote = ""
+
+
+        sLLevel= ""
+        targetLevel= ""
+
+        sLLevel= ""
+        targetLevel= ""
+
+        higherTimeFarameLocation= ""
+        higherTimeFarameTrend= ""
+        intermediateTimeFarameTrend= ""
+        excutionTimeTimeFarameLocation= ""
+        entryEmotion= ""
+
+        tradeManagementType= ""
+        tradeExitPostAnalysisTypeType= ""
+        missedTradeType= ""
+        mentalState= ""
+        confidenceLevel= ""
+        exitNote= ""
+
+        currentEntryTime= ""
+        currentExitTime= ""
+        note= ""
+
+        binding.editTextStock.setText("")
+        binding.editTextEntryPrice.setText("")
+        binding.etSLPrice.setText("")
+        binding.etExitPrice.setText("")
+        binding.etNote.setText("")
+        dateTime.timeInMillis = 0
+        spinner?.setSelection(0)
+    }
 
 
 /*
