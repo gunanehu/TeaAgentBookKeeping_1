@@ -36,20 +36,20 @@ object FirebaseUtil {
     private var tableTimerLogEntry: CollectionReference? = null
 
     init {
-       /* tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry")
+        tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry")
         tablePhoneUser = firestoreDb.collection("PhoneUser")
         tableCollectionEntry = firestoreDb.collection("BalanceTx")
-        tableTimerLogEntry = firestoreDb.collection("TimerLog")*/
+        tableTimerLogEntry = firestoreDb.collection("TimerLog")
 
         /* tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-prod")
          tablePhoneUser = firestoreDb.collection("PhoneUser-prod")
          tableCollectionEntry = firestoreDb.collection("BalanceTx-prod")
          tableTimerLogEntry = firestoreDb.collection("TimerLog-prod")*/
 
-         tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-backtesting")
+/*         tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-backtesting")
        tablePhoneUser = firestoreDb.collection("PhoneUser-backtesting")
        tableCollectionEntry = firestoreDb.collection("BalanceTx-backtesting")
-       tableTimerLogEntry = firestoreDb.collection("TimerLog-backtesting")
+       tableTimerLogEntry = firestoreDb.collection("TimerLog-backtesting")*/
 
         //TODO use only one in lifetime for that user
 //        addPhoneUser(phoneUser)

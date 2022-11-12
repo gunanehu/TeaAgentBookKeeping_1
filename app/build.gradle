@@ -21,8 +21,8 @@ android {
     applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 9
-    versionName "tradingjournal-0009-backtesting (show trading view chart )"
+    versionCode 10
+    versionName "tradingjournal-00010-backtesting (reset spiner + texts )"
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
