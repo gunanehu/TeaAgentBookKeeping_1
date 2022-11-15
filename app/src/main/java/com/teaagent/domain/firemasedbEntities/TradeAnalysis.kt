@@ -44,7 +44,9 @@ open class TradeAnalysis(
     var timestampTradePlanned: String?,
     var timestampTradeExited: String?,
 
-    var note: String?
+    var note: String?,
+
+    val quantity: Long?
 
 ) :
     Serializable {
@@ -72,7 +74,7 @@ open class TradeAnalysis(
         "",
         "",
         "",
-        "", ""
+        "", "",0
     )
 
     override fun toString(): String {
@@ -84,6 +86,9 @@ open class TradeAnalysis(
                 " EntryPrice  = $EntryPrice   " +
                 " SLPrice = $SLPrice    " +
                 " ExitPrice = $ExitPrice  \n" +
+                " quantity = $quantity  \n" +
+                " sl val = $quantity*( $EntryPrice -$EntryPrice) \n" +
+                " profit val = $quantity *$quantity*( $ExitPrice -$EntryPrice) \n" +
                 /*  " HTFLocation=$HTFLocation   , " +
                   "HTFTrend=$HTFTrend   ," +
                   " ITFTrend=$ITFTrend   , " +*/

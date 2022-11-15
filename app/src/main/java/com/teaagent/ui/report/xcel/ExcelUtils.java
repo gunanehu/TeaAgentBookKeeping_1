@@ -93,6 +93,7 @@ public class ExcelUtils {
         sheet.setColumnWidth(19, (15 * 400));
         sheet.setColumnWidth(20, (15 * 400));
         sheet.setColumnWidth(21, (15 * 400));
+        sheet.setColumnWidth(22, (15 * 300));
 
     }
 
@@ -225,8 +226,9 @@ public class ExcelUtils {
         cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(17);
         cell.setCellValue("ExitPostAnalysis Type");
-
         cell.setCellStyle(headerCellStyle);
+
+
         cell = headerRow.createCell(18);
         cell.setCellValue("Missed Trade Type");
 
@@ -234,23 +236,26 @@ public class ExcelUtils {
         cell = headerRow.createCell(19);
         cell.setCellValue("Confidence Level");
 
-        cell.setCellStyle(headerCellStyle);
+      /*  cell.setCellStyle(headerCellStyle);
         cell = headerRow.createCell(20);
-        cell.setCellValue("Execution Zone");
+        cell.setCellValue("Execution Zone");*/
 
 
 //            var timestampTradePlanned: String?,
 //            var timestampTradeExited: String?,
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(21);
+        cell = headerRow.createCell(20);
         cell.setCellValue("Timestamp TradePlanned");
 
         cell.setCellStyle(headerCellStyle);
-        cell = headerRow.createCell(22);
+        cell = headerRow.createCell(21);
         cell.setCellValue("Timestamp TradeExited");
         cell.setCellStyle(headerCellStyle);
 
-
+        cell.setCellStyle(headerCellStyle);
+        cell = headerRow.createCell(22);
+        cell.setCellValue("Quantity");
+        cell.setCellStyle(headerCellStyle);
     }
 
     /**
@@ -314,27 +319,35 @@ public class ExcelUtils {
 //            //Execution time frame-type2/3
 //            var ExecutionZone: String?,
 //            var entryEmotion: String?,
-            cell = rowData.createCell(12);
-            cell.setCellValue(dataList.get(i).getExecutionZone());
+
             cell = rowData.createCell(13);
             cell.setCellValue(dataList.get(i).getExecutionTrend());
             cell = rowData.createCell(14);
-            cell.setCellValue(dataList.get(i).getEntryEmotion());
+            cell.setCellValue(dataList.get(i).getExecutionZone());
+
 
             cell = rowData.createCell(15);
-            cell.setCellValue(dataList.get(i).getTradeManagementType());
+            cell.setCellValue(dataList.get(i).getEntryEmotion());
+
             cell = rowData.createCell(16);
-            cell.setCellValue(dataList.get(i).getTradeExitPostAnalysisTypeType());
+            cell.setCellValue(dataList.get(i).getTradeManagementType());
+
             cell = rowData.createCell(17);
-            cell.setCellValue(dataList.get(i).getMissedTradeType());
+            cell.setCellValue(dataList.get(i).getTradeExitPostAnalysisTypeType());
+
             cell = rowData.createCell(18);
-            cell.setCellValue(dataList.get(i).getConfidenceLevel());
+            cell.setCellValue(dataList.get(i).getMissedTradeType());
+
             cell = rowData.createCell(19);
-            cell.setCellValue(dataList.get(i).getExecutionZone());
+            cell.setCellValue(dataList.get(i).getConfidenceLevel());
+
+            /*cell = rowData.createCell(19);
+            cell.setCellValue(dataList.get(i).getExecutionZone());*/
 
 
 //            var timestampTradePlanned: String?,
 //            var timestampTradeExited: String?,
+
             cell = rowData.createCell(20);
             if (dataList.get(i).getTimestampTradePlanned() != null && !dataList.get(i).getTimestampTradePlanned().isEmpty()) {
                 String date1 = dataList.get(i).getTimestampTradePlanned();
@@ -346,6 +359,10 @@ public class ExcelUtils {
                 String date2 = dataList.get(i).getTimestampTradeExited();
                 cell.setCellValue(GeneralUtils.Companion.convertDisplayDate(Long.parseLong(date2)));
             }
+
+            cell = rowData.createCell(22);
+            cell.setCellValue(dataList.get(i).getQuantity());
+
 
         }
     }

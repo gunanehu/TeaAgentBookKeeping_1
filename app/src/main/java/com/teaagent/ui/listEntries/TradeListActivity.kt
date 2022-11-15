@@ -176,6 +176,8 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             tradeAnalysis?.timestampTradeExited
         val executionTrend =
             tradeAnalysis?.executionTrend
+        val quantity =
+            tradeAnalysis?.quantity
         val b =
             TradeAnalysis(
                 id,
@@ -208,7 +210,8 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
                 timestampTradePlanned,
                 timestampTradeExited,
-                note
+                note,
+                quantity
 
             )
         return b.toString()
@@ -216,7 +219,6 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     private fun buttonCalender() {
         binding.buttonfromDate.setOnClickListener {
-
 
             Toast.makeText(this, "in upcoming version", Toast.LENGTH_SHORT).show()
 

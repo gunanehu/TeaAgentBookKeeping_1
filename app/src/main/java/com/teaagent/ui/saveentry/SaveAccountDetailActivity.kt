@@ -26,6 +26,7 @@ import com.teaagent.ui.listEntries.TradeListActivity
 import util.GeneralUtils
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 
 /**
@@ -42,6 +43,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private lateinit var exitPrice: String
     private lateinit var note: String
     private lateinit var exitNote: String
+    private var quantity by Delegates.notNull<Long>()
+
 
     //    spinners
     var spinnerInstituteType: Spinner? = null
@@ -103,29 +106,33 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         val phoneId: String? = TeaAgentsharedPreferenceUtil.getAppId()
 
 //        loadWebviewTradingViewchart("AMD", "D")
+        try {
+            declareIncomeTypeSpinner()
+            declareHigherTimeFarameLocationSpinner()
+            declareHigherTimeFarameTrendSpinner()
+            declareIntermediateTimeFarameTrendSpinner()
+            declareExecutionTimeFarameTrendSpinner()
+            declareExecutionTimeFarameSpinner()
+            declareEntryEmotionTypeSpinner()
+            declareSpinnerSLLevel()
+            declareSpinnerTargetLevel()
 
-        declareIncomeTypeSpinner()
-        declareHigherTimeFarameLocationSpinner()
-        declareHigherTimeFarameTrendSpinner()
-        declareIntermediateTimeFarameTrendSpinner()
-        declareExecutionTimeFarameTrendSpinner()
-        declareExecutionTimeFarameSpinner()
-        declareEntryEmotionTypeSpinner()
-        declareSpinnerSLLevel()
-        declareSpinnerTargetLevel()
-
-        declareConfidenceLevelSpinner()
-        declareMentalStateSpinner()
-        declareMissedTradeSpinner()
-        declareTradeExitPostAnalysisTypeSpinner()
-        declareTradeManagementTypeSpinner()
-
+            declareConfidenceLevelSpinner()
+            declareMentalStateSpinner()
+            declareMissedTradeSpinner()
+            declareTradeExitPostAnalysisTypeSpinner()
+            declareTradeManagementTypeSpinner()
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "declareSpinner " + e.toString())
+        }
         registerEditTextChangeListenerrs()
 
         if (toUpdate) {
             setProfitPercentage()
             setSLPercentage()
 
+            setProfitwithQuantity()
+            setSLwithQuantity()
         }
         // Set up button click events
         binding.saveCustomerButton.setOnClickListener {
@@ -265,18 +272,23 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.editTextEntryPrice.setText(balanceTx?.EntryPrice)
         binding.etSLPrice.setText(balanceTx?.SLPrice)
         binding.etExitPrice.setText(balanceTx?.ExitPrice)
+        binding.etQuantity.setText("" + balanceTx?.quantity)
 
         binding.etNote.setText(balanceTx?.note)
         binding.etExitNote.setText(balanceTx?.exitNote)
 
         binding.toggleBuySell.isChecked = balanceTx?.isBuy!!
         isBuy = balanceTx.isBuy
+
+
     }
 
     private fun registerEditTextChangeListenerrs() {
         binding.etSLPrice.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 setSLPercentage()
+                setSLwithQuantity()
+
             }
 
             override fun beforeTextChanged(
@@ -290,7 +302,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 before: Int, count: Int
             ) {
                 setSLPercentage()
-
+                setSLwithQuantity()
             }
         })
 
@@ -299,6 +311,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable) {
                 setProfitPercentage()
+                setProfitwithQuantity()
             }
 
             override fun beforeTextChanged(
@@ -312,20 +325,30 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 before: Int, count: Int
             ) {
                 setProfitPercentage()
+                setProfitwithQuantity()
             }
         })
 
 
     }
 
-    private fun setSLPercentage() {
-        val loss = calculateSLPercentage()
-        binding.tvSLPercent.setText(loss.toString())
+    private fun  setSLwithQuantity(){
+        val sl = calculateSLwithQuantity()
+        binding.tvSLwithQntty.setText(""+sl)
     }
 
+    private fun setSLPercentage() {
+        val loss = calculateSLPercentage()
+        binding.tvSLPercent.setText(""+loss+" %" )
+    }
+
+    private fun  setProfitwithQuantity(){
+        val p:Float = calculateProfitwithQuantity()
+        binding.tvProfitwithQntty.setText(""+p)
+    }
     private fun setProfitPercentage() {
         val profit = calculateProfitPercentage()
-        binding.tvProfitPercent.setText(profit.toString() + " %")
+        binding.tvProfitPercent.setText(""+profit+" %" )
 
     }
 
@@ -341,7 +364,19 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         return 0F
     }
 
+    private fun calculateProfitwithQuantity(): Float {
+        try {
+            val exit = binding.etExitPrice.text?.toString()?.toFloat()
+            val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
+            val qntty = binding.etQuantity.text?.toString()?.toLong()
 
+            val profit =( exit!! - entry!!)* qntty!!
+            return profit
+        } catch (e: NumberFormatException) {
+
+        }
+        return 0F
+    }
     private fun calculateSLPercentage(): Float {
         try {
             val sl = binding.etSLPrice.text?.toString()?.toFloat()
@@ -354,9 +389,22 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
         return 0F
     }
+    private fun calculateSLwithQuantity(): Float {
+        try {
+            val sl = binding.etSLPrice.text?.toString()?.toFloat()
+            val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
+            val qntty = binding.etQuantity.text?.toString()?.toLong()
 
+            val slval =( sl!! - entry!!)* qntty!!
+            return slval
+        } catch (e: NumberFormatException) {
+
+        }
+        return 0F
+    }
     var targetLevel: String? = null
     private fun declareSpinnerTargetLevel() {
+
         val spinner: Spinner = findViewById(R.id.spinnerExitLevel)
         spinnerExitLevel = spinner
 
@@ -396,6 +444,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             val index: Int = TargetLevel.valueOf(balanceTx?.targetLevel.toString()).ordinal
             spinner.setSelection(index)
         }
+
     }
 
     var sLLevel: String? = null
@@ -993,7 +1042,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
                 it.timestampTradePlanned,
                 it.timestampTradeExited,
-                it.note
+                it.note,
+                it.quantity
             )
         }
         //            setEditTextValues(customer)
@@ -1009,8 +1059,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
     private fun clearPreviousUserInputValusWithIntentExtras() {
 
-        toUpdate=false
-        balanceTx=null;
+        toUpdate = false
+        balanceTx = null;
         binding.saveCustomerButton.setText("Save")
 
         stockName = ""
@@ -1044,6 +1094,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         currentEntryTime = ""
         currentExitTime = ""
         note = ""
+        quantity = 0
 
         binding.editTextStock.setText("")
         binding.editTextEntryPrice.setText("")
@@ -1051,6 +1102,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.etExitPrice.setText("")
         binding.etNote.setText("")
         binding.etExitNote.setText("")
+        binding.etQuantity.setText("")
 
         dateTime.timeInMillis = 0
 
@@ -1106,6 +1158,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         note = binding.etNote.text.toString()
         exitNote = binding.etExitNote.text.toString()
+        if (!binding.etQuantity.text.toString().isNullOrEmpty()) {
+            quantity = binding.etQuantity.text.toString().toLong()
+        }
 //spinnser for exit -end
 
         return TradeAnalysis(
@@ -1141,8 +1196,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
             currentEntryTime,
             currentExitTime,
-            note
-
+            note,
+            quantity
         )
     }
 
