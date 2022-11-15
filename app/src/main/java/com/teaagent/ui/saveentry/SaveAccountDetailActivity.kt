@@ -26,7 +26,6 @@ import com.teaagent.ui.listEntries.TradeListActivity
 import util.GeneralUtils
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.properties.Delegates
 
 
 /**
@@ -43,7 +42,7 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private lateinit var exitPrice: String
     private lateinit var note: String
     private lateinit var exitNote: String
-    private var quantity by Delegates.notNull<Long>()
+    private var quantity: Long = 0
 
 
     //    spinners
@@ -330,25 +329,49 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         })
 
 
+
+        binding.etQuantity.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                setSLwithQuantity()
+                setProfitwithQuantity()
+
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                setSLwithQuantity()
+                setProfitwithQuantity()
+
+            }
+        })
     }
 
-    private fun  setSLwithQuantity(){
+    private fun setSLwithQuantity() {
         val sl = calculateSLwithQuantity()
-        binding.tvSLwithQntty.setText(""+sl)
+        binding.tvSLwithQntty.setText("" + sl)
     }
 
     private fun setSLPercentage() {
         val loss = calculateSLPercentage()
-        binding.tvSLPercent.setText(""+loss+" %" )
+        binding.tvSLPercent.setText("" + loss + " %")
     }
 
-    private fun  setProfitwithQuantity(){
-        val p:Float = calculateProfitwithQuantity()
-        binding.tvProfitwithQntty.setText(""+p)
+    private fun setProfitwithQuantity() {
+        val p: Float = calculateProfitwithQuantity()
+        binding.tvProfitwithQntty.setText("" + p)
     }
+
     private fun setProfitPercentage() {
         val profit = calculateProfitPercentage()
-        binding.tvProfitPercent.setText(""+profit+" %" )
+        binding.tvProfitPercent.setText("" + profit + " %")
 
     }
 
@@ -370,13 +393,14 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
             val qntty = binding.etQuantity.text?.toString()?.toLong()
 
-            val profit =( exit!! - entry!!)* qntty!!
+            val profit = (exit!! - entry!!) * qntty!!
             return profit
         } catch (e: NumberFormatException) {
 
         }
         return 0F
     }
+
     private fun calculateSLPercentage(): Float {
         try {
             val sl = binding.etSLPrice.text?.toString()?.toFloat()
@@ -389,19 +413,21 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         }
         return 0F
     }
+
     private fun calculateSLwithQuantity(): Float {
         try {
             val sl = binding.etSLPrice.text?.toString()?.toFloat()
             val entry = binding.editTextEntryPrice.text?.toString()?.toFloat()
             val qntty = binding.etQuantity.text?.toString()?.toLong()
 
-            val slval =( sl!! - entry!!)* qntty!!
+            val slval = (sl!! - entry!!) * qntty!!
             return slval
         } catch (e: NumberFormatException) {
 
         }
         return 0F
     }
+
     var targetLevel: String? = null
     private fun declareSpinnerTargetLevel() {
 
