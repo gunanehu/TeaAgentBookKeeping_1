@@ -124,42 +124,13 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         val filteredList = ArrayList<TradeAnalysis>()
 
         for (currentSport in tradeList!!) {
-            if (currentSport.stockName?.contains(filterQuery) == true) {
+            if (currentSport.stockName?.toLowerCase(Locale.getDefault())?.contains(filterQuery) == true) {
                 filteredList.add(currentSport)
             }
         }
         return filteredList
     }
 
-
-  /*  private fun registerEditTextChangeListenerrs() {
-        binding.search.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                val sl = binding.search.text?.toString()?.toFloat()
-
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            *//*@RequiresApi(Build.VERSION_CODES.N)
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-                val sl = binding.search.text?.toString()?.toFloat()
-                tradeList?.stream()?.filter { x -> tradeList?.contains(x) == true }?.forEach { x ->
-                    System.out.println(
-                        //todo to set to adapet
-                    )
-                }
-
-            }*//*
-        })
-    }*/
     /*  private fun getAccountDetails() {
           lifecycleScope.launch {
               showProgressDialog()
