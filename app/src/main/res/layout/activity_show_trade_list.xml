@@ -147,6 +147,10 @@
         android:text="Share xls"
         android:textAllCaps="false"
         android:visibility="gone" />
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></EditText>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"

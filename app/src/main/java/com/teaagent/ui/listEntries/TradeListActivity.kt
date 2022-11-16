@@ -3,14 +3,15 @@ package com.teaagent.ui.listEntries
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,7 +45,9 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     // Repository
 
-    var recycleViewAdapter: CustomAdapter? = null
+//        var recycleViewAdapter: CustomAdapter? = null
+    var recycleViewAdapter: TradeListNewAdapter? = null
+
 
     //    var recycleViewAdapter: ItemAdapter? = null
     var dateTime = Calendar.getInstance()
@@ -62,7 +65,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     }
 
     var recyclerview: RecyclerView? = null
-
+    var search: EditText? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -71,7 +74,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
         recyclerview = binding.list
-
+        search = binding.search
         recyclerview!!.layoutManager = LinearLayoutManager(this)
 
         setContentView(view)
@@ -84,8 +87,40 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         buttonCalender()
         sendClick()
 
+        registerEditTextChangeListenerrs()
     }
+   /* fun onTradeListRowClicked(view: View?,position: Int) {
+        clearPreviousUserInputValusWithIntentExtras()
+    }*/
 
+    private fun registerEditTextChangeListenerrs() {
+        binding.search.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                val sl = binding.search.text?.toString()?.toFloat()
+
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                val sl = binding.search.text?.toString()?.toFloat()
+                tradeList?.stream()?.filter { x -> tradeList?.contains(x) == true }?.forEach { x ->
+                    System.out.println(
+                        //todo to set to adapet
+                    )
+                }
+
+            }
+        })
+    }
     /*  private fun getAccountDetails() {
           lifecycleScope.launch {
               showProgressDialog()
@@ -259,7 +294,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
      }
  */
     var customerString: ArrayList<String>? = null
-    var customers: ArrayList<TradeAnalysis>? = null
+    var tradeList: ArrayList<TradeAnalysis>? = null
 
 
     private suspend fun allTradeDetailsMutableLiveDataCallback() {
@@ -268,15 +303,19 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 binding.buttonShareScreen.visibility = View.VISIBLE
                 Log.d(TAG, "***************** ********************* customers $it")
 
+
+
+
                 customerString = convertBalanceTxToStringList(it as ArrayList<TradeAnalysis>)
-                customers = it /*as ArrayList<BalanceTx>*/
-//            recycleViewAdapter = ItemAdapter(customerString!!)
-                recycleViewAdapter = CustomAdapter(customerString, this)
+                tradeList = it
 
+               /* recycleViewAdapter = CustomAdapter(customerString, this)
+                recyclerview?.adapter = recycleViewAdapter*/
+
+                recycleViewAdapter = TradeListNewAdapter(it, this)
                 recyclerview?.adapter = recycleViewAdapter
-//            recycleViewAdapter!!.setClickListener(this);
 
-                binding.totalAmount.setText("Total amount : " + total)
+//                binding.totalAmount.setText("Total amount : " + total)
 
 
             }
@@ -313,7 +352,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     private fun sendClick() {
         binding.buttonShareScreen.setOnClickListener {
-            val dataList = customers as ArrayList<TradeAnalysis>
+            val dataList = tradeList as ArrayList<TradeAnalysis>
             ExcelUtils.exportDataIntoWorkbook(this, Constants.EXCEL_FILE_NAME, dataList)
             dismissProgressDialog()
         }
@@ -370,7 +409,27 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         spinner.adapter = adapter
     }
 
+    /* fun updateList(list: List<DataHolder?>) {
+         displayedList = list
+         notifyDataSetChanged()
+     }
 
+     @OnTextChanged(R.id.feature_manager_search)
+     protected fun onTextChanged(text: CharSequence) {
+         filter(text.toString())
+     }
+     fun filter(text: String?) {
+         val temp: MutableList<DataHolder> = ArrayList()
+         for (d in displayedList) {
+             //or use .equal(text) with you want equal match
+             //use .toLowerCase() for better matches
+             if (d.getEnglish().contains(text)) {
+                 temp.add(d)
+             }
+         }
+         //update recyclerview
+         updateList(temp)
+     }*/
     var institutionType: String? = null
 
     private fun declareTypeSpinner() {
@@ -408,12 +467,22 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
 
     override fun onClick(position: Int) {
-        val balanceTx: TradeAnalysis? = customers?.get(position)
+
+
+
+        val balanceTx: TradeAnalysis? = tradeList?.get(position)
         val txId = balanceTx?.id
+
+                    Toast.makeText(
+                this,
+                "id "+txId,
+                Toast.LENGTH_LONG
+            ).show()
+
+
         var task: Task<DocumentSnapshot>? = FirebaseUtil.getTxById(txId!!)
         task?.addOnSuccessListener(OnSuccessListener { it ->
             it.data
-
 
             val i = Intent(this, SaveAccountDetailActivity::class.java)
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -429,11 +498,11 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         })
         task?.addOnCompleteListener(OnCompleteListener { it ->
 
-            Toast.makeText(
-                this,
-                "completed ",
-                Toast.LENGTH_LONG
-            ).show()
+//            Toast.makeText(
+//                this,
+//                "completed ",
+//                Toast.LENGTH_LONG
+//            ).show()
         })
 
 

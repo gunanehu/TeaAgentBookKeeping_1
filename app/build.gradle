@@ -21,8 +21,10 @@ android {
     applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 10
-    versionName "tradingjournal-00010- backtet (reset spiner + texts )"
+    versionCode 12
+//    versionName "tradingjournal-00011- backtet (added quantity )"
+    versionName "tradingjournal-00012- (trade list row to show PROFIT/LOSS)"
+
     multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
