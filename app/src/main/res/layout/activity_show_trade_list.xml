@@ -147,10 +147,13 @@
         android:text="Share xls"
         android:textAllCaps="false"
         android:visibility="gone" />
+
     <EditText
         android:id="@+id/search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></EditText>
+        android:layout_height="50dip"
+        android:layout_margin="10dp"
+        android:hint="Search my stock name"></EditText>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"

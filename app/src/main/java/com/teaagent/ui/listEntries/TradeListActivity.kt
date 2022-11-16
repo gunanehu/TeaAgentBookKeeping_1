@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -49,6 +50,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     var recycleViewAdapter: TradeListNewAdapter? = null
 
 
+
     //    var recycleViewAdapter: ItemAdapter? = null
     var dateTime = Calendar.getInstance()
     var data = ArrayList<String>()
@@ -77,7 +79,17 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         search = binding.search
         recyclerview!!.layoutManager = LinearLayoutManager(this)
 
+        search?.doOnTextChanged { text, _, _, _ ->
+            val query = text.toString()//.toLowerCase(Locale.getDefault())
+            filterWithQuery(query)
+        }
+
+
         setContentView(view)
+
+
+
+
         declareTypeSpinner()
 
         // getAccountDetails()
@@ -87,13 +99,40 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         buttonCalender()
         sendClick()
 
-        registerEditTextChangeListenerrs()
+//        registerEditTextChangeListenerrs()
     }
    /* fun onTradeListRowClicked(view: View?,position: Int) {
         clearPreviousUserInputValusWithIntentExtras()
     }*/
 
-    private fun registerEditTextChangeListenerrs() {
+    private fun filterWithQuery(query: String) {
+        if (query.isNotEmpty()) {
+            val filteredList: List<TradeAnalysis> = onQueryChanged(query)
+            attachAdapter(filteredList)
+        } else if (query.isEmpty()) {
+            tradeList?.let { attachAdapter(it) }
+        }
+    }
+    private fun attachAdapter(list: List<TradeAnalysis>) {
+        recycleViewAdapter = TradeListNewAdapter(list, this)
+        Log.d(TAG, "recycleViewAdapter  list " + list)
+
+        recyclerview?.adapter = recycleViewAdapter
+    }
+
+    private fun onQueryChanged(filterQuery: String): List<TradeAnalysis> {
+        val filteredList = ArrayList<TradeAnalysis>()
+
+        for (currentSport in tradeList!!) {
+            if (currentSport.stockName?.contains(filterQuery) == true) {
+                filteredList.add(currentSport)
+            }
+        }
+        return filteredList
+    }
+
+
+  /*  private fun registerEditTextChangeListenerrs() {
         binding.search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 val sl = binding.search.text?.toString()?.toFloat()
@@ -106,7 +145,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             ) {
             }
 
-            @RequiresApi(Build.VERSION_CODES.N)
+            *//*@RequiresApi(Build.VERSION_CODES.N)
             override fun onTextChanged(
                 s: CharSequence, start: Int,
                 before: Int, count: Int
@@ -118,9 +157,9 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                     )
                 }
 
-            }
+            }*//*
         })
-    }
+    }*/
     /*  private fun getAccountDetails() {
           lifecycleScope.launch {
               showProgressDialog()

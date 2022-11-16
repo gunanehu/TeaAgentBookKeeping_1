@@ -27,13 +27,16 @@ class TradeListNewAdapter(
         val isBuy = data[position].isBuy
         val entryPrice = data[position].EntryPrice
         val exitPrice = data[position].ExitPrice
+        val exitDate = data[position].timestampTradeExited
+
+
         val qntty = data[position].quantity
         if (isBuy) {
             holder.tvbuySold.text = "BUY"
         } else {
             holder.tvbuySold.text = "SELL"
         }
-        if (!entryPrice!!.isEmpty() && !exitPrice!!.isEmpty() && qntty!! > 0) {
+        if (!entryPrice!!.isEmpty() && !exitPrice!!.isEmpty() && qntty!! > 0 && !exitDate.isNullOrEmpty()) {
             val entry = java.lang.Long.valueOf(entryPrice)
             val exit = java.lang.Long.valueOf(exitPrice)
             if (isBuy) { //BUY
