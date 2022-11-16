@@ -139,9 +139,20 @@ class SaveAccountViewModel() : ViewModel(),
 
     }
 
-    suspend fun getAllAccountDetailsFirebaseDb()/*: ArrayList<Customer>*/ {
+
+
+    suspend fun getAllStockListOfThePhoneUser(isOpen: Boolean, isClosed: Boolean) {
+        var task: Task<QuerySnapshot>? = null
         var customers: ArrayList<TradeAnalysis> = ArrayList()
-        var task: Task<QuerySnapshot>? = FirebaseUtil.getAllTradeDetails()
+        if (isOpen) {
+            task =
+                FirebaseUtil.getAllTradeDetails(true)//find only trades where quantity ==0, if trade not entered
+        } else if (isClosed) {
+            task =
+                FirebaseUtil.getAllExitedTradeDetails(true)
+        } else {//all trades
+            task = FirebaseUtil.getAllTradeDetails()
+        }
 
         val job = GlobalScope.async {
             task?.addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->

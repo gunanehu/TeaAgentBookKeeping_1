@@ -125,6 +125,13 @@
                                 android:onClick="onToggleClick"
                                 android:textOff="SELL"
                                 android:textOn="BUY" />
+
+                            <Switch android:visibility="gone"
+                                android:id="@+id/switch1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Switch" />
                         </LinearLayout>
 
                         <EditText
@@ -224,7 +231,7 @@
                                 android:layout_margin="10dp"
                                 android:layout_weight="1"
                                 android:ems="10"
-                                android:hint="ExitPrice"
+                                android:hint="Quantity"
                                 android:inputType="number" />
 
                             <TextView

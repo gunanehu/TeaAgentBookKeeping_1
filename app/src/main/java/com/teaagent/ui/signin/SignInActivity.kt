@@ -1,32 +1,27 @@
 package com.teaagent.ui.signin
 
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.SignInButton
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener
-import android.os.Bundle
-import com.teaagent.R
-import com.google.firebase.auth.FirebaseUser
-import com.teaagent.ui.signin.SignInActivity
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.GoogleAuthProvider
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.SignInButton
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.auth.GoogleAuthProvider
+import com.teaagent.R
 import com.teaagent.database.TeaAgentsharedPreferenceUtil
 import com.teaagent.databinding.ActivitySignInBinding
-import com.teaagent.databinding.ActivitySplashBinding
-import com.teaagent.ui.SplashActivity
 import com.teaagent.ui.signin.ProfileActivity
+
 
 class SignInActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
     var name: String? = null
@@ -91,6 +86,29 @@ class SignInActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLi
         }
     }
 
+    private fun signInSilently() {
+        val signInClient = GoogleSignIn.getClient(
+            this,
+            GoogleSignInOptions.DEFAULT_SIGN_IN
+        )
+        signInClient.silentSignIn().addOnCompleteListener(
+            this
+        ) { task ->
+            if (task.isSuccessful) {
+                // The signed in account is stored in the task's result.
+                val signedInAccount = task.result
+                gotoProfile()
+            } else {
+                Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        signInSilently()
+    }
     private fun handleSignInResult(result: GoogleSignInResult?) {
         if (result!!.isSuccess) {
             val account = result.signInAccount

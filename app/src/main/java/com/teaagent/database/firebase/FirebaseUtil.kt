@@ -42,10 +42,10 @@ object FirebaseUtil {
         tableTimerLogEntry = firestoreDb.collection("TimerLog")
 
 
-    /*     tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-backtesting")
-       tablePhoneUser = firestoreDb.collection("PhoneUser-backtesting")
-       tableCollectionEntry = firestoreDb.collection("BalanceTx-backtesting")
-       tableTimerLogEntry = firestoreDb.collection("TimerLog-backtesting")*/
+        /*     tableTradeAnalysisEntry = firestoreDb.collection("TradeAnalysisEntry-backtesting")
+           tablePhoneUser = firestoreDb.collection("PhoneUser-backtesting")
+           tableCollectionEntry = firestoreDb.collection("BalanceTx-backtesting")
+           tableTimerLogEntry = firestoreDb.collection("TimerLog-backtesting")*/
 
         //TODO use only one in lifetime for that user
 //        addPhoneUser(phoneUser)
@@ -220,7 +220,39 @@ object FirebaseUtil {
         return query?.get()
     }
 
+    /**
+    find only trades where quantity ==0, if trade not entered
+     */
+    fun getAllTradeDetails(isOpen: Boolean): Task<QuerySnapshot>? {
+        val query = tableTradeAnalysisEntry?.whereEqualTo(
+            "phoneUserName",
+            getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
+        )
+            ?.orderBy("quantity", Query.Direction.DESCENDING)
+        if (isOpen) {
+//            query?.whereGreaterThan("quantity", 0)
+            query?.whereNotEqualTo("quantity", 0)
 
+        }
+        return query?.get()
+    }
+    /**
+    find only trades where exit date is present, if trade not entered
+     */
+    fun getAllExitedTradeDetails(i: Boolean): Task<QuerySnapshot>? {
+        val query = tableTradeAnalysisEntry?.whereEqualTo(
+            "phoneUserName",
+            getCurrentPhoneUser(TeaAgentsharedPreferenceUtil.getAppId().toString()).name
+        )
+            ?.orderBy("timestampTradeExited", Query.Direction.DESCENDING)
+        if (i) {
+            query?.whereNotEqualTo("timestampTradeExited", "")
+        }
+        return query?.get()
+    }
+    /**
+    find all trades
+     */
     fun getAllTradeDetails(): Task<QuerySnapshot>? {
         val query = tableTradeAnalysisEntry?.whereEqualTo(
             "phoneUserName",
@@ -229,6 +261,8 @@ object FirebaseUtil {
             ?.orderBy("timestampTradePlanned", Query.Direction.DESCENDING)
         return query?.get()
     }
+
+
 
     fun getByNameAndDate(
         customerName: String,

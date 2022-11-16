@@ -124,7 +124,7 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
     private fun getAllAccountDetailsFirebaseDb() {
         GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
             showProgressDialog()
-            mapsActivityViewModel.getAllAccountDetailsFirebaseDb()
+            mapsActivityViewModel.getAllStockListOfThePhoneUser(false,false)
         }
 
         mapsActivityViewModel.tradeDetailsLiveData.observe(this, Observer() { it ->
@@ -133,11 +133,9 @@ class SaveAccountTxEntryActivity : AppCompatActivity() {
 
             allTrades = it as ArrayList<TradeAnalysis>
             getALLCustomerNamesToSpinner(allTrades as ArrayList<TradeAnalysis>)
-
-
             val dataList=  it as ArrayList<TradeAnalysis>
-            ExcelUtils.exportDataIntoWorkbook(this,"tradeAlalysisReport",dataList)
 
+            ExcelUtils.exportDataIntoWorkbook(this,"tradeAlalysisReport",dataList)
             dismissProgressDialog()
 
         })

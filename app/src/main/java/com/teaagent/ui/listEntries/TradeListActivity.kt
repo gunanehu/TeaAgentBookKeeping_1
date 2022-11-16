@@ -3,15 +3,11 @@ package com.teaagent.ui.listEntries
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
@@ -84,17 +80,15 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             filterWithQuery(query)
         }
 
-
         setContentView(view)
-
-
-
 
         declareTypeSpinner()
 
         // getAccountDetails()
         // setSearchTransactionsClickListener()
-        getNetAssetsByNameTransactionsClickListener()
+        setClickListenerOfAllStockListOfThePhoneUser()
+        setClickListenerAllOpenStockList()
+        setClickListenerAllExitedTradeDetails()
 
         buttonCalender()
         sendClick()
@@ -108,6 +102,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     private fun filterWithQuery(query: String) {
         if (query.isNotEmpty()) {
             val filteredList: List<TradeAnalysis> = onQueryChanged(query)
+            tradeList = filteredList as ArrayList<TradeAnalysis>
             attachAdapter(filteredList)
         } else if (query.isEmpty()) {
             tradeList?.let { attachAdapter(it) }
@@ -116,7 +111,6 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     private fun attachAdapter(list: List<TradeAnalysis>) {
         recycleViewAdapter = TradeListNewAdapter(list, this)
         Log.d(TAG, "recycleViewAdapter  list " + list)
-
         recyclerview?.adapter = recycleViewAdapter
     }
 
@@ -311,13 +305,13 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer { it ->
             if (it != null) {
                 binding.buttonShareScreen.visibility = View.VISIBLE
+                binding.search.visibility = View.VISIBLE
+
                 Log.d(TAG, "***************** ********************* customers $it")
-
-
-
 
                 customerString = convertBalanceTxToStringList(it as ArrayList<TradeAnalysis>)
                 tradeList = it
+
 
                /* recycleViewAdapter = CustomAdapter(customerString, this)
                 recyclerview?.adapter = recycleViewAdapter*/
@@ -325,18 +319,18 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 recycleViewAdapter = TradeListNewAdapter(it, this)
                 recyclerview?.adapter = recycleViewAdapter
 
-//                binding.totalAmount.setText("Total amount : " + total)
+                binding.totalAmount.setText("Total trades : " + it.size)
 
 
             }
         })
     }
 
-    fun getNetAssetsByNameTransactionsClickListener() {
+    fun setClickListenerOfAllStockListOfThePhoneUser() {
 //        showProgressDialog()
         binding.buttonGetNetAssetsByName.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-                saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
+                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false,false)
             }
         }
         GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
@@ -344,6 +338,30 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         }
     }
 
+
+    fun setClickListenerAllOpenStockList() {
+//        showProgressDialog()
+        binding.btnGetOpenTradeList.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(true,false)
+            }
+        }
+        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            allTradeDetailsMutableLiveDataCallback()
+        }
+    }
+
+    fun setClickListenerAllExitedTradeDetails() {
+//        showProgressDialog()
+        binding.btnGetExitedTradeList.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false,true)
+            }
+        }
+        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            allTradeDetailsMutableLiveDataCallback()
+        }
+    }
     private fun showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = ProgressDialog(this)
@@ -477,18 +495,13 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
 
     override fun onClick(position: Int) {
-
-
-
         val balanceTx: TradeAnalysis? = tradeList?.get(position)
         val txId = balanceTx?.id
-
                     Toast.makeText(
                 this,
                 "id "+txId,
                 Toast.LENGTH_LONG
             ).show()
-
 
         var task: Task<DocumentSnapshot>? = FirebaseUtil.getTxById(txId!!)
         task?.addOnSuccessListener(OnSuccessListener { it ->

@@ -23,34 +23,6 @@
 "
             android:orientation="horizontal">
 
-            <LinearLayout
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#D85DA59C"
-                android:gravity="left"
-                android:orientation="horizontal"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/tvProfitOrLoss"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
-                    android:textStyle="italic" />
-
-                <TextView
-                    android:id="@+id/tvPercentageGainLoss"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,27 +31,70 @@
                 android:orientation="vertical"
                 android:padding="10dp">
 
-                <TextView
-                    android:id="@+id/tvStockName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Stock Name"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                <RelativeLayout
 
-                <TextView
-                    android:id="@+id/tvIncomeTrade"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/restaurantNameTextView"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:text="Income trade Type"
-                    android:textStyle="italic" />
+                    android:background="#D85DA59C"
+                    android:gravity="left"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tvStockName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:gravity="left"
+                        android:text="Stock Name"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvIncomeTrade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvStockName"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:text="Income trade Type"
+                        android:textStyle="italic" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="right"
+                        android:background="#D85DA59C"
+                        android:gravity="right"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tvProfitOrLoss"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="20sp"
+                            android:textStyle="italic|bold" />
+
+                        <TextView
+                            android:id="@+id/tvPercentageGainLoss"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="20sp"
+                            android:textStyle="italic|bold" />
+                    </LinearLayout>
+                </RelativeLayout>
+
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent">
 
                     <LinearLayout
@@ -87,82 +102,131 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:background="#ffffff"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:orientation="horizontal"
                         android:padding="10dp"
-                        android:weightSum="6">
+                        android:weightSum="3.5">
+
 
                         <TextView
                             android:id="@+id/tvbuySold"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_margin="3dp"
-                            android:layout_weight="1"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:layout_marginBottom="3dp"
+                            android:layout_weight=".5"
                             android:text="bought/sold"
                             android:textColor="@color/colorPrimary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvbuyPrice"
+                        <LinearLayout
                             android:layout_width="0dp"
+
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_margin="3dp"
                             android:layout_weight="1"
-                            android:text="0.0"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            android:weightSum="2">
 
-                        <TextView
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="3dp"
+                                android:layout_weight="1"
+                                android:text="Entry"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tvbuyPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="3dp"
+                                android:layout_weight="1"
+                                android:text="0.0"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="0dp"
+
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_margin="3dp"
                             android:layout_weight="1"
-                            android:text="Exit Price"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            android:weightSum="2">
 
-                        <TextView
-                            android:id="@+id/tvsellPrice"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="3dp"
+                                android:layout_weight="1"
+                                android:text="Exit"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tvsellPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="3dp"
+                                android:layout_weight="1"
+                                android:text="0.0"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="0dp"
+
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_margin="3dp"
                             android:layout_weight="1"
-                            android:text="0.0"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            android:weightSum="2">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="3dp"
-                            android:layout_weight="1"
-                            android:text="Quantity "
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="3dp"
+                                android:layout_weight="1"
+                                android:text="Quantity"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="15sp" />
 
-                        <TextView
-                            android:id="@+id/tvbuyQntty"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="3dp"
-                            android:layout_weight="1"
-                            android:text="0"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
+                            <TextView
+                                android:id="@+id/tvbuyQntty"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="3dp"
+                                android:layout_weight="1"
+                                android:text="0"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
                     </LinearLayout>
 

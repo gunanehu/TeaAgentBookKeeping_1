@@ -92,7 +92,7 @@ class ListTransactionsActivity : AppCompatActivity(), ItemClickListener {
     private fun getAccountDetails() {
         lifecycleScope.launch {
             showProgressDialog()
-            saveAccountDetailViewModel.getAllAccountDetailsFirebaseDb()
+            saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false,false)
         }
 
         saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer() { it ->

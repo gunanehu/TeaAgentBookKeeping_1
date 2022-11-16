@@ -33,8 +33,11 @@ class TradeListNewAdapter(
         val qntty = data[position].quantity
         if (isBuy) {
             holder.tvbuySold.text = "BUY"
+            holder.tvbuySold.setTextColor(Color.BLUE)
         } else {
             holder.tvbuySold.text = "SELL"
+            holder.tvbuySold.setTextColor(Color.MAGENTA)
+
         }
         if (!entryPrice!!.isEmpty() && !exitPrice!!.isEmpty() && qntty!! > 0 && !exitDate.isNullOrEmpty()) {
             val entry = java.lang.Long.valueOf(entryPrice)
