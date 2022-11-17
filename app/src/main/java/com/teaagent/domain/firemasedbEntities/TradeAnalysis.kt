@@ -45,8 +45,10 @@ open class TradeAnalysis(
     var timestampTradeExited: String?,
 
     var note: String?,
+    val quantity: Long?,
 
-    val quantity: Long?
+    var noteMistake: String?,
+    var noteImpromement: String?
 
 ) :
     Serializable {
@@ -65,7 +67,7 @@ open class TradeAnalysis(
         "",
         "",
         "", "",
-        
+
         "",
         "",
         "",
@@ -74,7 +76,7 @@ open class TradeAnalysis(
         "",
         "",
         "",
-        "", "",0
+        "", "", 0, "", ""
     )
 
     override fun toString(): String {

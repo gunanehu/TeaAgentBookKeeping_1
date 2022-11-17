@@ -42,8 +42,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
     private lateinit var exitPrice: String
     private lateinit var note: String
     private lateinit var exitNote: String
-    private var quantity: Long = 0
+    private lateinit var noteInprogress: String
 
+    private var quantity: Long = 0
+    private lateinit var noteMistake: String
+    private lateinit var noteImprovement: String
 
     //    spinners
     var spinnerInstituteType: Spinner? = null
@@ -275,7 +278,8 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         binding.etNote.setText(balanceTx?.note)
         binding.etExitNote.setText(balanceTx?.exitNote)
-
+        binding.etNoteMistake.setText(balanceTx?.noteMistake)
+        binding.etNoteImprovement.setText(balanceTx?.noteImpromement)
         binding.toggleBuySell.isChecked = balanceTx?.isBuy!!
         isBuy = balanceTx.isBuy
 
@@ -1069,7 +1073,10 @@ class SaveAccountDetailActivity : AppCompatActivity() {
                 it.timestampTradePlanned,
                 it.timestampTradeExited,
                 it.note,
-                it.quantity
+                it.quantity,
+
+                it.noteMistake,
+                it.noteImpromement
             )
         }
         //            setEditTextValues(customer)
@@ -1119,8 +1126,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
 
         currentEntryTime = ""
         currentExitTime = ""
-        note = ""
         quantity = 0
+        noteMistake = ""
+        noteImprovement = ""
 
         binding.editTextStock.setText("")
         binding.editTextEntryPrice.setText("")
@@ -1129,6 +1137,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         binding.etNote.setText("")
         binding.etExitNote.setText("")
         binding.etQuantity.setText("")
+        binding.etNoteImprovement.setText("")
+        binding.etNoteMistake.setText("")
+        binding.etNoteInprogress.setText("")
 
         dateTime.timeInMillis = 0
 
@@ -1183,7 +1194,11 @@ class SaveAccountDetailActivity : AppCompatActivity() {
         exitPrice = binding.etExitPrice.text.toString()
 
         note = binding.etNote.text.toString()
+        noteInprogress = binding.etNoteInprogress.text.toString()
         exitNote = binding.etExitNote.text.toString()
+        noteMistake = binding.etNoteMistake.text.toString()
+        noteImprovement = binding.etNoteImprovement.text.toString()
+
         if (!binding.etQuantity.text.toString().isNullOrEmpty()) {
             quantity = binding.etQuantity.text.toString().toLong()
         }
@@ -1223,7 +1238,9 @@ class SaveAccountDetailActivity : AppCompatActivity() {
             currentEntryTime,
             currentExitTime,
             note,
-            quantity
+            quantity,
+
+            noteMistake,noteImprovement
         )
     }
 

@@ -126,12 +126,13 @@
                                 android:textOff="SELL"
                                 android:textOn="BUY" />
 
-                            <Switch android:visibility="gone"
+                            <Switch
                                 android:id="@+id/switch1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Switch" />
+                                android:text="Switch"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <EditText
@@ -555,6 +556,14 @@
                             android:layout_margin="10dp"
                             android:ems="10"
                             android:hint="Entry note" />
+                        <EditText
+                            android:visibility="gone"
+                            android:id="@+id/etNoteInprogress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:ems="10"
+                            android:hint="Note Inprogress" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -718,6 +727,38 @@
                         android:hint="Exit note" />
                 </LinearLayout>
 
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="5dip"
+                android:background="#355478"
+                android:gravity="bottom">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#355478"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/etNoteMistake"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:ems="10"
+                        android:hint="Note Mistake" />
+
+                    <EditText
+                        android:id="@+id/etNoteImprovement"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:ems="10"
+                        android:hint="Note Improvement" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView

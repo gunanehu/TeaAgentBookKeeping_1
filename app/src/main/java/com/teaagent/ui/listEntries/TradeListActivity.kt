@@ -42,9 +42,8 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
     // Repository
 
-//        var recycleViewAdapter: CustomAdapter? = null
+    //        var recycleViewAdapter: CustomAdapter? = null
     var recycleViewAdapter: TradeListNewAdapter? = null
-
 
 
     //    var recycleViewAdapter: ItemAdapter? = null
@@ -85,6 +84,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         declareTypeSpinner()
 
         // getAccountDetails()
+        getAllStockListOfThePhoneUser()
         // setSearchTransactionsClickListener()
         setClickListenerOfAllStockListOfThePhoneUser()
         setClickListenerAllOpenStockList()
@@ -95,9 +95,9 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
 
 //        registerEditTextChangeListenerrs()
     }
-   /* fun onTradeListRowClicked(view: View?,position: Int) {
-        clearPreviousUserInputValusWithIntentExtras()
-    }*/
+    /* fun onTradeListRowClicked(view: View?,position: Int) {
+         clearPreviousUserInputValusWithIntentExtras()
+     }*/
 
     private fun filterWithQuery(query: String) {
         if (query.isNotEmpty()) {
@@ -108,6 +108,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             tradeList?.let { attachAdapter(it) }
         }
     }
+
     private fun attachAdapter(list: List<TradeAnalysis>) {
         recycleViewAdapter = TradeListNewAdapter(list, this)
         Log.d(TAG, "recycleViewAdapter  list " + list)
@@ -118,7 +119,9 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         val filteredList = ArrayList<TradeAnalysis>()
 
         for (currentSport in tradeList!!) {
-            if (currentSport.stockName?.toLowerCase(Locale.getDefault())?.contains(filterQuery) == true) {
+            if (currentSport.stockName?.toLowerCase(Locale.getDefault())
+                    ?.contains(filterQuery) == true
+            ) {
                 filteredList.add(currentSport)
             }
         }
@@ -217,6 +220,12 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             tradeAnalysis?.executionTrend
         val quantity =
             tradeAnalysis?.quantity
+
+        val noteMistake =
+            tradeAnalysis?.noteMistake
+        val noteImpromement =
+            tradeAnalysis?.noteImpromement
+
         val b =
             TradeAnalysis(
                 id,
@@ -250,7 +259,9 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 timestampTradePlanned,
                 timestampTradeExited,
                 note,
-                quantity
+                quantity,
+                noteMistake,
+                noteImpromement
 
             )
         return b.toString()
@@ -304,6 +315,7 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     private suspend fun allTradeDetailsMutableLiveDataCallback() {
         saveAccountDetailViewModel.tradeDetailsLiveData.observe(this, Observer { it ->
             if (it != null) {
+                dismissProgressDialog()
                 binding.buttonShareScreen.visibility = View.VISIBLE
                 binding.search.visibility = View.VISIBLE
 
@@ -313,8 +325,8 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
                 tradeList = it
 
 
-               /* recycleViewAdapter = CustomAdapter(customerString, this)
-                recyclerview?.adapter = recycleViewAdapter*/
+                /* recycleViewAdapter = CustomAdapter(customerString, this)
+                 recyclerview?.adapter = recycleViewAdapter*/
 
                 recycleViewAdapter = TradeListNewAdapter(it, this)
                 recyclerview?.adapter = recycleViewAdapter
@@ -326,24 +338,33 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
         })
     }
 
-    fun setClickListenerOfAllStockListOfThePhoneUser() {
-//        showProgressDialog()
-        binding.buttonGetNetAssetsByName.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
-                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false,false)
-            }
-        }
-        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+    fun getAllStockListOfThePhoneUser() {
+        showProgressDialog()
+        GlobalScope.launch(Dispatchers.Main) {
+            saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false, false)
             allTradeDetailsMutableLiveDataCallback()
         }
     }
 
 
+    fun setClickListenerOfAllStockListOfThePhoneUser() {
+        /*binding.buttonGetNetAssetsByName.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false, false)
+            }
+        }
+        GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
+            allTradeDetailsMutableLiveDataCallback()
+        }*/
+        getAllStockListOfThePhoneUser()
+    }
+
+
     fun setClickListenerAllOpenStockList() {
-//        showProgressDialog()
+        showProgressDialog()
         binding.btnGetOpenTradeList.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(true,false)
+                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(true, false)
             }
         }
         GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
@@ -352,21 +373,22 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     }
 
     fun setClickListenerAllExitedTradeDetails() {
-//        showProgressDialog()
+        showProgressDialog()
         binding.btnGetExitedTradeList.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false,true)
+                saveAccountDetailViewModel.getAllStockListOfThePhoneUser(false, true)
             }
         }
         GlobalScope.launch(Dispatchers.Main) { // launches coroutine in main thread
             allTradeDetailsMutableLiveDataCallback()
         }
     }
+
     private fun showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = ProgressDialog(this)
         }
-        mProgressDialog?.setTitle("Loading data...")
+        mProgressDialog?.setTitle("Getting Trade list...")
         mProgressDialog?.show()
     }
 
@@ -375,8 +397,6 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
             mProgressDialog?.dismiss()
         }
     }
-
-    public val ReportActivityBundleTag: String = "ReportActivityBundleTag"
 
     private fun sendClick() {
         binding.buttonShareScreen.setOnClickListener {
@@ -497,11 +517,11 @@ class TradeListActivity : AppCompatActivity(), ItemClickListener {
     override fun onClick(position: Int) {
         val balanceTx: TradeAnalysis? = tradeList?.get(position)
         val txId = balanceTx?.id
-                    Toast.makeText(
-                this,
-                "id "+txId,
-                Toast.LENGTH_LONG
-            ).show()
+        Toast.makeText(
+            this,
+            "id " + txId,
+            Toast.LENGTH_LONG
+        ).show()
 
         var task: Task<DocumentSnapshot>? = FirebaseUtil.getTxById(txId!!)
         task?.addOnSuccessListener(OnSuccessListener { it ->

@@ -79,8 +79,6 @@ public class ExcelUtils {
         sheet.setColumnWidth(7, (15 * 800));
         sheet.setColumnWidth(8, (15 * 300));
         sheet.setColumnWidth(9, (15 * 300));
-
-
         sheet.setColumnWidth(10, (15 * 300));
         sheet.setColumnWidth(11, (15 * 300));
         sheet.setColumnWidth(12, (15 * 300));
@@ -94,7 +92,8 @@ public class ExcelUtils {
         sheet.setColumnWidth(20, (15 * 400));
         sheet.setColumnWidth(21, (15 * 400));
         sheet.setColumnWidth(22, (15 * 300));
-
+        sheet.setColumnWidth(23, (15 * 500));
+        sheet.setColumnWidth(24, (15 * 500));
     }
 
     /**
@@ -256,6 +255,14 @@ public class ExcelUtils {
         cell = headerRow.createCell(22);
         cell.setCellValue("Quantity");
         cell.setCellStyle(headerCellStyle);
+
+        cell = headerRow.createCell(23);
+        cell.setCellValue("Mistake");
+        cell.setCellStyle(headerCellStyle);
+
+        cell = headerRow.createCell(24);
+        cell.setCellValue("Improvement");
+        cell.setCellStyle(headerCellStyle);
     }
 
     /**
@@ -363,6 +370,11 @@ public class ExcelUtils {
             cell = rowData.createCell(22);
             cell.setCellValue(dataList.get(i).getQuantity());
 
+            cell = rowData.createCell(23);
+            cell.setCellValue(dataList.get(i).getNoteMistake());
+
+            cell = rowData.createCell(24);
+            cell.setCellValue(dataList.get(i).getNoteImpromement());
 
         }
     }
