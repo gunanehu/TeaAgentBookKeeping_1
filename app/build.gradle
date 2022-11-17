@@ -21,9 +21,9 @@ android {
     applicationId "com.trading.tradingjournal"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 12
+    versionCode 13
 //    versionName "tradingjournal-00011- backtet (added quantity )"
-    versionName "tradingjournal-00012- (trade list row to show PROFIT/LOSS)"
+    versionName "tradingjournal-00013- (added note for improvement and mistake)"
 
     multiDexEnabled true
 
