@@ -1,41 +1,42 @@
 {
   "project_info": {
-    "project_number": "794901982066",
-    "project_id": "tradingjournal-ee100",
-    "storage_bucket": "tradingjournal-ee100.appspot.com"
+    "project_number": "743581934333",
+    "firebase_url": "https://tradingjournalpro-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tradingjournalpro",
+    "storage_bucket": "tradingjournalpro.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:794901982066:android:de41b7482bcf2b12e7cbeb",
+        "mobilesdk_app_id": "1:743581934333:android:d7a91192263c11886f5494",
         "android_client_info": {
-          "package_name": "com.trading.tradingjournal"
+          "package_name": "com.investment.tradingjournal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "794901982066-s57l90o1vlu659ahtosr8ho2m9i7enfo.apps.googleusercontent.com",
+          "client_id": "743581934333-4dnvq41na5srku9rspk28eegh2gptj0l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.trading.tradingjournal",
+            "package_name": "com.investment.tradingjournal",
             "certificate_hash": "a0035e4a7f0b6d3b475c37a2b36769515cd2243d"
           }
         },
         {
-          "client_id": "794901982066-82o1eioutsfpavpb1ljlk61nrejolv5r.apps.googleusercontent.com",
+          "client_id": "743581934333-mr5av9nbajisgr1qdcoce8aejpcit4u5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyANbCTL7Ef4bv-xFS2z7pQ7ff5GN21jyTU"
+          "current_key": "AIzaSyBebKgU81vwTO4F_sL_yOMY-UOpIxalJoY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "794901982066-82o1eioutsfpavpb1ljlk61nrejolv5r.apps.googleusercontent.com",
+              "client_id": "743581934333-mr5av9nbajisgr1qdcoce8aejpcit4u5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
