@@ -7,12 +7,21 @@
 10.send e mail(email hardcoded for now)-done
 11.show trading view chart in a different activity -done
 17.added trade list row to show PROFIT/LOSS amount with updated UI-done
+18.added improvement/mistake note-done
+19.auto sign in (google)- done
+13. if quantity is not empty, means u got the entry and consider it as entered trade-done
+15.Fetch trade list by stock name-done
+8. Planned SL amount edittext  - it should calculate and show show much quantity to trade based on SL price.
+  It should show SUGGESTED quantity text box-done
+
+4.calculate total logged time for the day-improgress
+5.calculate total logged time for the week
+
+
 
 12. add in the trade note after entry and  before exit -
-13. if quantity is not empty, means u got the entry and consider it as entered trade
 13. include to entry traded value ( total buy/sell value)
 14. auto complete search type feature for searching stock from the stock list
-15.Fetch trade list by stock name
 Fetch trade list by date
 Fetch trade list by income type
 Fetch trade list by open/onTrade/exited/Loss/Profit
@@ -23,11 +32,9 @@ Fetch trade list by Weekly gain/loss  Weekly maxgaiin/max loss
 
 
 3.Show percentage in trade details rows in the trade list as well.
-4.calculate total logged time for the day
-5.calculate total logged time for the week
+
 7. Add Close button to exit the trade:  -based on closed cliked get the exit timemilli  -keep isClose boolean flag in TradeAnalysis doc
-8. Planned SL amount edittext  - it should calculate and show show much quantity to trade based on SL price.
-  It should show SUGGESTED quantity text box
+
 
 
 
